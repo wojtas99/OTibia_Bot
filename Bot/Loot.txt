@@ -1,11 +1,3 @@
-https://wiki.mediviastats.info/images/5/58/Meat.gif
-
-https://wiki.mediviastats.info/images/b/b0/Gold_Coin.gif
-https://wiki.mediviastats.info/images/4/4c/Minotaur_Hoof.png
-https://wiki.mediviastats.info/images/3/3f/Life_Ring.png
-https://wiki.mediviastats.info/images/1/12/Halberd.png
-https://wiki.mediviastats.info/images/d/d4/Bag.png
-https://wiki.mediviastats.info/images/4/46/Dark_Helmet.png
-https://wiki.mediviastats.info/images/7/70/Melee_Ring.png
-https://wiki.mediviastats.info/images/7/7b/White_Mushroom.png
-https://wiki.mediviastats.info/images/4/49/Steel_Helmet.png
+https://wiki.altaron.pl/images/Mi%C4%99so.gif
+https://wiki.altaron.pl/images/Miedziak.gif
+https://wiki.altaron.pl/images/Diament.gif

@@ -1,0 +1,2042 @@
+[
+    {
+        "name": "Stand: 2213 2379 7",
+        "data": {
+            "Action": 0,
+            "Direction": 1,
+            "X": 2213,
+            "Y": 2379,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2213 2379 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2213,
+            "Y": 2379,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2214 2379 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2214,
+            "Y": 2379,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2215 2379 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2215,
+            "Y": 2379,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2215 2380 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2215,
+            "Y": 2380,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2216 2380 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2216,
+            "Y": 2380,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2216 2381 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2216,
+            "Y": 2381,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Ladder: 2216 2381 7",
+        "data": {
+            "Action": 3,
+            "Direction": 0,
+            "X": 2216,
+            "Y": 2381,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2216 2382 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2216,
+            "Y": 2382,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 2217 2382 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2217,
+            "Y": 2382,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 2217 2381 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2217,
+            "Y": 2381,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 2217 2380 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2217,
+            "Y": 2380,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 2217 2379 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2217,
+            "Y": 2379,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Ladder: 2217 2379 6",
+        "data": {
+            "Action": 3,
+            "Direction": 0,
+            "X": 2217,
+            "Y": 2379,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 2217 2380 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2217,
+            "Y": 2380,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2217 2381 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2217,
+            "Y": 2381,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2216 2381 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2216,
+            "Y": 2381,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2216 2382 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2216,
+            "Y": 2382,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2215 2382 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2215,
+            "Y": 2382,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2215 2383 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2215,
+            "Y": 2383,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2214 2383 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2214,
+            "Y": 2383,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2213 2383 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2213,
+            "Y": 2383,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2212 2383 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2212,
+            "Y": 2383,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2211 2383 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2211,
+            "Y": 2383,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2210 2383 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2210,
+            "Y": 2383,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2209 2383 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2209,
+            "Y": 2383,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2208 2383 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2208,
+            "Y": 2383,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2207 2383 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2207,
+            "Y": 2383,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2207 2384 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2207,
+            "Y": 2384,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2206 2384 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2206,
+            "Y": 2384,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2206 2385 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2206,
+            "Y": 2385,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2205 2385 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2205,
+            "Y": 2385,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2204 2385 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2204,
+            "Y": 2385,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2203 2385 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2203,
+            "Y": 2385,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2203 2386 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2203,
+            "Y": 2386,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2202 2386 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2202,
+            "Y": 2386,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2202 2387 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2202,
+            "Y": 2387,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2202 2388 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2202,
+            "Y": 2388,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2202 2389 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2202,
+            "Y": 2389,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2202 2390 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2202,
+            "Y": 2390,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2202 2391 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2202,
+            "Y": 2391,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2201 2391 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2201,
+            "Y": 2391,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2200 2391 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2200,
+            "Y": 2391,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2199 2391 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2199,
+            "Y": 2391,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2198 2391 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2198,
+            "Y": 2391,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2197 2391 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2197,
+            "Y": 2391,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2196 2391 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2196,
+            "Y": 2391,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2195 2391 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2195,
+            "Y": 2391,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2195 2392 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2195,
+            "Y": 2392,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2194 2392 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2194,
+            "Y": 2392,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2194 2393 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2194,
+            "Y": 2393,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2194 2394 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2194,
+            "Y": 2394,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2194 2395 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2194,
+            "Y": 2395,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2194 2396 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2194,
+            "Y": 2396,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2194 2397 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2194,
+            "Y": 2397,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2194 2398 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2194,
+            "Y": 2398,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2194 2399 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2194,
+            "Y": 2399,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2194 2400 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2194,
+            "Y": 2400,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2193 2400 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2193,
+            "Y": 2400,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2192 2400 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2400,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2192 2401 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2401,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2192 2402 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2402,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2192 2403 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2403,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2192 2404 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2404,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2192 2405 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2405,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2192 2406 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2406,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2192 2407 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2407,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2192 2408 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2408,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2192 2409 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2409,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2192 2410 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2410,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2192 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2191 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2191,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2190 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2190,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2190 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2190,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2189 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2189,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2188 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2188,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2187 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2187,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2186 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2186,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2185 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2185,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2184 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2184,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2183 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2183,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2182 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2182,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2181 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2181,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2180 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2180,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2179 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2179,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2179 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2179,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2178 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2178,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2177 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2177,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2176 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2176,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2175 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2175,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2174 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2174,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2173 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2173,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2172 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2172,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2171 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2171,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2170 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2170,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2169 2411 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2169,
+            "Y": 2411,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2169 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2169,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2168 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2168,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2167 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2167,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2166 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2166,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2165 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2165,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2164 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2164,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2163 2412 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2163,
+            "Y": 2412,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 2163 2414 6",
+        "data": {
+            "Action": 0,
+            "Direction": 2,
+            "X": 2163,
+            "Y": 2414,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 2163 2414 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2163,
+            "Y": 2414,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 2164 2414 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2164,
+            "Y": 2414,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 2165 2414 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2165,
+            "Y": 2414,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 2166 2414 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2166,
+            "Y": 2414,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 2167 2414 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2167,
+            "Y": 2414,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 2167 2413 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2167,
+            "Y": 2413,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 2167 2411 7",
+        "data": {
+            "Action": 0,
+            "Direction": 1,
+            "X": 2167,
+            "Y": 2411,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2167 2411 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2167,
+            "Y": 2411,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2166 2411 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2166,
+            "Y": 2411,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2165 2411 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2165,
+            "Y": 2411,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2164 2411 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2164,
+            "Y": 2411,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2164 2412 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2164,
+            "Y": 2412,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2164 2413 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2164,
+            "Y": 2413,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2164 2414 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2164,
+            "Y": 2414,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2165 2414 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2165,
+            "Y": 2414,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2166 2414 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2166,
+            "Y": 2414,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 2166 2416 8",
+        "data": {
+            "Action": 0,
+            "Direction": 2,
+            "X": 2166,
+            "Y": 2416,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2166 2416 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2166,
+            "Y": 2416,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2167 2416 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2167,
+            "Y": 2416,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2168 2416 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2168,
+            "Y": 2416,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2168 2415 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2168,
+            "Y": 2415,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2168 2414 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2168,
+            "Y": 2414,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2168 2413 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2168,
+            "Y": 2413,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2168 2412 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2168,
+            "Y": 2412,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2168 2411 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2168,
+            "Y": 2411,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2168 2410 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2168,
+            "Y": 2410,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2168 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2168,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2169 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2169,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2170 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2170,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2171 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2171,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2172 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2172,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2173 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2173,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2174 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2174,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2175 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2175,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2176 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2176,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2177 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2177,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2178 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2178,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2179 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2179,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2180 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2180,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2181 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2181,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2182 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2182,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2183 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2183,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2184 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2184,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2185 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2185,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2186 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2186,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2187 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2187,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2188 2409 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2188,
+            "Y": 2409,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2188 2408 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2188,
+            "Y": 2408,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2188 2407 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2188,
+            "Y": 2407,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2188 2406 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2188,
+            "Y": 2406,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2189 2406 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2189,
+            "Y": 2406,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2189 2405 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2189,
+            "Y": 2405,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2189 2404 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2189,
+            "Y": 2404,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2190 2404 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2190,
+            "Y": 2404,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2191 2404 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2191,
+            "Y": 2404,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2191 2403 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2191,
+            "Y": 2403,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2192 2403 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2403,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2192 2402 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2402,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2192 2401 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2192,
+            "Y": 2401,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2193 2401 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2193,
+            "Y": 2401,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2193 2400 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2193,
+            "Y": 2400,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2193 2399 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2193,
+            "Y": 2399,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2193 2398 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2193,
+            "Y": 2398,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2193 2397 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2193,
+            "Y": 2397,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2194 2397 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2194,
+            "Y": 2397,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2195 2397 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2195,
+            "Y": 2397,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2196 2397 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2196,
+            "Y": 2397,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2196 2396 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2196,
+            "Y": 2396,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2197 2396 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2197,
+            "Y": 2396,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2198 2396 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2198,
+            "Y": 2396,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2199 2396 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2199,
+            "Y": 2396,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2200 2396 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2200,
+            "Y": 2396,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2201 2396 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2201,
+            "Y": 2396,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2201 2395 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2201,
+            "Y": 2395,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2202 2395 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2202,
+            "Y": 2395,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2202 2394 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2202,
+            "Y": 2394,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2203 2394 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2203,
+            "Y": 2394,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2204 2394 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2204,
+            "Y": 2394,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2204 2393 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2204,
+            "Y": 2393,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2205 2393 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2205,
+            "Y": 2393,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2205 2392 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2205,
+            "Y": 2392,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2205 2391 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2205,
+            "Y": 2391,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2205 2390 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2205,
+            "Y": 2390,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2205 2389 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2205,
+            "Y": 2389,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2205 2388 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2205,
+            "Y": 2388,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2205 2387 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2205,
+            "Y": 2387,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2205 2386 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2205,
+            "Y": 2386,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2205 2385 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2205,
+            "Y": 2385,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2205 2384 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2205,
+            "Y": 2384,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2206 2384 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2206,
+            "Y": 2384,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2207 2384 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2207,
+            "Y": 2384,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2208 2384 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2208,
+            "Y": 2384,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2209 2384 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2209,
+            "Y": 2384,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2209 2383 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2209,
+            "Y": 2383,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2210 2383 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2210,
+            "Y": 2383,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2211 2383 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2211,
+            "Y": 2383,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2212 2383 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2212,
+            "Y": 2383,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2213 2383 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2213,
+            "Y": 2383,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2213 2382 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2213,
+            "Y": 2382,
+            "Z": 8
+        }
+    },
+    {
+        "name": "Stand: 2213 2381 8",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 2213,
+            "Y": 2381,
+            "Z": 8
+        }
+    }
+]

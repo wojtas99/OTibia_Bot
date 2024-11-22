@@ -1,30 +1,51 @@
-import ctypes
+import win32gui
+import Addresses
+from Addresses import icon_image, coordinates_x, coordinates_y, screen_width, screen_height,  screen_x, screen_y, lock
+import base64
+import os
 import json
 import time
+import numpy as np
+import cv2 as cv
+from threading import Thread
+from Functions import read_my_wpt, read_target_info
+from KeyboardFunctions import walk
 
-import cv2
-import win32gui
+import win32con
+from PyQt5.QtWidgets import (
+    QWidget, QCheckBox, QComboBox, QLineEdit, QListWidget, QGridLayout,
+    QGroupBox, QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QListWidgetItem
+)
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtCore import Qt
 
-from Functions import *
-import Functions
+from MemoryFunctions import read_memory_address
+
+from MouseFunctions import right_click
+from MouseFunctions import drag_drop
+from MouseFunctions import collect_item, left_click
+
+from GeneralFunctions import WindowCapture
+from GeneralFunctions import merge_close_points
 
 
 class TargetLootTab(QWidget):
     def __init__(self, parent=None):
         super(TargetLootTab, self).__init__(parent)
+
         # Load Icon
-        self.setWindowIcon(QIcon('Icon.jpg'))
+        self.setWindowIcon(QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(base64.b64decode(icon_image)) else QIcon())
 
         # Set Title and Size
         self.setWindowTitle("Targeting")
         self.setFixedSize(350, 400)
-        # Variables
+
         # Check Boxes
         self.startLoot_checkBox = QCheckBox("Open Corpses", self)
         self.startTarget_checkBox = QCheckBox("Start Targeting", self)
+        self.chase_checkBox = QCheckBox("Chase", self)
 
         # Combo Boxes
-        self.actionList_comboBox = QComboBox(self)
         self.attackDist_comboBox = QComboBox(self)
 
         # Line Edits
@@ -34,424 +55,369 @@ class TargetLootTab(QWidget):
         self.lootOption_lineEdit = QLineEdit(self)
         self.lootOption_lineEdit.setFixedWidth(20)
         self.lootOption_lineEdit.setMaxLength(2)
-        self.hpFrom_lineEdit = QLineEdit(self)
-        self.hpTo_lineEdit = QLineEdit(self)
-        self.hpFrom_lineEdit.setMaxLength(3)
-        self.hpTo_lineEdit.setMaxLength(2)
 
         # List Widgets
         self.targetLootProfile_listWidget = QListWidget(self)
         self.targetList_listWidget = QListWidget(self)
+        self.targetList_listWidget.setFixedHeight(150)
         self.lootList_listWidget = QListWidget(self)
 
         # Layouts
         self.layout = QGridLayout(self)
         self.setLayout(self.layout)
 
-        # Initialize
-        self.targetList()
-        self.saveLoadTargetLoot()
-        self.setTarget()
-        self.lootList()
-        self.targetLoot()
+        # Initialize UI components
+        self.target_list()
+        self.save_load_target_loot()
+        self.set_target()
+        self.loot_list()
+        self.target_loot()
 
-    def targetList(self) -> None:
+    def target_list(self) -> None:
         groupbox = QGroupBox("Target List", self)
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
         # Buttons
-        deleteTarget_button = QPushButton("Del", self)
-        clearTargets_button = QPushButton("Clear", self)
+        delete_target_button = QPushButton("Del", self)
+        clear_targets_button = QPushButton("Clear", self)
 
-        # Buttons Functions
-        deleteTarget_button.clicked.connect(self.deleteTarget)
-        clearTargets_button.clicked.connect(self.clearTargetsList)
+        # Button functions
+        delete_target_button.clicked.connect(self.delete_target)
+        clear_targets_button.clicked.connect(self.clear_targets_list)
 
-        # QHBox
+        # Layouts
         layout1 = QHBoxLayout(self)
 
         # Add Widgets
-        layout1.addWidget(deleteTarget_button)
-        layout1.addWidget(clearTargets_button)
+        layout1.addWidget(delete_target_button)
+        layout1.addWidget(clear_targets_button)
 
         # Add Layouts
         groupbox_layout.addWidget(self.targetList_listWidget)
         groupbox_layout.addLayout(layout1)
         self.layout.addWidget(groupbox, 0, 0, 2, 1)
 
-    def saveLoadTargetLoot(self) -> None:
-        groupbox = QGroupBox("Save&&Load", self)
+    def save_load_target_loot(self) -> None:
+        groupbox = QGroupBox("Save && Load", self)
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
         # Buttons
-        saveTargetLoot_button = QPushButton("Save", self)
-        loadTargetLoot_button = QPushButton("Load", self)
+        save_target_loot_button = QPushButton("Save", self)
+        load_target_loot_button = QPushButton("Load", self)
 
-        # Buttons Functions
-        saveTargetLoot_button.clicked.connect(self.saveTargetLoot)
-        loadTargetLoot_button.clicked.connect(self.loadTargetLoot)
+        # Button functions
+        save_target_loot_button.clicked.connect(self.save_target_loot)
+        load_target_loot_button.clicked.connect(self.load_target_loot)
 
-        # List Widgets
+        # Populate list widget
         for file in os.listdir("Targeting"):
             self.targetLootProfile_listWidget.addItem(f"{file.split('.')[0]}")
-        # QHBox
+
+        # Layouts for input fields and buttons
         layout1 = QHBoxLayout(self)
         layout2 = QHBoxLayout(self)
-
-        # Add Widgets
         layout1.addWidget(QLabel("Name:", self))
         layout1.addWidget(self.targetLootProfile_lineEdit)
-        layout2.addWidget(saveTargetLoot_button)
-        layout2.addWidget(loadTargetLoot_button)
+        layout2.addWidget(save_target_loot_button)
+        layout2.addWidget(load_target_loot_button)
 
-        # Add Layouts
+        # Add layouts to groupbox
         groupbox_layout.addWidget(self.targetLootProfile_listWidget)
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
         self.layout.addWidget(groupbox, 2, 0)
 
-    def setTarget(self) -> None:
+    def set_target(self) -> None:
         groupbox = QGroupBox("Define Target", self)
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
         # Buttons
-        addTarget_button = QPushButton("Add", self)
-        addTarget_button.setFixedWidth(50)
-
-        # Buttons Functions
-        addTarget_button.clicked.connect(self.addTarget)
+        add_target_button = QPushButton("Add", self)
+        add_target_button.setFixedWidth(50)
+        add_target_button.clicked.connect(self.add_target)
 
         # Combo Boxes
-        self.actionList_comboBox.addItem("NoRune")
-        self.actionList_comboBox.addItem("HMM")
-        self.actionList_comboBox.addItem("GFB")
-        self.actionList_comboBox.addItem("SD")
-        for i in range(1, 13):
-            self.actionList_comboBox.addItem(f"F{i}")
+        self.attackDist_comboBox.addItems(["All", "1", "2", "3", "4", "5"])
 
-        self.attackDist_comboBox.addItem("All")
-        self.attackDist_comboBox.addItem("1")
-        self.attackDist_comboBox.addItem("2")
-        self.attackDist_comboBox.addItem("3")
-        self.attackDist_comboBox.addItem("4")
-        self.attackDist_comboBox.addItem("5")
-
-        # Combo Boxes Functions
-        self.actionList_comboBox.currentIndexChanged.connect(self.runeListChange)
-
-        # Line Edit
-        self.hpFrom_lineEdit.setEnabled(False)
-        self.hpTo_lineEdit.setEnabled(False)
-
-        # QHBox
+        # Layouts for input fields
         layout1 = QHBoxLayout(self)
         layout2 = QHBoxLayout(self)
-        layout3 = QHBoxLayout(self)
-        layout4 = QHBoxLayout(self)
 
-        # Add Widgets
+        # Add widgets to layouts
         layout1.addWidget(self.targetName_lineEdit)
-        layout1.addWidget(addTarget_button)
+        layout1.addWidget(add_target_button)
         layout2.addWidget(QLabel("Attack Distance:", self))
         layout2.addWidget(self.attackDist_comboBox)
-        layout3.addWidget(QLabel("Action:", self))
-        layout3.addWidget(self.actionList_comboBox)
-        layout4.addWidget(QLabel("From:", self))
-        layout4.addWidget(self.hpFrom_lineEdit)
-        layout4.addWidget(QLabel("% To:", self))
-        layout4.addWidget(self.hpTo_lineEdit)
-        layout4.addWidget(QLabel("%", self))
 
-        # Add Layouts
+        # Add layouts to groupbox
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
-        groupbox_layout.addLayout(layout3)
-        groupbox_layout.addLayout(layout4)
         self.layout.addWidget(groupbox, 0, 1, 1, 1)
 
-    def targetLoot(self):
-        groupbox = QGroupBox("Start")
+    def target_loot(self) -> None:
+        groupbox = QGroupBox("Start", self)
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
-        # Check Boxes
-        self.startTarget_checkBox.stateChanged.connect(self.startTargetLoot)
+        # Connect checkbox state changes to function
+        self.startTarget_checkBox.stateChanged.connect(self.start_target_loot)
 
-        # QHBox
+        # Layouts
         layout1 = QHBoxLayout(self)
         layout2 = QHBoxLayout(self)
 
-        # Add Widgets
+        # Add widgets to layouts
         layout1.addWidget(self.startLoot_checkBox)
+        layout1.addWidget(self.chase_checkBox)
         layout2.addWidget(self.startTarget_checkBox)
 
-        # Add Layouts
+        # Add layouts to groupbox
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
         self.layout.addWidget(groupbox, 1, 1, 1, 1)
 
-    def lootList(self) -> None:
-        groupbox = QGroupBox("Loot List")
+    def loot_list(self) -> None:
+        groupbox = QGroupBox("Loot List", self)
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
         # Buttons
-        addItem_button = QPushButton("Add", self)
-        deleteItem_button = QPushButton("Del", self)
+        add_item_button = QPushButton("Add", self)
+        delete_item_button = QPushButton("Del", self)
+        add_item_button.setFixedWidth(40)
+        delete_item_button.setFixedWidth(40)
 
-        addItem_button.setFixedWidth(40)
-        deleteItem_button.setFixedWidth(40)
+        # Button functions
+        add_item_button.clicked.connect(self.add_item)
+        delete_item_button.clicked.connect(self.delete_item)
 
-        # Buttons Functions
-        addItem_button.clicked.connect(self.addItem)
-        deleteItem_button.clicked.connect(self.deleteItem)
-
-        # QHBox
+        # Layout for input fields
         layout1 = QHBoxLayout(self)
-
-        # Add Widgets
         layout1.addWidget(self.itemName_lineEdit)
         layout1.addWidget(self.lootOption_lineEdit)
-        layout1.addWidget(addItem_button)
-        layout1.addWidget(deleteItem_button)
+        layout1.addWidget(add_item_button)
+        layout1.addWidget(delete_item_button)
 
-        # Add Layouts
+        # Add to groupbox
         groupbox_layout.addWidget(self.lootList_listWidget)
         groupbox_layout.addLayout(layout1)
         self.layout.addWidget(groupbox, 2, 1)
 
-    def runeListChange(self, index):
-        if index != 0:
-            self.hpTo_lineEdit.setEnabled(True)
-            self.hpFrom_lineEdit.setEnabled(True)
-        else:
-            self.hpFrom_lineEdit.setEnabled(False)
-            self.hpTo_lineEdit.setEnabled(False)
-
-    def addItem(self) -> None:
-        itemName = self.itemName_lineEdit.text()
-        lootContainer = self.lootOption_lineEdit.text()
-        if itemName and lootContainer:
+    def add_item(self) -> None:
+        item_name = self.itemName_lineEdit.text()
+        loot_container = self.lootOption_lineEdit.text()
+        if item_name and loot_container:
             for index in range(self.lootList_listWidget.count()):
-                if itemName.upper() == self.lootList_listWidget.item(index).text().upper():
+                if item_name.upper() == self.lootList_listWidget.item(index).text().upper():
                     return
-            itemData = {"Loot": int(lootContainer)}
-            item = QListWidgetItem(itemName)
-            item.setData(Qt.UserRole, itemData)
+            item_data = {"Loot": int(loot_container)}
+            item = QListWidgetItem(item_name)
+            item.setData(Qt.UserRole, item_data)
             self.itemName_lineEdit.clear()
             self.lootOption_lineEdit.clear()
             self.lootList_listWidget.addItem(item)
 
-    def deleteItem(self) -> None:
+    def delete_item(self) -> None:
         selected_item = self.lootList_listWidget.currentItem()
         if selected_item:
             self.lootList_listWidget.takeItem(self.lootList_listWidget.row(selected_item))
 
-    def addTarget(self) -> None:
-        monsterName = self.targetName_lineEdit.text()
+    def add_target(self) -> None:
+        monster_name = self.targetName_lineEdit.text()
         for index in range(self.targetList_listWidget.count()):
-            if monsterName.upper() == self.targetList_listWidget.item(index).text().split(' | ')[0].upper():
+            if monster_name.upper() == self.targetList_listWidget.item(index).text().split(' | ')[0].upper():
                 return
-        monsterData = {"Distance": self.attackDist_comboBox.currentText(),
-                       "Rune": self.actionList_comboBox.currentText(),
-                       "HpFrom": self.hpFrom_lineEdit.text(), "HpTo": self.hpTo_lineEdit.text()}
-        monster = QListWidgetItem(monsterName)
-        if monsterData['Distance'] == 'All':
-            monsterData['Distance'] = 0
-        if monsterData['HpFrom'] == '':
-            monsterData['HpFrom'] = 0
-        if monsterData['HpTo'] == '':
-            monsterData['HpTo'] = 0
-        if monsterData['Rune'] == 'HMM':
-            monsterData['Rune'] = 6
-        if monsterData['Rune'] == 'SD':
-            monsterData['Rune'] = 7
-        if monsterData['Rune'] == 'GFB':
-            monsterData['Rune'] = 8
-        if monsterData['Rune'] == 'NoRune':
-            monsterData['Rune'] = 0
-        monster.setData(Qt.UserRole, monsterData)
-        self.actionList_comboBox.setCurrentIndex(0)
+        monster_data = {
+            "Distance": self.attackDist_comboBox.currentText(),
+        }
+        monster = QListWidgetItem(monster_name)
+        if monster_data['Distance'] == 'All':
+            monster_data['Distance'] = 0
+        monster.setData(Qt.UserRole, monster_data)
         self.attackDist_comboBox.setCurrentIndex(0)
         self.targetName_lineEdit.clear()
-        self.hpFrom_lineEdit.clear()
-        self.hpTo_lineEdit.clear()
         self.targetList_listWidget.addItem(monster)
 
-    def deleteTarget(self) -> None:
+    def delete_target(self) -> None:
         selected_monster = self.targetList_listWidget.currentItem()
         if selected_monster:
             self.targetList_listWidget.takeItem(self.targetList_listWidget.row(selected_monster))
 
-    def clearTargetsList(self) -> None:
+    def clear_targets_list(self) -> None:
         self.targetList_listWidget.clear()
 
-    def saveTargetLoot(self) -> None:
-        targetLootName = self.targetLootProfile_lineEdit.text()
+    def save_target_loot(self) -> None:
+        target_loot_name = self.targetLootProfile_lineEdit.text()
         for index in range(self.targetLootProfile_listWidget.count()):
-            if targetLootName.upper() == self.targetLootProfile_listWidget.item(index).text().upper():
+            if target_loot_name.upper() == self.targetLootProfile_listWidget.item(index).text().upper():
                 return
-        if targetLootName:
-            targetList = []
-            for i in range(self.targetList_listWidget.count()):
-                item = self.targetList_listWidget.item(i)
-                targetName = item.text()
-                targetData = item.data(Qt.UserRole)
-                targetList.append({"name": targetName, "data": targetData})
-            with open(f"Targeting/{targetLootName}.json", "w") as f:
-                json.dump(targetList, f, indent=4)
-            lootingList = []
-            for i in range(self.lootList_listWidget.count()):
-                item = self.lootList_listWidget.item(i)
-                itemName = item.text()
-                itemData = item.data(Qt.UserRole)
-                lootingList.append({"name": itemName, "data": itemData})
-            with open(f"Looting/{targetLootName}.json", "w") as f:
-                json.dump(lootingList, f, indent=4)
-            self.targetLootProfile_listWidget.addItem(targetLootName)
+        if target_loot_name and self.targetList_listWidget.count():
+            target_list = [
+                {"name": self.targetList_listWidget.item(i).text(),
+                 "data": self.targetList_listWidget.item(i).data(Qt.UserRole)}
+                for i in range(self.targetList_listWidget.count())
+            ]
+            with open(f"Targeting/{target_loot_name}.json", "w") as f:
+                json.dump(target_list, f, indent=4)
+
+            looting_list = [
+                {"name": self.lootList_listWidget.item(i).text(),
+                 "data": self.lootList_listWidget.item(i).data(Qt.UserRole)}
+                for i in range(self.lootList_listWidget.count())
+            ]
+            with open(f"Looting/{target_loot_name}.json", "w") as f:
+                json.dump(looting_list, f, indent=4)
+            self.targetLootProfile_listWidget.addItem(target_loot_name)
             self.targetLootProfile_lineEdit.clear()
 
-    def loadTargetLoot(self) -> None:
-        targetLootName = self.targetLootProfile_listWidget.currentItem().text()
-        if targetLootName:
-            with open(f"Targeting/{targetLootName}.json", "r") as f:
-                targetList = json.load(f)
+    def load_target_loot(self) -> None:
+        target_loot_name = self.targetLootProfile_listWidget.currentItem().text()
+        if target_loot_name:
+            with open(f"Targeting/{target_loot_name}.json", "r") as f:
+                target_list = json.load(f)
                 self.targetList_listWidget.clear()
-                for entry in targetList:
-                    targetName = entry["name"]
-                    targetData = entry["data"]
-                    target = QListWidgetItem(targetName)
-                    target.setData(Qt.UserRole, targetData)
+                for entry in target_list:
+                    target = QListWidgetItem(entry["name"])
+                    target.setData(Qt.UserRole, entry["data"])
                     self.targetList_listWidget.addItem(target)
-            with open(f"Looting/{targetLootName}.json", "r") as f:
-                lootList = json.load(f)
-                self.lootList_listWidget.clear()
-                for entry in lootList:
-                    itemName = entry["name"]
-                    itemData = entry["data"]
-                    item = QListWidgetItem(itemName)
-                    item.setData(Qt.UserRole, itemData)
-                    self.lootList_listWidget.addItem(item)
-            self.targetLootProfile_lineEdit.setText(targetLootName)
 
-    def startTargetLoot(self) -> None:
-        thread = Thread(target=self.startTargetLoot_Thread)
+            with open(f"Looting/{target_loot_name}.json", "r") as f:
+                loot_list = json.load(f)
+                self.lootList_listWidget.clear()
+                for entry in loot_list:
+                    item = QListWidgetItem(entry["name"])
+                    item.setData(Qt.UserRole, entry["data"])
+                    self.lootList_listWidget.addItem(item)
+
+    def start_target_loot(self) -> None:
+        thread = Thread(target=self.start_target_loot_thread)
         thread.daemon = True
         if self.startTarget_checkBox.checkState() == 2:
             thread.start()
 
     # Target monsters
-    def startTargetLoot_Thread(self) -> None:
-        while self.startTarget_checkBox.checkState():
-            targetCount = c.c_int.from_buffer(readPointer(monstersOnScreenPtr, monstersOnScreenOffset)).value / 25 - 1
-            for _ in range(int(targetCount)):
-                timer = 0.0
-                win32gui.PostMessage(game, win32con.WM_KEYDOWN, 0XC0, 0x290001)
-                win32gui.PostMessage(game, win32con.WM_KEYUP, 0XC0, 0xC0290001)
+    def start_target_loot_thread(self) -> None:
+        """
+        Thread method to automate targeting monsters and looting based on specific criteria.
+
+        Returns:
+            None
+        """
+        while self.startTarget_checkBox.checkState() == 2:
+            open_corpse = False
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
+            time.sleep(0.1)
+            target_id = read_memory_address(Addresses.attack_address, 0, 2)
+            timer = 0
+            if target_id != 0:
+                target_x, target_y, target_name, target_hp = read_target_info()
                 time.sleep(0.1)
-                targetID = c.c_ulonglong.from_buffer(readMemory(attack, 0)).value
-                targetName = readMemory(targetID - baseAddress, 0xA8)
-                targetName = b''.join(targetName).split(b'\x00', 1)[0].decode('utf-8')
-                targetHP = c.c_int.from_buffer(readMemory(targetID - baseAddress, 0xE8)).value
-                targetY = c.c_int.from_buffer(readMemory(c.c_ulonglong.from_buffer(readMemory(attack, 0)).value - baseAddress, 0x3C)).value
-                targetX = c.c_int.from_buffer(readMemory(c.c_ulonglong.from_buffer(readMemory(attack, 0)).value - baseAddress, 0x38)).value
-                if self.targetList_listWidget.findItems(targetName, Qt.MatchFixedString):
-                    targetIndex = self.targetList_listWidget.findItems(targetName, Qt.MatchFixedString)
-                    targetIndex = targetIndex[0]
-                    targetData = targetIndex.data(Qt.UserRole)
-                    targetDist = int(targetData['Distance'])
-                    targetRune = int(targetData['Rune'])
-                    targetHpFrom = int(targetData['HpFrom'])
-                    targetHpTo = int(targetData['HpTo'])
-                    myX = abs(targetX - c.c_int.from_buffer(readMemory(myXAddress, 0)).value)
-                    myY = abs(targetY - c.c_int.from_buffer(readMemory(myYAddress, 0)).value)
-                    openCorpse = False
-                    if (targetDist > 0 and myX <= targetDist and myY <= targetDist) or targetDist == 0:
-                        while c.c_ulonglong.from_buffer(readMemory(attack, 0)).value != 0:
-                            openCorpse = True
-                            if (timer >= 7 and targetHP == c.c_int.from_buffer(readMemory(targetID - baseAddress, 0xE8)).value) or timer >= 30:
-                                openCorpse = False
-                                break
-                            if not lock.locked():
-                                lock.acquire()
-                            targetY = c.c_int.from_buffer(readMemory(c.c_ulonglong.from_buffer(readMemory(attack, 0)).value - baseAddress,0x3C)).value
-                            targetX = c.c_int.from_buffer(readMemory(c.c_ulonglong.from_buffer(readMemory(attack, 0)).value - baseAddress,0x38)).value
-                            if targetRune != 0 and targetHpFrom == 0:
-                                time.sleep(0.3)
-                                rightClick(coordinatesX[targetRune], coordinatesY[targetRune])
-                                x = targetX - c.c_int.from_buffer(readMemory(myXAddress, 0)).value
-                                y = targetY - c.c_int.from_buffer(readMemory(myYAddress, 0)).value
-                                x = coordinatesX[0] + x * 75
-                                y = coordinatesY[0] + y * 75
-                                leftClick(x, y)
-                                timer += 0.3
-                            elif targetRune != 0 and targetHpFrom >= c.c_int.from_buffer(readMemory(targetID - baseAddress, 0xE8)).value > targetHpTo:
-                                time.sleep(0.3)
-                                rightClick(coordinatesX[targetRune], coordinatesY[targetRune])
-                                x = targetX - c.c_int.from_buffer(readMemory(myXAddress, 0)).value
-                                y = targetY - c.c_int.from_buffer(readMemory(myYAddress, 0)).value
-                                x = coordinatesX[0] + x * 75
-                                y = coordinatesY[0] + y * 75
-                                leftClick(x, y)
-                                timer += 0.3
-                            time.sleep(0.05)
-                            timer += 0.05
-                        if openCorpse and self.startLoot_checkBox.checkState() == 2:
-                            x = targetX - c.c_int.from_buffer(readMemory(myXAddress, 0)).value
-                            y = targetY - c.c_int.from_buffer(readMemory(myYAddress, 0)).value
-                            x = coordinatesX[0] + x * 75
-                            y = coordinatesY[0] + y * 75
-                            rightClick(x, y)
-                            time.sleep(0.2)
-                            for _ in range(2):
-                                for itemIndex in range(self.lootList_listWidget.count()):
-                                    itemName = self.lootList_listWidget.item(itemIndex).text()
-                                    itemData = self.lootList_listWidget.item(itemIndex).data(Qt.UserRole)
-                                    lootContainer = itemData['Loot']
-                                    file_name = [x for x in os.listdir('ItemImages/') if x.split('.')[0] == itemName]
-                                    if file_name:
-                                        captureScreen = WindowCapture("Medivia - " + nickname, screenWidth[0] - screenX[0],
-                                                                      screenHeight[0] - screenY[0], screenX[0],
-                                                                      screenY[0])
-                                        if '.png' in file_name[0]:
-                                            loadedImage = cv.imread('ItemImages/'f'{itemName}' + '.png')
-                                            screenshot = captureScreen.get_screenshot()
-                                            result = cv.matchTemplate(screenshot, loadedImage, cv.TM_CCOEFF_NORMED)
-                                            locations = list(zip(*(np.where(result >= 0.85))[::-1]))
-                                            locations = mergeClosePoints(locations, 15)
-                                            locations = sorted(locations, key=lambda point: (point[1], point[0]), reverse=True)
+                if self.targetList_listWidget.findItems("*", Qt.MatchFixedString):
+                    target_name = "*"
+                if self.targetList_listWidget.findItems(target_name, Qt.MatchFixedString):
+                    target_index = self.targetList_listWidget.findItems(target_name, Qt.MatchFixedString)[0]
+                    target_data = target_index.data(Qt.UserRole)
+                    while read_memory_address(Addresses.attack_address, 0, 2) != 0:
+                        if timer > 15:
+                            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
+                            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
+                            timer = 0
+                            time.sleep(0.1)
+                        open_corpse = True
+                        target_x, target_y, target_name, target_hp = read_target_info()
+                        x, y, z = read_my_wpt()
+                        if self.chase_checkBox.checkState() == 2:
+                            walk(0, x, y, 0, target_x, target_y, 0)
+                            time.sleep(0.1)
+                        if not lock.locked():
+                            lock.acquire()
+                        if (int(target_data['Distance']) < abs(x - target_x) or int(target_data['Distance']) < abs(y - target_y)) and lock.locked() and int(target_data['Distance']) != 0:
+                            lock.release()
+                            break
+                        timer += 0.1
+                        time.sleep(0.1)
+                    if open_corpse and self.startLoot_checkBox.checkState() == 2:
+                        x, y, z = read_my_wpt()
+                        x = target_x - x
+                        y = target_y - y
+                        right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
+                        time.sleep(0.2)
+                        for _ in range(2):
+                            for item_index in range(self.lootList_listWidget.count()):
+                                item_name = self.lootList_listWidget.item(item_index).text()
+                                item_data = self.lootList_listWidget.item(item_index).data(Qt.UserRole)
+                                loot_container = item_data['Loot']
+                                file_name = [
+                                    x for x in os.listdir('ItemImages/') if x.split('.')[0] == item_name
+                                ]
+                                if file_name:
+                                    capture_screen = WindowCapture(
+                                        screen_width[0] - screen_x[0],
+                                        screen_height[0] - screen_y[0], screen_x[0], screen_y[0]
+                                    )
+
+                                    if '.png' in file_name[0]:
+                                        loaded_image = cv.imread(f'ItemImages/{item_name}.png')
+                                        screenshot = capture_screen.get_screenshot()
+                                        result = cv.matchTemplate(screenshot, loaded_image, cv.TM_CCOEFF_NORMED)
+                                        locations = list(zip(*(np.where(result >= 0.85))[::-1]))
+                                        locations = merge_close_points(locations, 15)
+                                        locations = sorted(locations, key=lambda point: (point[1], point[0]),
+                                                           reverse=True)
+                                        locations = [[int(x), int(y)] for x, y in locations]
+
+                                        for x, y in locations:
+                                            if loot_container > 0:
+                                                collect_item(
+                                                    x + screen_x[0], y + screen_y[0], coordinates_x[loot_container],
+                                                    coordinates_y[loot_container]
+                                                )
+                                            elif loot_container == 0:
+                                                drag_drop(
+                                                    x + screen_x[0], y + screen_y[0]
+                                                )
+                                            elif loot_container == -1:
+                                                right_click(x + screen_x[0], y + screen_y[0])
+                                            elif loot_container == -2:
+                                                left_click(x + screen_x[0], y + screen_y[0])
+                                                left_click(x + screen_x[0], y + screen_y[0])
+                                            time.sleep(0.1)
+
+                                    else:
+                                        for item_name in os.listdir(f'ItemImages/{file_name[0]}'):
+                                            loaded_image = cv.imread(f'ItemImages/{file_name[0]}/{item_name}')
+                                            screenshot = capture_screen.get_screenshot()
+                                            result = cv.matchTemplate(screenshot, loaded_image, cv.TM_CCOEFF_NORMED)
+                                            locations = list(zip(*(np.where(result >= 0.75))[::-1]))
+                                            locations = merge_close_points(locations, 15)
+                                            locations = sorted(locations, key=lambda point: (point[1], point[0]),
+                                                               reverse=True)
                                             locations = [[int(x), int(y)] for x, y in locations]
+
                                             for x, y in locations:
-                                                if lootContainer > 0:
-                                                    collectItem(x + screenX[0], y + screenY[0],
-                                                                coordinatesX[lootContainer],
-                                                                coordinatesY[lootContainer])
-                                                elif lootContainer == 0:
-                                                    dragDrop(x + screenX[0], y + screenY[0],
-                                                             coordinatesX[lootContainer], coordinatesY[lootContainer])
-                                                elif lootContainer == -1:
-                                                    rightClick(x + screenX[0], y + screenY[0])
+                                                if loot_container > 0:
+                                                    collect_item(
+                                                        x + screen_x[0], y + screen_y[0], coordinates_x[loot_container],
+                                                        coordinates_y[loot_container]
+                                                    )
+                                                elif loot_container == 0:
+                                                    drag_drop(
+                                                        x + screen_x[0], y + screen_y[0]
+                                                    )
+
+                                                elif loot_container == -1:
+                                                    right_click(x + screen_x[0], y + screen_y[0])
+                                                elif loot_container == -2:
+                                                    left_click(x + screen_x[0], y + screen_y[0])
+                                                    left_click(x + screen_x[0], y + screen_y[0])
                                                 time.sleep(0.1)
-                                        else:
-                                            for itemName in os.listdir('ItemImages/' + file_name[0]):
-                                                loadedImage = cv.imread('ItemImages/'f'{file_name[0]}''/' + itemName)
-                                                screenshot = captureScreen.get_screenshot()
-                                                result = cv.matchTemplate(screenshot, loadedImage, cv.TM_CCOEFF_NORMED)
-                                                locations = list(zip(*(np.where(result >= 0.70))[::-1]))
-                                                locations = mergeClosePoints(locations, 15)
-                                                locations = sorted(locations, key=lambda point: (point[1], point[0]), reverse=True)
-                                                locations = [[int(x), int(y)] for x, y in locations]
-                                                for x, y in locations:
-                                                    if lootContainer > 0:
-                                                        collectItem(x + screenX[0], y + screenY[0], coordinatesX[lootContainer] ,coordinatesY[lootContainer])
-                                                    elif lootContainer == 0:
-                                                        dragDrop(x + screenX[0], y + screenY[0], coordinatesX[lootContainer], coordinatesY[lootContainer])
-                                                    elif lootContainer == -1:
-                                                        rightClick(x + screenX[0], y + screenY[0])
-                                                    time.sleep(0.1)
+                else:
+                    win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
+                    win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
+                    time.sleep(0.1)
             if lock.locked():
                 lock.release()
-            time.sleep(0.5)

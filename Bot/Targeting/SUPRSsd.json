@@ -1,0 +1,29 @@
+[
+    {
+        "name": "Warlock",
+        "data": {
+            "Distance": 0,
+            "HpFrom": "100",
+            "HpTo": "0",
+            "Rune": 12
+        }
+    },
+    {
+        "name": "Demonic Warlock",
+        "data": {
+            "Distance": 0,
+            "HpFrom": 0,
+            "HpTo": 0,
+            "Rune": 5
+        }
+    },
+    {
+        "name": "Supreme Warlock",
+        "data": {
+            "Distance": 0,
+            "HpFrom": "100",
+            "HpTo": "0",
+            "Rune": 12
+        }
+    }
+]

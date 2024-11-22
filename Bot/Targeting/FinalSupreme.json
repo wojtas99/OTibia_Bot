@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Supreme Warlock",
+        "data": {
+            "Distance": "5",
+            "HpFrom": "100",
+            "HpTo": "0",
+            "Rune": 12
+        }
+    },
+    {
+        "name": "Warlock",
+        "data": {
+            "Distance": "5",
+            "HpFrom": "100",
+            "HpTo": "0",
+            "Rune": 12
+        }
+    }
+]

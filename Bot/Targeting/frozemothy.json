@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Frozemoth",
+        "data": {
+            "Distance": 0,
+            "HpFrom": "100",
+            "HpTo": "0",
+            "Rune": 13
+        }
+    },
+    {
+        "name": "Demonic Frozemoth",
+        "data": {
+            "Distance": 0,
+            "HpFrom": "100",
+            "HpTo": "0",
+            "Rune": 13
+        }
+    }
+]

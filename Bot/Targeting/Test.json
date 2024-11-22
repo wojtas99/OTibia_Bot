@@ -1,0 +1,11 @@
+[
+    {
+        "name": "Minotaur",
+        "data": {
+            "Distance": 0,
+            "HpFrom": "100",
+            "HpTo": "0",
+            "Rune": 11
+        }
+    }
+]

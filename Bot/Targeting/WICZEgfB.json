@@ -1,0 +1,11 @@
+[
+    {
+        "name": "Witch Agatha",
+        "data": {
+            "Distance": "3",
+            "HpFrom": "100",
+            "HpTo": "0",
+            "Rune": 13
+        }
+    }
+]

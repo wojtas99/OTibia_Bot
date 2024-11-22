@@ -1,0 +1,29 @@
+[
+    {
+        "name": "Warlock",
+        "data": {
+            "Distance": "5",
+            "HpFrom": "100",
+            "HpTo": "0",
+            "Rune": 12
+        }
+    },
+    {
+        "name": "Demonic Warlock",
+        "data": {
+            "Distance": "5",
+            "HpFrom": "100",
+            "HpTo": "0",
+            "Rune": 12
+        }
+    },
+    {
+        "name": "Elf Arcanist",
+        "data": {
+            "Distance": 0,
+            "HpFrom": "100",
+            "HpTo": "0",
+            "Rune": 14
+        }
+    }
+]
