@@ -1,0 +1,1662 @@
+[
+    {
+        "name": "Stand: 1657 1784 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1657,
+            "Y": 1784,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1656 1784 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1656,
+            "Y": 1784,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1655 1784 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1655,
+            "Y": 1784,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1655 1785 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1655,
+            "Y": 1785,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1654 1785 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1654,
+            "Y": 1785,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1654 1786 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1654,
+            "Y": 1786,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1654 1787 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1654,
+            "Y": 1787,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1655 1787 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1655,
+            "Y": 1787,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1656 1787 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1656,
+            "Y": 1787,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1656 1788 6",
+        "data": {
+            "Action": 0,
+            "Direction": 2,
+            "X": 1656,
+            "Y": 1788,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1656 1788 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1656,
+            "Y": 1788,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1655 1788 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1655,
+            "Y": 1788,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1655 1787 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1655,
+            "Y": 1787,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1654 1787 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1654,
+            "Y": 1787,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1653 1787 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1653,
+            "Y": 1787,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1652 1787 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1652,
+            "Y": 1787,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1652 1786 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1652,
+            "Y": 1786,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1652 1785 7",
+        "data": {
+            "Action": 0,
+            "Direction": 1,
+            "X": 1652,
+            "Y": 1785,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1652 1785 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1652,
+            "Y": 1785,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1653 1785 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1653,
+            "Y": 1785,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1653 1786 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1653,
+            "Y": 1786,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1654 1786 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1654,
+            "Y": 1786,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1655 1786 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1655,
+            "Y": 1786,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1656 1786 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1656,
+            "Y": 1786,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1656 1787 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1656,
+            "Y": 1787,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1657 1787 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1657,
+            "Y": 1787,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1658 1787 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1658,
+            "Y": 1787,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1659 1787 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1659,
+            "Y": 1787,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1660 1787 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1660,
+            "Y": 1787,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1660 1788 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1660,
+            "Y": 1788,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1660 1789 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1660,
+            "Y": 1789,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1660 1790 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1660,
+            "Y": 1790,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1660 1791 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1660,
+            "Y": 1791,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1661 1791 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1661,
+            "Y": 1791,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1662 1792 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1662,
+            "Y": 1792,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1663 1792 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1663,
+            "Y": 1792,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1663 1793 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1663,
+            "Y": 1793,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1664 1793 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1664,
+            "Y": 1793,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1665 1793 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1665,
+            "Y": 1793,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1666 1793 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1666,
+            "Y": 1793,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1666 1792 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1666,
+            "Y": 1792,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1666 1791 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1666,
+            "Y": 1791,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1666 1790 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1666,
+            "Y": 1790,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1667 1790 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1667,
+            "Y": 1790,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1668 1790 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1668,
+            "Y": 1790,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1669 1790 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1669,
+            "Y": 1790,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1669 1789 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1669,
+            "Y": 1789,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1670 1789 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1670,
+            "Y": 1789,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1670 1788 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1670,
+            "Y": 1788,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1670 1787 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1670,
+            "Y": 1787,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1670 1786 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1670,
+            "Y": 1786,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1671 1786 7",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1671,
+            "Y": 1786,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Ladder: 1671 1786 7",
+        "data": {
+            "Action": 3,
+            "Direction": 1,
+            "X": 1671,
+            "Y": 1786,
+            "Z": 7
+        }
+    },
+    {
+        "name": "Stand: 1671 1787 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1671,
+            "Y": 1787,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1672 1787 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1672,
+            "Y": 1787,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1673 1787 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1673,
+            "Y": 1787,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1673 1786 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1673,
+            "Y": 1786,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1673 1785 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1673,
+            "Y": 1785,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1673 1784 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1673,
+            "Y": 1784,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1673 1783 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1673,
+            "Y": 1783,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1673 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1673,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1674 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1674,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1674 1781 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1674,
+            "Y": 1781,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1675 1781 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1675,
+            "Y": 1781,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1676 1781 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1676,
+            "Y": 1781,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1676 1780 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1676,
+            "Y": 1780,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1676 1779 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1676,
+            "Y": 1779,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1675 1779 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1675,
+            "Y": 1779,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1674 1779 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1674,
+            "Y": 1779,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1673 1779 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1673,
+            "Y": 1779,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1672 1779 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1672,
+            "Y": 1779,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1671 1779 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1671,
+            "Y": 1779,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1671 1778 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1671,
+            "Y": 1778,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Ladder: 1671 1778 6",
+        "data": {
+            "Action": 3,
+            "Direction": 1,
+            "X": 1671,
+            "Y": 1778,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1671 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1671,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1672 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1672,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1673 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1673,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1674 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1674,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1675 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1675,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1676 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1676,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1677 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1677,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1677 1778 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1677,
+            "Y": 1778,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Ladder: 1677 1778 5",
+        "data": {
+            "Action": 3,
+            "Direction": 1,
+            "X": 1677,
+            "Y": 1778,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1677 1779 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1677,
+            "Y": 1779,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1677 1780 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1677,
+            "Y": 1780,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1677 1779 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1677,
+            "Y": 1779,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1677 1778 5",
+        "data": {
+            "Action": 0,
+            "Direction": 1,
+            "X": 1677,
+            "Y": 1778,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1677 1778 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1677,
+            "Y": 1778,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1677 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1677,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1676 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1676,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1675 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1675,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1674 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1674,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1673 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1673,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1672 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1672,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1671 1779 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1671,
+            "Y": 1779,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1671 1778 6",
+        "data": {
+            "Action": 0,
+            "Direction": 1,
+            "X": 1671,
+            "Y": 1778,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1671 1778 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1671,
+            "Y": 1778,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1672 1778 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1672,
+            "Y": 1778,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1673 1778 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1673,
+            "Y": 1778,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1673 1779 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1673,
+            "Y": 1779,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1674 1779 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1674,
+            "Y": 1779,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1675 1779 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1675,
+            "Y": 1779,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1676 1779 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1676,
+            "Y": 1779,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1676 1780 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1676,
+            "Y": 1780,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1676 1781 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1676,
+            "Y": 1781,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1676 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1676,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1675 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1675,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1674 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1674,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1673 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1673,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1672 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1672,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1671 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1671,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1671 1783 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1671,
+            "Y": 1783,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1670 1783 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1670,
+            "Y": 1783,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1669 1783 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1669,
+            "Y": 1783,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1668 1783 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1668,
+            "Y": 1783,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1667 1783 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1667,
+            "Y": 1783,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1666 1783 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1666,
+            "Y": 1783,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1665 1783 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1665,
+            "Y": 1783,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1664 1783 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1664,
+            "Y": 1783,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1663 1783 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1663,
+            "Y": 1783,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1662 1783 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1662,
+            "Y": 1783,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1662 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1662,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1661 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1661,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1660 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1660,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1659 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1659,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1658 1782 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1658,
+            "Y": 1782,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1658 1781 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1658,
+            "Y": 1781,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1658 1780 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1658,
+            "Y": 1780,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1658 1779 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1658,
+            "Y": 1779,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1658 1778 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1658,
+            "Y": 1778,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1658 1777 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1658,
+            "Y": 1777,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1657 1777 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1657,
+            "Y": 1777,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1656 1777 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1656,
+            "Y": 1777,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1655 1777 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1655,
+            "Y": 1777,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1655 1776 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1655,
+            "Y": 1776,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1655 1775 6",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1655,
+            "Y": 1775,
+            "Z": 6
+        }
+    },
+    {
+        "name": "Stand: 1655 1773 5",
+        "data": {
+            "Action": 0,
+            "Direction": 1,
+            "X": 1655,
+            "Y": 1773,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1655 1773 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1655,
+            "Y": 1773,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1655 1773 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1655,
+            "Y": 1773,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1654 1773 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1654,
+            "Y": 1773,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1654 1774 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1654,
+            "Y": 1774,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1654 1775 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1654,
+            "Y": 1775,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1654 1776 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1654,
+            "Y": 1776,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1653 1776 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1653,
+            "Y": 1776,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1653 1777 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1653,
+            "Y": 1777,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1653 1778 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1653,
+            "Y": 1778,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Ladder: 1653 1778 5",
+        "data": {
+            "Action": 3,
+            "Direction": 1,
+            "X": 1653,
+            "Y": 1778,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1653 1779 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1653,
+            "Y": 1779,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1654 1779 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1654,
+            "Y": 1779,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1654 1780 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1654,
+            "Y": 1780,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1655 1780 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1655,
+            "Y": 1780,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1656 1780 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1656,
+            "Y": 1780,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1657 1780 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1657,
+            "Y": 1780,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1657 1781 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1657,
+            "Y": 1781,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1657 1782 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1657,
+            "Y": 1782,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1658 1782 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1658,
+            "Y": 1782,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1658 1783 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1658,
+            "Y": 1783,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1659 1783 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1659,
+            "Y": 1783,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1660 1783 4",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1660,
+            "Y": 1783,
+            "Z": 4
+        }
+    },
+    {
+        "name": "Stand: 1660 1782 5",
+        "data": {
+            "Action": 0,
+            "Direction": 1,
+            "X": 1660,
+            "Y": 1782,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1660 1782 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1660,
+            "Y": 1782,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1659 1782 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1659,
+            "Y": 1782,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1658 1782 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1658,
+            "Y": 1782,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1657 1782 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1657,
+            "Y": 1782,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1657 1783 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1657,
+            "Y": 1783,
+            "Z": 5
+        }
+    },
+    {
+        "name": "Stand: 1657 1784 5",
+        "data": {
+            "Action": 0,
+            "Direction": 0,
+            "X": 1657,
+            "Y": 1784,
+            "Z": 5
+        }
+    }
+]
