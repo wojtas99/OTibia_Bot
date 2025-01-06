@@ -39,6 +39,8 @@ def right_click(x, y) -> None:
     Returns:
         None
     """
+    x = int(x)
+    y = int(y)
     win32gui.PostMessage(Addresses.game, win32con.WM_MOUSEMOVE, 0, win32api.MAKELONG(x, y))
     win32gui.PostMessage(Addresses.game, win32con.WM_RBUTTONDOWN, 2, win32api.MAKELONG(x, y))
     win32gui.PostMessage(Addresses.game, win32con.WM_RBUTTONUP, 0, win32api.MAKELONG(x, y))

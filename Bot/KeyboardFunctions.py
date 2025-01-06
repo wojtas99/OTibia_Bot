@@ -6,21 +6,6 @@ import win32con
 
 
 def walk(wpt_direction, my_x, my_y, my_z, map_x, map_y, map_z) -> None:
-    """
-    Controls character movement based on direction and current map coordinates.
-
-    Args:
-        wpt_direction (int): Direction to move (0 for no movement, 1 for North, 2 for South, 3 for East, 4 for West).
-        my_x (int): Current x-coordinate of the character.
-        my_y (int): Current y-coordinate of the character.
-        my_z (int): Current z-coordinate of the character.
-        map_x (int): Target x-coordinate on the map.
-        map_y (int): Target y-coordinate on the map.
-        map_z (int): Target z-coordinate on the map.
-
-    Returns:
-        None
-    """
     x = map_x - my_x
     y = map_y - my_y
     z = map_z - my_z
@@ -81,15 +66,6 @@ def walk(wpt_direction, my_x, my_y, my_z, map_x, map_y, map_z) -> None:
 
 
 def press_hotkey(hotkey) -> None:
-    """
-    Simulates pressing a hotkey.
-
-    Args:
-        hotkey (int): The hotkey to be pressed.
-
-    Returns:
-        None
-    """
     hotkey_index = (((0x003A0001 >> 16) + hotkey) << 16) + 1
     win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0x6F + hotkey, hotkey_index)
     win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0x6F + hotkey, hotkey_index)

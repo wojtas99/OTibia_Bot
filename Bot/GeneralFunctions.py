@@ -1,31 +1,17 @@
+import requests
+from PyQt5.QtCore import Qt
 import Addresses
 import base64
 import io
 import math
-import os
-import urllib
-from urllib import request
 import numpy as np
 import win32con
 import win32ui
 from PIL import Image, ImageDraw, ImageFont, ImageSequence
 import win32gui
+import cv2 as cv
 
-
-def sort_monsters_by_dist(point, character_x, character_y):
-    """
-    Calculate the distance between a given point and a character's position.
-
-    Args:
-        point (tuple): A tuple representing the coordinates of the point (x, y).
-        character_x (int): X coordinate of the character.
-        character_y (int): Y coordinate of the character.
-
-    Returns:
-        int: The distance between the point and the character.
-    """
-    calculated_distance = math.sqrt((point[0] - character_x) ** 2 + (point[1] - character_y) ** 2)
-    return calculated_distance
+from MouseFunctions import collect_item, drag_drop, right_click, left_click
 
 
 def merge_close_points(points, distance_threshold):
@@ -68,7 +54,6 @@ class WindowCapture:
         Initializes the WindowCapture object to capture a screenshot of a specified window.
 
         Args:
-            window_name (str): The name of the window to capture.
             w (int): Width of the capture area.
             h (int): Height of the capture area.
             x (int): X-coordinate of the capture starting point.
@@ -77,7 +62,7 @@ class WindowCapture:
         Raises:
             Exception: If the specified window cannot be found.
         """
-        window_name = Addresses.game_name + " - " + Addresses.nickname
+        window_name = Addresses.game_name + " - " + Addresses.numberEasyBot
         self.hwnd = win32gui.FindWindow(None, window_name)
         if not self.hwnd:
             raise Exception('Window not found: {}'.format(window_name))
@@ -120,97 +105,16 @@ class WindowCapture:
         return img
 
 
-def replace_polish_characters(text):
-    translation_table = str.maketrans({
-        'ó': 'o',
-        'ą': 'a',
-        'ę': 'e',
-        'ł': 'l',
-        'ś': 's',
-        'ć': 'c',
-        'ż': 'z',
-        'ź': 'z',
-        'ń': 'n',
-        'Ą': 'A',
-        'Ę': 'E',
-        'Ó': 'O',
-        'Ł': 'L',
-        'Ś': 'S',
-        'Ć': 'C',
-        'Ż': 'Z',
-        'Ź': 'Z',
-        'Ń': 'N'
-    })
-
-    return text.translate(translation_table)
-
-
-def add_number_to_image(image: Image.Image, number: str = "2") -> Image.Image:
-    draw = ImageDraw.Draw(image)
-    font = ImageFont.load_default()
-    if int(number) < 6:
-        text_position = (image.width - 10, image.height - 15)
-    else:
-        text_position = (image.width - 15, image.height - 15)
-    draw.text(text_position, number, font=font, fill=(255, 255, 255, 255))
-
-    return image
-
-
-def load_items_from_url() -> None:
-    """
-    Downloads images from URLs listed in 'Loot.txt', processes GIFs into individual frames,
-    and saves them in the 'ItemImages' folder. Non-GIF images are combined with a background
-    before saving.
-
-    Returns:
-        None
-    """
-    with open('Loot.txt', 'r') as f:
-        for item in f:
-            # Open and process the image
-            item = item.strip()
-            name = item.split('/')[-1].replace("_", " ")
-            # Check if image already exists
-            if name in os.listdir('ItemImages/'):
-                continue
-
-            # Download the image
-            urllib.request.urlretrieve(item, f'ItemImages/{name}')
-            gif = Image.open(f'ItemImages/{name}')
-            if gif.format == 'GIF':
-                name = urllib.parse.unquote(name)
-                name = replace_polish_characters(name)
-                frames_dir = f'ItemImages/{name.split(".gif")[0]}'
-                os.makedirs(frames_dir, exist_ok=True)
-
-                # Iterate through GIF frames and save each as a PNG
-                for i, frame in enumerate(ImageSequence.Iterator(gif)):
-                    frame = frame.convert('RGBA')
-                    background = Image.open(io.BytesIO(base64.b64decode(Addresses.background_image))).convert('RGBA')
-                    background.paste(frame, (0, 0), frame)
-
-                    if 5 > i > 0:
-                        background = add_number_to_image(background, number=str(i+1))
-                    elif 6 > i > 4:
-                        background = add_number_to_image(background, number=str(13))
-                    elif i > 5:
-                        background = add_number_to_image(background, number=str(20))
-
-                    background.save(f'{frames_dir}/{name.split(".gif")[0]}{i}.png')
-                gif.close()
-                name = item.split('/')[-1].replace("_", " ")
-                os.remove(f'ItemImages/{name}')  # Remove original GIF file
-            else:
-                # Process non-GIF images
-                image1 = Image.open(f'ItemImages/{name}').convert('RGBA')
-                image2 = Image.open(io.BytesIO(base64.b64decode(Addresses.background_image))).convert('RGBA')
-                image2.paste(image1, (0, 0), image1)
-
-                # Dodanie numeru "2" dla obrazu
-                image2 = add_number_to_image(image2, number="2")
-
-                image2.save(f'ItemImages/{name}')
+def manage_collect(x, y, action) -> None:
+    if action > 0:
+        collect_item(x + Addresses.screen_x[0], y + Addresses.screen_y[0], Addresses.coordinates_x[action], Addresses.coordinates_y[action])
+    elif action == 0:
+        drag_drop(x + Addresses.screen_x[0], y + Addresses.screen_y[0])
+    elif action == -1:
+        right_click(x + Addresses.screen_x[0], y + Addresses.screen_y[0])
+    elif action == -2:
+        left_click(x + Addresses.screen_x[0], y + Addresses.screen_y[0])
+        left_click(x + Addresses.screen_x[0], y + Addresses.screen_y[0])
 
 
 

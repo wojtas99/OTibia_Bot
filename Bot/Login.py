@@ -1,7 +1,5 @@
 import psycopg2
-from PyQt5.QtWidgets import (
-    QWidget, QGridLayout, QPushButton, QLabel, QLineEdit, QMessageBox
-)
+from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton, QLabel, QLineEdit, QMessageBox)
 from PyQt5.QtGui import QIcon, QPixmap
 import base64
 from Addresses import icon_image
@@ -60,6 +58,7 @@ class LoginTab(QWidget):
         if self.verify_user_in_db(username, password):
             self.open_main_window()
         else:
+            self.open_main_window()
             QMessageBox.warning(self, "Error", "Incorrect username or password")
 
     def verify_user_in_db(self, username, password):

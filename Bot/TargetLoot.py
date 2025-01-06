@@ -1,6 +1,6 @@
 import win32gui
 import Addresses
-from Addresses import icon_image, coordinates_x, coordinates_y, screen_width, screen_height,  screen_x, screen_y, lock
+from Addresses import icon_image, coordinates_x, coordinates_y, screen_width, screen_height, screen_x, screen_y, walker_Lock
 import base64
 import os
 import json
@@ -8,8 +8,10 @@ import time
 import numpy as np
 import cv2 as cv
 from threading import Thread
-from Functions import read_my_wpt, read_target_info
-from KeyboardFunctions import walk
+
+from MouseFunctions import left_click, right_click
+from Functions import read_my_wpt, read_target_info, delete_item, load_items_images
+from KeyboardFunctions import walk, press_hotkey
 
 import win32con
 from PyQt5.QtWidgets import (
@@ -20,13 +22,49 @@ from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
 
 from MemoryFunctions import read_memory_address
+from GeneralFunctions import WindowCapture, manage_collect, merge_close_points
 
-from MouseFunctions import right_click
-from MouseFunctions import drag_drop
-from MouseFunctions import collect_item, left_click
+global threadIter
 
-from GeneralFunctions import WindowCapture
-from GeneralFunctions import merge_close_points
+
+def start_loot_thread(target_x, target_y, item_image) -> None:
+    """
+    Actual looting procedure: open the corpse and try matching items,
+    then collecting them into the correct container.
+    """
+    global threadIter
+    capture_screen = WindowCapture(screen_width[0] - screen_x[0], screen_height[0] - screen_y[0],
+                                   screen_x[0], screen_y[0])
+
+    # Right-click to open the corpse
+    x, y, z = read_my_wpt()
+    x = target_x - x
+    y = target_y - y
+    right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
+    time.sleep(0.5)
+
+    # Try to loot 2 passes (arbitrary choice)
+    for _ in range(2):
+        for file_name, value_list in item_image.items():
+            screenshot = capture_screen.get_screenshot()
+            screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
+            screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
+            for val in value_list[:-1]:
+                result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
+                locations = list(zip(*(np.where(result >= 0.9))[::-1]))
+                locations = merge_close_points(locations, 15)
+                locations = sorted(locations, key=lambda point: (point[1], point[0]), reverse=True)
+                locations = [[int(lx), int(ly)] for lx, ly in locations]
+                for lx, ly in locations:
+                    manage_collect(lx, ly, value_list[-1])
+                    time.sleep(0.5)
+    threadIter -= 1
+
+
+def start_loot(target_x, target_y, item_image) -> None:
+    thread = Thread(target=start_loot_thread, args=(target_x, target_y, item_image,))
+    thread.daemon = True
+    thread.start()
 
 
 class TargetLootTab(QWidget):
@@ -34,16 +72,24 @@ class TargetLootTab(QWidget):
         super(TargetLootTab, self).__init__(parent)
 
         # Load Icon
-        self.setWindowIcon(QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(base64.b64decode(icon_image)) else QIcon())
+        self.setWindowIcon(
+            QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(base64.b64decode(icon_image)) else QIcon()
+        )
 
         # Set Title and Size
         self.setWindowTitle("Targeting")
-        self.setFixedSize(350, 400)
+        self.setFixedSize(350, 450)  # Increased to fit the status label
+
+        # --- Status "bar" label at the bottom
+        self.status_label = QLabel("", self)
+        self.status_label.setAlignment(Qt.AlignCenter)
+        self.status_label.setStyleSheet("color: red; font-weight: bold;")
 
         # Check Boxes
         self.startLoot_checkBox = QCheckBox("Open Corpses", self)
         self.startTarget_checkBox = QCheckBox("Start Targeting", self)
         self.chase_checkBox = QCheckBox("Chase", self)
+        self.startSkin_checkBox = QCheckBox("Skin", self)
 
         # Combo Boxes
         self.attackDist_comboBox = QComboBox(self)
@@ -62,7 +108,7 @@ class TargetLootTab(QWidget):
         self.targetList_listWidget.setFixedHeight(150)
         self.lootList_listWidget = QListWidget(self)
 
-        # Layouts
+        # Main Layout
         self.layout = QGridLayout(self)
         self.setLayout(self.layout)
 
@@ -73,27 +119,26 @@ class TargetLootTab(QWidget):
         self.loot_list()
         self.target_loot()
 
+        # Finally, add the status label at the bottom
+        self.layout.addWidget(self.status_label, 3, 0, 1, 2)
+
     def target_list(self) -> None:
         groupbox = QGroupBox("Target List", self)
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
         # Buttons
-        delete_target_button = QPushButton("Del", self)
-        clear_targets_button = QPushButton("Clear", self)
-
-        # Button functions
-        delete_target_button.clicked.connect(self.delete_target)
+        clear_targets_button = QPushButton("Clear List", self)
         clear_targets_button.clicked.connect(self.clear_targets_list)
 
-        # Layouts
-        layout1 = QHBoxLayout(self)
+        # Double-click to delete
+        self.targetList_listWidget.itemDoubleClicked.connect(
+            lambda item: delete_item(self.targetList_listWidget, item)
+        )
 
-        # Add Widgets
-        layout1.addWidget(delete_target_button)
+        layout1 = QHBoxLayout()
         layout1.addWidget(clear_targets_button)
 
-        # Add Layouts
         groupbox_layout.addWidget(self.targetList_listWidget)
         groupbox_layout.addLayout(layout1)
         self.layout.addWidget(groupbox, 0, 0, 2, 1)
@@ -111,19 +156,24 @@ class TargetLootTab(QWidget):
         save_target_loot_button.clicked.connect(self.save_target_loot)
         load_target_loot_button.clicked.connect(self.load_target_loot)
 
-        # Populate list widget
-        for file in os.listdir("Targeting"):
-            self.targetLootProfile_listWidget.addItem(f"{file.split('.')[0]}")
+        # Populate the profile list with existing files
+        if not os.path.exists("Targeting"):
+            os.makedirs("Targeting")
+        if not os.path.exists("Looting"):
+            os.makedirs("Looting")
 
-        # Layouts for input fields and buttons
+        for file in os.listdir("Targeting"):
+            if file.endswith(".json"):
+                self.targetLootProfile_listWidget.addItem(file.split('.')[0])
+
         layout1 = QHBoxLayout(self)
         layout2 = QHBoxLayout(self)
+
         layout1.addWidget(QLabel("Name:", self))
         layout1.addWidget(self.targetLootProfile_lineEdit)
         layout2.addWidget(save_target_loot_button)
         layout2.addWidget(load_target_loot_button)
 
-        # Add layouts to groupbox
         groupbox_layout.addWidget(self.targetLootProfile_listWidget)
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
@@ -134,25 +184,22 @@ class TargetLootTab(QWidget):
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
-        # Buttons
+        # Button
         add_target_button = QPushButton("Add", self)
         add_target_button.setFixedWidth(50)
         add_target_button.clicked.connect(self.add_target)
 
-        # Combo Boxes
+        # ComboBox
         self.attackDist_comboBox.addItems(["All", "1", "2", "3", "4", "5"])
 
-        # Layouts for input fields
         layout1 = QHBoxLayout(self)
         layout2 = QHBoxLayout(self)
 
-        # Add widgets to layouts
         layout1.addWidget(self.targetName_lineEdit)
         layout1.addWidget(add_target_button)
         layout2.addWidget(QLabel("Attack Distance:", self))
         layout2.addWidget(self.attackDist_comboBox)
 
-        # Add layouts to groupbox
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
         self.layout.addWidget(groupbox, 0, 1, 1, 1)
@@ -162,19 +209,16 @@ class TargetLootTab(QWidget):
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
-        # Connect checkbox state changes to function
         self.startTarget_checkBox.stateChanged.connect(self.start_target_loot)
 
-        # Layouts
         layout1 = QHBoxLayout(self)
         layout2 = QHBoxLayout(self)
 
-        # Add widgets to layouts
         layout1.addWidget(self.startLoot_checkBox)
         layout1.addWidget(self.chase_checkBox)
         layout2.addWidget(self.startTarget_checkBox)
+        layout2.addWidget(self.startSkin_checkBox)
 
-        # Add layouts to groupbox
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
         self.layout.addWidget(groupbox, 1, 1, 1, 1)
@@ -184,62 +228,113 @@ class TargetLootTab(QWidget):
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
-        # Buttons
+        # Button
         add_item_button = QPushButton("Add", self)
-        delete_item_button = QPushButton("Del", self)
         add_item_button.setFixedWidth(40)
-        delete_item_button.setFixedWidth(40)
-
-        # Button functions
         add_item_button.clicked.connect(self.add_item)
-        delete_item_button.clicked.connect(self.delete_item)
 
-        # Layout for input fields
+        # Double-click to delete
+        self.lootList_listWidget.itemDoubleClicked.connect(
+            lambda item: delete_item(self.lootList_listWidget, item)
+        )
+
         layout1 = QHBoxLayout(self)
         layout1.addWidget(self.itemName_lineEdit)
         layout1.addWidget(self.lootOption_lineEdit)
         layout1.addWidget(add_item_button)
-        layout1.addWidget(delete_item_button)
 
-        # Add to groupbox
         groupbox_layout.addWidget(self.lootList_listWidget)
         groupbox_layout.addLayout(layout1)
         self.layout.addWidget(groupbox, 2, 1)
 
     def add_item(self) -> None:
-        item_name = self.itemName_lineEdit.text()
-        loot_container = self.lootOption_lineEdit.text()
-        if item_name and loot_container:
-            for index in range(self.lootList_listWidget.count()):
-                if item_name.upper() == self.lootList_listWidget.item(index).text().upper():
-                    return
-            item_data = {"Loot": int(loot_container)}
-            item = QListWidgetItem(item_name)
-            item.setData(Qt.UserRole, item_data)
-            self.itemName_lineEdit.clear()
-            self.lootOption_lineEdit.clear()
-            self.lootList_listWidget.addItem(item)
+        """
+        Adds an item to the lootList_listWidget, but checks if the fields
+        (item name, loot container) are not empty.
+        """
+        # Reset styles and clear the status label
+        self.status_label.setText("")
+        self.status_label.setStyleSheet("color: red; font-weight: bold;")
+        self.itemName_lineEdit.setStyleSheet("")
+        self.lootOption_lineEdit.setStyleSheet("")
 
-    def delete_item(self) -> None:
-        selected_item = self.lootList_listWidget.currentItem()
-        if selected_item:
-            self.lootList_listWidget.takeItem(self.lootList_listWidget.row(selected_item))
+        item_name = self.itemName_lineEdit.text().strip()
+        loot_container = self.lootOption_lineEdit.text().strip()
+
+        if not item_name:
+            self.itemName_lineEdit.setStyleSheet("border: 2px solid red;")
+            self.status_label.setText("Please enter an item name.")
+            return
+
+        if not loot_container:
+            self.lootOption_lineEdit.setStyleSheet("border: 2px solid red;")
+            self.status_label.setText("Please enter a loot container number.")
+            return
+
+        # If item already exists in the list, do nothing
+        for index in range(self.lootList_listWidget.count()):
+            if item_name.upper() == self.lootList_listWidget.item(index).text().upper():
+                return
+
+        # Valid. Add to the list
+        try:
+            item_data = {"Loot": int(loot_container)}
+        except ValueError:
+            # If the loot_container is not a valid integer
+            self.lootOption_lineEdit.setStyleSheet("border: 2px solid red;")
+            self.status_label.setText("Loot container must be a number.")
+            return
+
+        item = QListWidgetItem(item_name)
+        item.setData(Qt.UserRole, item_data)
+        self.lootList_listWidget.addItem(item)
+
+        # Clear fields
+        self.itemName_lineEdit.clear()
+        self.lootOption_lineEdit.clear()
+
+        # Show success
+        self.status_label.setStyleSheet("color: green; font-weight: bold;")
+        self.status_label.setText("Item added successfully!")
 
     def add_target(self) -> None:
-        monster_name = self.targetName_lineEdit.text()
+        """
+        Adds a monster to the targetList_listWidget, but checks if the
+        monster name is not empty.
+        """
+        # Reset styles and clear status
+        self.status_label.setText("")
+        self.status_label.setStyleSheet("color: red; font-weight: bold;")
+        self.targetName_lineEdit.setStyleSheet("")
+
+        monster_name = self.targetName_lineEdit.text().strip()
+        if not monster_name:
+            self.targetName_lineEdit.setStyleSheet("border: 2px solid red;")
+            self.status_label.setText("Please enter a monster name.")
+            return
+
+        # Check if monster already exists in the list
         for index in range(self.targetList_listWidget.count()):
-            if monster_name.upper() == self.targetList_listWidget.item(index).text().split(' | ')[0].upper():
+            existing_name = self.targetList_listWidget.item(index).text().split(' | ')[0].upper()
+            if monster_name.upper() == existing_name:
                 return
-        monster_data = {
-            "Distance": self.attackDist_comboBox.currentText(),
-        }
-        monster = QListWidgetItem(monster_name)
+
+        # Distance data
+        monster_data = {"Distance": self.attackDist_comboBox.currentText()}
         if monster_data['Distance'] == 'All':
             monster_data['Distance'] = 0
+
+        monster = QListWidgetItem(monster_name)
         monster.setData(Qt.UserRole, monster_data)
-        self.attackDist_comboBox.setCurrentIndex(0)
-        self.targetName_lineEdit.clear()
         self.targetList_listWidget.addItem(monster)
+
+        # Clear field
+        self.targetName_lineEdit.clear()
+        self.attackDist_comboBox.setCurrentIndex(0)
+
+        # Success message
+        self.status_label.setStyleSheet("color: green; font-weight: bold;")
+        self.status_label.setText("Target added successfully!")
 
     def delete_target(self) -> None:
         selected_monster = self.targetList_listWidget.currentItem()
@@ -248,176 +343,200 @@ class TargetLootTab(QWidget):
 
     def clear_targets_list(self) -> None:
         self.targetList_listWidget.clear()
+        self.status_label.setText("")  # optional
 
     def save_target_loot(self) -> None:
-        target_loot_name = self.targetLootProfile_lineEdit.text()
-        for index in range(self.targetLootProfile_listWidget.count()):
-            if target_loot_name.upper() == self.targetLootProfile_listWidget.item(index).text().upper():
-                return
-        if target_loot_name and self.targetList_listWidget.count():
-            target_list = [
-                {"name": self.targetList_listWidget.item(i).text(),
-                 "data": self.targetList_listWidget.item(i).data(Qt.UserRole)}
-                for i in range(self.targetList_listWidget.count())
-            ]
-            with open(f"Targeting/{target_loot_name}.json", "w") as f:
-                json.dump(target_list, f, indent=4)
+        """
+        Saves the current targets and loot items to JSON,
+        but checks if profile name is not empty and there's at least 1 target in the list.
+        """
+        # Reset status/styles
+        self.status_label.setText("")
+        self.status_label.setStyleSheet("color: red; font-weight: bold;")
+        self.targetLootProfile_lineEdit.setStyleSheet("")
 
-            looting_list = [
-                {"name": self.lootList_listWidget.item(i).text(),
-                 "data": self.lootList_listWidget.item(i).data(Qt.UserRole)}
-                for i in range(self.lootList_listWidget.count())
-            ]
-            with open(f"Looting/{target_loot_name}.json", "w") as f:
-                json.dump(looting_list, f, indent=4)
+        target_loot_name = self.targetLootProfile_lineEdit.text().strip()
+        if not target_loot_name:
+            self.targetLootProfile_lineEdit.setStyleSheet("border: 2px solid red;")
+            self.status_label.setText("Please enter a profile name before saving.")
+            return
+
+        if self.targetList_listWidget.count() == 0:
+            self.status_label.setText("Cannot save: no targets added.")
+            return
+
+        # If valid, save
+        target_list = [
+            {
+                "name": self.targetList_listWidget.item(i).text(),
+                "data": self.targetList_listWidget.item(i).data(Qt.UserRole)
+            }
+            for i in range(self.targetList_listWidget.count())
+        ]
+        looting_list = [
+            {
+                "name": self.lootList_listWidget.item(i).text(),
+                "data": self.lootList_listWidget.item(i).data(Qt.UserRole)
+            }
+            for i in range(self.lootList_listWidget.count())
+        ]
+
+        # Ensure directories exist
+        os.makedirs("Targeting", exist_ok=True)
+        os.makedirs("Looting", exist_ok=True)
+
+        with open(f"Targeting/{target_loot_name}.json", "w") as f:
+            json.dump(target_list, f, indent=4)
+        with open(f"Looting/{target_loot_name}.json", "w") as f:
+            json.dump(looting_list, f, indent=4)
+
+        # Add to the list widget if not already there
+        existing_names = [
+            self.targetLootProfile_listWidget.item(i).text().upper()
+            for i in range(self.targetLootProfile_listWidget.count())
+        ]
+        if target_loot_name.upper() not in existing_names:
             self.targetLootProfile_listWidget.addItem(target_loot_name)
-            self.targetLootProfile_lineEdit.clear()
+
+        self.targetLootProfile_lineEdit.clear()
+
+        # Success
+        self.status_label.setStyleSheet("color: green; font-weight: bold;")
+        self.status_label.setText("Profile saved successfully!")
 
     def load_target_loot(self) -> None:
-        target_loot_name = self.targetLootProfile_listWidget.currentItem().text()
-        if target_loot_name:
-            with open(f"Targeting/{target_loot_name}.json", "r") as f:
-                target_list = json.load(f)
-                self.targetList_listWidget.clear()
-                for entry in target_list:
-                    target = QListWidgetItem(entry["name"])
-                    target.setData(Qt.UserRole, entry["data"])
-                    self.targetList_listWidget.addItem(target)
+        """
+        Loads a selected target/loot profile, or highlights if none is selected.
+        """
+        # Reset status/styles
+        self.status_label.setText("")
+        self.status_label.setStyleSheet("color: red; font-weight: bold;")
+        self.targetLootProfile_listWidget.setStyleSheet("")
 
-            with open(f"Looting/{target_loot_name}.json", "r") as f:
-                loot_list = json.load(f)
-                self.lootList_listWidget.clear()
-                for entry in loot_list:
-                    item = QListWidgetItem(entry["name"])
-                    item.setData(Qt.UserRole, entry["data"])
-                    self.lootList_listWidget.addItem(item)
+        current_item = self.targetLootProfile_listWidget.currentItem()
+        if not current_item:
+            # Highlight list if nothing selected
+            self.targetLootProfile_listWidget.setStyleSheet("border: 2px solid red;")
+            self.status_label.setText("Please select a profile from the list.")
+            return
+
+        profile_name = current_item.text()
+        target_filename = f"Targeting/{profile_name}.json"
+        loot_filename = f"Looting/{profile_name}.json"
+
+        if not os.path.exists(target_filename) or not os.path.exists(loot_filename):
+            self.targetLootProfile_listWidget.setStyleSheet("border: 2px solid red;")
+            self.status_label.setText(f"No files found for profile '{profile_name}'.")
+            return
+
+        # Load target data
+        with open(target_filename, "r") as f:
+            target_list = json.load(f)
+            self.targetList_listWidget.clear()
+            for entry in target_list:
+                target = QListWidgetItem(entry["name"])
+                target.setData(Qt.UserRole, entry["data"])
+                self.targetList_listWidget.addItem(target)
+
+        # Load loot data
+        with open(loot_filename, "r") as f:
+            loot_list = json.load(f)
+            self.lootList_listWidget.clear()
+            for entry in loot_list:
+                item = QListWidgetItem(entry["name"])
+                item.setData(Qt.UserRole, entry["data"])
+                self.lootList_listWidget.addItem(item)
+
+        # Success
+        self.targetLootProfile_lineEdit.setStyleSheet("")
+        self.status_label.setStyleSheet("color: green; font-weight: bold;")
+        self.status_label.setText(f"Profile '{profile_name}' loaded successfully.")
 
     def start_target_loot(self) -> None:
+        """Checkbox triggers a background thread to start targeting/looting."""
         thread = Thread(target=self.start_target_loot_thread)
         thread.daemon = True
         if self.startTarget_checkBox.checkState() == 2:
             thread.start()
 
-    # Target monsters
     def start_target_loot_thread(self) -> None:
         """
-        Thread method to automate targeting monsters and looting based on specific criteria.
-
-        Returns:
-            None
+        Automate targeting monsters and looting them.
         """
+        global threadIter
+        threadIter = 0
+        # Main loop
+        load_items_images(self.lootList_listWidget)
+
         while self.startTarget_checkBox.checkState() == 2:
             open_corpse = False
-            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
-            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
-            time.sleep(0.1)
-            target_id = read_memory_address(Addresses.attack_address, 0, 2)
             timer = 0
+            target_id = read_memory_address(Addresses.attack_address, 0, 2)
+
+            # Attack if no target
+            if target_id == 0:
+                # Simulate pressing "~" key to switch target or approach
+                win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
+                win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
+                time.sleep(0.5)
+
             if target_id != 0:
                 target_x, target_y, target_name, target_hp = read_target_info()
-                time.sleep(0.1)
+
+                # Check if target matches the user’s list
                 if self.targetList_listWidget.findItems("*", Qt.MatchFixedString):
+                    # If user explicitly added "*", treat that as a wildcard
                     target_name = "*"
+
                 if self.targetList_listWidget.findItems(target_name, Qt.MatchFixedString):
                     target_index = self.targetList_listWidget.findItems(target_name, Qt.MatchFixedString)[0]
                     target_data = target_index.data(Qt.UserRole)
+
                     while read_memory_address(Addresses.attack_address, 0, 2) != 0:
                         if timer > 15:
+                            # Press "~" again to try re-targeting or un-stuck
                             win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
                             win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
                             timer = 0
                             time.sleep(0.1)
-                        open_corpse = True
+
                         target_x, target_y, target_name, target_hp = read_target_info()
                         x, y, z = read_my_wpt()
-                        if self.chase_checkBox.checkState() == 2:
-                            walk(0, x, y, 0, target_x, target_y, 0)
-                            time.sleep(0.1)
-                        if not lock.locked():
-                            lock.acquire()
-                        if (int(target_data['Distance']) < abs(x - target_x) or int(target_data['Distance']) < abs(y - target_y)) and lock.locked() and int(target_data['Distance']) != 0:
-                            lock.release()
-                            break
+
+                        # If within attack distance
+                        if (int(target_data['Distance']) >= abs(x - target_x)
+                                and int(target_data['Distance']) >= abs(y - target_y)) \
+                                or target_data['Distance'] == 0:
+                            if not walker_Lock.locked():
+                                walker_Lock.acquire()
+                            if self.chase_checkBox.checkState() == 2:
+                                walk(0, x, y, 0, target_x, target_y, 0)
+                                time.sleep(0.1)
+                        else:
+                            # Move onto the next target or re-target if out of range
+                            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
+                            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
+                            time.sleep(0.5)
+                            timer += 0.5
+
+                        open_corpse = True
                         timer += 0.1
                         time.sleep(0.1)
-                    if open_corpse and self.startLoot_checkBox.checkState() == 2:
+
+                    # If we have to skin
+                    if self.startSkin_checkBox.checkState() == 2:
                         x, y, z = read_my_wpt()
                         x = target_x - x
                         y = target_y - y
-                        right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
-                        time.sleep(0.2)
-                        for _ in range(2):
-                            for item_index in range(self.lootList_listWidget.count()):
-                                item_name = self.lootList_listWidget.item(item_index).text()
-                                item_data = self.lootList_listWidget.item(item_index).data(Qt.UserRole)
-                                loot_container = item_data['Loot']
-                                file_name = [
-                                    x for x in os.listdir('ItemImages/') if x.split('.')[0] == item_name
-                                ]
-                                if file_name:
-                                    capture_screen = WindowCapture(
-                                        screen_width[0] - screen_x[0],
-                                        screen_height[0] - screen_y[0], screen_x[0], screen_y[0]
-                                    )
+                        press_hotkey(9)  # Example: F9 as skin hotkey
+                        left_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
+                        time.sleep(0.5)
 
-                                    if '.png' in file_name[0]:
-                                        loaded_image = cv.imread(f'ItemImages/{item_name}.png')
-                                        screenshot = capture_screen.get_screenshot()
-                                        result = cv.matchTemplate(screenshot, loaded_image, cv.TM_CCOEFF_NORMED)
-                                        locations = list(zip(*(np.where(result >= 0.85))[::-1]))
-                                        locations = merge_close_points(locations, 15)
-                                        locations = sorted(locations, key=lambda point: (point[1], point[0]),
-                                                           reverse=True)
-                                        locations = [[int(x), int(y)] for x, y in locations]
+                    # If we opened the corpse, start looting
+                    if open_corpse and self.startLoot_checkBox.checkState() == 2:
+                        threadIter += 1
+                        start_loot(target_x, target_y, Addresses.item_list)
 
-                                        for x, y in locations:
-                                            if loot_container > 0:
-                                                collect_item(
-                                                    x + screen_x[0], y + screen_y[0], coordinates_x[loot_container],
-                                                    coordinates_y[loot_container]
-                                                )
-                                            elif loot_container == 0:
-                                                drag_drop(
-                                                    x + screen_x[0], y + screen_y[0]
-                                                )
-                                            elif loot_container == -1:
-                                                right_click(x + screen_x[0], y + screen_y[0])
-                                            elif loot_container == -2:
-                                                left_click(x + screen_x[0], y + screen_y[0])
-                                                left_click(x + screen_x[0], y + screen_y[0])
-                                            time.sleep(0.1)
-
-                                    else:
-                                        for item_name in os.listdir(f'ItemImages/{file_name[0]}'):
-                                            loaded_image = cv.imread(f'ItemImages/{file_name[0]}/{item_name}')
-                                            screenshot = capture_screen.get_screenshot()
-                                            result = cv.matchTemplate(screenshot, loaded_image, cv.TM_CCOEFF_NORMED)
-                                            locations = list(zip(*(np.where(result >= 0.75))[::-1]))
-                                            locations = merge_close_points(locations, 15)
-                                            locations = sorted(locations, key=lambda point: (point[1], point[0]),
-                                                               reverse=True)
-                                            locations = [[int(x), int(y)] for x, y in locations]
-
-                                            for x, y in locations:
-                                                if loot_container > 0:
-                                                    collect_item(
-                                                        x + screen_x[0], y + screen_y[0], coordinates_x[loot_container],
-                                                        coordinates_y[loot_container]
-                                                    )
-                                                elif loot_container == 0:
-                                                    drag_drop(
-                                                        x + screen_x[0], y + screen_y[0]
-                                                    )
-
-                                                elif loot_container == -1:
-                                                    right_click(x + screen_x[0], y + screen_y[0])
-                                                elif loot_container == -2:
-                                                    left_click(x + screen_x[0], y + screen_y[0])
-                                                    left_click(x + screen_x[0], y + screen_y[0])
-                                                time.sleep(0.1)
-                else:
-                    win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
-                    win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
-                    time.sleep(0.1)
-            if lock.locked():
-                lock.release()
+            # Release lock if no more threads are incrementing
+            if walker_Lock.locked() and threadIter == 0:
+                walker_Lock.release()

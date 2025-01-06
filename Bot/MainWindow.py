@@ -2,18 +2,14 @@ import Addresses
 import win32gui
 import base64
 from Addresses import icon_image
-from PyQt5.QtWidgets import (
-    QWidget, QGridLayout, QPushButton, QApplication
-)
+from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton, QApplication)
 from PyQt5.QtGui import QIcon, QPixmap
 from HealingSpells import HealingTab
-from Training import TrainingTab
+from TrainingTools import TrainingTab
 from Walker import WalkerTab
 from TargetLoot import TargetLootTab
 from Settings import SettingsTab
 from SmartHotkeys import SmartHotkeysTab
-import os
-from GeneralFunctions import load_items_from_url
 
 
 class MainWindowTab(QWidget):
@@ -22,16 +18,12 @@ class MainWindowTab(QWidget):
 
         # Handle closing
         QApplication.instance().aboutToQuit.connect(lambda: win32gui.SetWindowText(Addresses.game, Addresses.game_name))
-        # Load images
-        load_items_from_url()
-
         # Load Icon
-        win32gui.SetWindowText(Addresses.game, Addresses.game_name + " - " + Addresses.nickname)
+        win32gui.SetWindowText(Addresses.game, Addresses.game_name + " - " + Addresses.numberEasyBot)
         self.setWindowIcon(QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(base64.b64decode(icon_image)) else QIcon())
-
         # Set Title and Size
         self.setFixedSize(400, 100)
-        self.setWindowTitle("EasyBot - " + Addresses.nickname)
+        self.setWindowTitle("EasyBot - " + Addresses.numberEasyBot)
 
         # Instances
         self.targetLootTab_instance = None
@@ -48,10 +40,10 @@ class MainWindowTab(QWidget):
         # Buttons
         self.targetLootTab_button = QPushButton('Targeting', self)
         self.walkerTab_button = QPushButton('Walker', self)
-        self.healingTab_button = QPushButton('Spells&&Healing', self)
+        self.healingTab_button = QPushButton('Spells && Healing', self)
         self.settingsTab_button = QPushButton('Settings', self)
         self.smartHotkeysTab_button = QPushButton('Smart Hotkeys', self)
-        self.trainingTab_button = QPushButton('Skill', self)
+        self.trainingTab_button = QPushButton('Skill && Tools', self)
 
         # Buttons Functions
         self.targetLootTab_button.clicked.connect(self.targetLoot)
