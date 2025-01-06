@@ -458,7 +458,7 @@ class WalkerTab(QWidget):
                     map_x = wpt_data['X']
                     map_y = wpt_data['Y']
                     map_z = wpt_data['Z']
-                    time.sleep(0.05)
+                    time.sleep(0.1)
                     if z == map_z and abs(map_x - x) < 4 and abs(map_y - y) < 4:
                         current_wpt = index
                         left_click(
@@ -478,7 +478,7 @@ class WalkerTab(QWidget):
                         map_x = wpt_data['X']
                         map_y = wpt_data['Y']
                         map_z = wpt_data['Z']
-                        time.sleep(0.05)
+                        time.sleep(0.1)
                         if z == map_z and abs(map_x - x) < 4 and abs(map_y - y) < 4:
                             current_wpt = index
                             left_click(
@@ -493,5 +493,6 @@ class WalkerTab(QWidget):
 
                 while not found:
                     print("Logging out (stuck or no waypoint found).")
+                    time.sleep(2)
                     # Perform any logout or cleanup if needed
                     break

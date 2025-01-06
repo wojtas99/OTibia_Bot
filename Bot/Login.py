@@ -4,13 +4,16 @@ from PyQt5.QtGui import QIcon, QPixmap
 import base64
 from Addresses import icon_image
 from SelectTibia import SelectTibiaTab
+import configparser
 
-# Database connection settings
-DB_HOST = "easybotpgwk-easybot.d.aivencloud.com"
-DB_PORT = "11357"
-DB_NAME = "defaultdb"
-DB_USER = "easybotuser"
-DB_PASSWORD = "AVNS_W0doQOGvoagZiwmtk_y"
+config = configparser.ConfigParser()
+config.read('config.ini')
+# Fetch database configuration
+DB_HOST = config['database']['host']
+DB_PORT = config['database']['port']
+DB_NAME = config['database']['name']
+DB_USER = config['database']['user']
+DB_PASSWORD = config['database']['password']
 
 
 class LoginTab(QWidget):
@@ -58,7 +61,6 @@ class LoginTab(QWidget):
         if self.verify_user_in_db(username, password):
             self.open_main_window()
         else:
-            self.open_main_window()
             QMessageBox.warning(self, "Error", "Incorrect username or password")
 
     def verify_user_in_db(self, username, password):

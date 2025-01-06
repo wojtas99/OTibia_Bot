@@ -472,14 +472,14 @@ class TargetLootTab(QWidget):
             open_corpse = False
             timer = 0
             target_id = read_memory_address(Addresses.attack_address, 0, 2)
-
+            time.sleep(0.5)
             # Attack if no target
             if target_id == 0:
                 # Simulate pressing "~" key to switch target or approach
                 win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
                 win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
-                time.sleep(0.5)
-
+                time.sleep(0.1)
+                target_id = read_memory_address(Addresses.attack_address, 0, 2)
             if target_id != 0:
                 target_x, target_y, target_name, target_hp = read_target_info()
 
@@ -516,7 +516,9 @@ class TargetLootTab(QWidget):
                             # Move onto the next target or re-target if out of range
                             win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
                             win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
-                            time.sleep(0.5)
+                            time.sleep(0.1)
+                            target_x, target_y, target_name, target_hp = read_target_info()
+                            time.sleep(0.4)
                             timer += 0.5
 
                         open_corpse = True
