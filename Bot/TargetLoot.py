@@ -514,6 +514,8 @@ class TargetLootTab(QWidget):
                                 time.sleep(0.1)
                         else:
                             # Move onto the next target or re-target if out of range
+                            if walker_Lock.locked() and threadIter == 0:
+                                walker_Lock.release()
                             win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
                             win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
                             time.sleep(0.1)

@@ -163,7 +163,7 @@ def load_medivia() -> None:
     Memory Addresses in Medivia
     :return: None
     """
-    global my_x_address, my_y_address, my_z_address, my_name_address, attack_address
+    global my_x_address, my_y_address, my_z_address, attack_address
     global target_name_offset, target_x_offset, target_y_offset, target_hp_offset
     global my_stats_ptr, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
     global process_handle, base_address, game, game_name, client_name, background_image, numberEasyBot
@@ -173,18 +173,17 @@ def load_medivia() -> None:
 
     # Static Addresses
     # Character Addresses
-    my_x_address = 0XBF12E0
-    my_y_address = 0XBF12E4
-    my_z_address = 0XBF12E8
-    my_name_address = 0XBF01B0
-    my_stats_ptr = 0X00BF0258
+    my_x_address = 0XBEF560
+    my_y_address = 0XBEF564
+    my_z_address = 0XBEF568
+    my_stats_ptr = 0X00BEE4E0
     my_hp_offset = [0X558]
     my_hp_max_offset = [0X560]
     my_mp_offset = [0x590]
     my_mp_max_offset = [0x598]
 
     # Target Addresses
-    attack_address = 0XBF0260
+    attack_address = 0XBEE4E8
     target_name_offset = 0xA8
     target_x_offset = 0x38
     target_y_offset = 0x3C
@@ -203,6 +202,7 @@ def load_medivia() -> None:
     base_address = modules[0]
 
     numberEasyBot = process_count()
+
 
 # We are Dragons Game
 def load_wad() -> None:

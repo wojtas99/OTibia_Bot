@@ -5,7 +5,7 @@ from PIL import Image, ImageSequence
 import numpy as np
 import cv2 as cv
 from PyQt5.QtCore import Qt
-
+from bs4 import BeautifulSoup
 import Addresses
 from MemoryFunctions import read_pointer_address, read_memory_address
 
@@ -49,12 +49,74 @@ def load_items_images(list_widget) -> None:
                     Addresses.item_list[item_name].append(background)
                 item_image.close()
                 Addresses.item_list[item_name].append(loot_container)
+    elif Addresses.client_name == "Medivia":
+        for item_index in range(list_widget.count()):
+            item_name = list_widget.item(item_index).text()
+            item_data = list_widget.item(item_index).data(Qt.UserRole)
+            loot_container = item_data['Loot']
+            item_name = item_name.replace(' ', '_')
+            file_page_url = f"https://wiki.mediviastats.info/File:{item_name}.gif"
+            response = requests.get(file_page_url)
+            if response:
+                soup = BeautifulSoup(response.text, "html.parser")
+                full_media_div = soup.find("div", class_="fullMedia")
+                if not full_media_div:
+                    continue
+                gif_url = full_media_div.find("a").get("href")
+                response = requests.get('https://wiki.mediviastats.info' + gif_url)
+                if response.status_code != 200:
+                    continue
+                item_image = Image.open(io.BytesIO(response.content))
+                Addresses.item_list[item_name] = []
+                if item_image.format == 'GIF':
+                    for i, frame in enumerate(ImageSequence.Iterator(item_image)):
+                        frame_rgba = frame.convert('RGBA')
+                        background = Image.open(
+                            io.BytesIO(base64.b64decode(Addresses.background_image))
+                        ).convert('RGBA')
+                        background.paste(frame_rgba, (0, 0), frame_rgba)
+                        background = np.array(background)
+                        background = background[:22, :, :]
+                        background = cv.cvtColor(background, cv.COLOR_BGR2GRAY)
+                        background = cv.GaussianBlur(background, (7, 7), 0)
+                        background = np.array(background)
+                        Addresses.item_list[item_name].append(background)
+                    item_image.close()
+                    Addresses.item_list[item_name].append(loot_container)
+            else:
+                file_page_url = f"https://wiki.mediviastats.info/File:{item_name}.png"
+                response = requests.get(file_page_url)
+                if response:
+                    soup = BeautifulSoup(response.text, "html.parser")
+                    full_media_div = soup.find("div", class_="fullMedia")
+                    if not full_media_div:
+                        continue
+                    gif_url = full_media_div.find("a").get("href")
+                    response = requests.get('https://wiki.mediviastats.info' + gif_url)
+                    if response.status_code != 200:
+                        continue
+                    item_image = Image.open(io.BytesIO(response.content))
+                    Addresses.item_list[item_name] = []
+                    frame_rgba = item_image.convert('RGBA')
+                    background = Image.open(
+                        io.BytesIO(base64.b64decode(Addresses.background_image))
+                    ).convert('RGBA')
+                    background.paste(frame_rgba, (0, 0), frame_rgba)
+                    background = np.array(background)
+                    background = background[:22, :, :]
+                    background = cv.cvtColor(background, cv.COLOR_BGR2GRAY)
+                    background = cv.GaussianBlur(background, (7, 7), 0)
+                    background = np.array(background)
+                    Addresses.item_list[item_name].append(background)
+                    Addresses.item_list[item_name].append(loot_container)
+
 
 def delete_item(list_widget, item) -> None:
     # Get the index of the clicked item
     index = list_widget.row(item)
     # Remove the item using the index
     list_widget.takeItem(index)
+
 
 def read_my_stats():
     if Addresses.client_name == "Altaron":
@@ -74,6 +136,14 @@ def read_my_wpt():
 
 def read_target_info():
     if Addresses.client_name == "Altaron":
+        target_x = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
+        target_x = read_memory_address(target_x, Addresses.target_x_offset, 1)
+        target_y = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
+        target_y = read_memory_address(target_y, Addresses.target_y_offset, 1)
+        target_name = "*"
+        target_hp = read_memory_address(read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address, Addresses.target_hp_offset, 7)
+        return target_x, target_y, target_name, target_hp
+    if Addresses.client_name == "Medivia":
         target_x = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
         target_x = read_memory_address(target_x, Addresses.target_x_offset, 1)
         target_y = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
