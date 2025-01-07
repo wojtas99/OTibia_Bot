@@ -566,14 +566,12 @@ class HealingTab(QWidget):
                 heal_min_mp = heal_data['MinMp']
 
                 current_hp, current_max_hp, current_mp, current_max_mp = read_my_stats()
-                time.sleep(0.1)
-
                 # HP-based healing
                 if heal_type.startswith("HP"):
                     if heal_option == "UH":
                         if heal_below >= (current_hp * 100) / current_max_hp >= heal_above:
                             use_on_me(coordinates_x[5], coordinates_y[5])
-                            time.sleep(0.1)
+                            time.sleep(random.uniform(0.1, 0.2))
                     else:
                         # Potions or hotkeys (F1..F12)
                         if (
@@ -581,9 +579,10 @@ class HealingTab(QWidget):
                             and current_mp >= heal_min_mp
                         ):
                             press_hotkey(int(heal_option[1:]))
-                            time.sleep(0.1)
+                            time.sleep(random.uniform(0.1, 0.2))
                 else:
                     # MP-based healing
                     if heal_below >= (current_mp * 100) / current_max_mp >= heal_above:
                         press_hotkey(int(heal_option[1:]))
-                        time.sleep(0.1)
+                        time.sleep(random.uniform(0.1, 0.2))
+            time.sleep(0.1)

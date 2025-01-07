@@ -472,7 +472,6 @@ class TargetLootTab(QWidget):
             open_corpse = False
             timer = 0
             target_id = read_memory_address(Addresses.attack_address, 0, 2)
-            time.sleep(0.5)
             # Attack if no target
             if target_id == 0:
                 # Simulate pressing "~" key to switch target or approach

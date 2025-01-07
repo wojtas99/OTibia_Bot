@@ -125,6 +125,12 @@ def read_my_stats():
         current_mp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_mp_offset, 1)
         current_max_mp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_mp_max_offset, 1)
         return current_hp, current_max_hp, current_mp, current_max_mp
+    elif Addresses.client_name == "Medivia":
+        current_hp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_hp_offset, 3)
+        current_max_hp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_hp_max_offset, 3)
+        current_mp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_mp_offset, 3)
+        current_max_mp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_mp_max_offset, 3)
+        return current_hp, current_max_hp, current_mp, current_max_mp
 
 
 def read_my_wpt():

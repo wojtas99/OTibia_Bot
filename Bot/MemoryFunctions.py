@@ -37,7 +37,7 @@ def read_pointer_address(address_read, offsets, option):
     result = c.windll.kernel32.ReadProcessMemory(Addresses.process_handle, address, buffer, 256, c.byref(bytes_read))
     if result:
         for offset in offsets:
-            if option != 2:
+            if option != 2 and Addresses.client_name != "Medivia":
                 address = c.c_int.from_buffer(buffer).value
             else:
                 address = c.c_ulonglong.from_buffer(buffer).value
