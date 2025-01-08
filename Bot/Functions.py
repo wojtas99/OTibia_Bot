@@ -42,7 +42,7 @@ def load_items_images(list_widget) -> None:
                     ).convert('RGBA')
                     background.paste(frame_rgba, (0, 0), frame_rgba)
                     background = np.array(background)
-                    background = background[:22, :, :]
+                    background = background[:20, :, :]
                     background = cv.cvtColor(background, cv.COLOR_BGR2GRAY)
                     background = cv.GaussianBlur(background, (7, 7), 0)
                     background = np.array(background)
@@ -76,7 +76,7 @@ def load_items_images(list_widget) -> None:
                         ).convert('RGBA')
                         background.paste(frame_rgba, (0, 0), frame_rgba)
                         background = np.array(background)
-                        background = background[:22, :, :]
+                        background = background[:20, :, :]
                         background = cv.cvtColor(background, cv.COLOR_BGR2GRAY)
                         background = cv.GaussianBlur(background, (7, 7), 0)
                         background = np.array(background)
