@@ -1,15 +1,8 @@
-import requests
-from PyQt5.QtCore import Qt
 import Addresses
-import base64
-import io
-import math
 import numpy as np
 import win32con
 import win32ui
-from PIL import Image, ImageDraw, ImageFont, ImageSequence
 import win32gui
-import cv2 as cv
 
 from MouseFunctions import collect_item, drag_drop, right_click, left_click
 

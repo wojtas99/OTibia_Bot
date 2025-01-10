@@ -51,7 +51,7 @@ def start_loot_thread(target_x, target_y, item_image) -> None:
             screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
             for val in value_list[:-1]:
                 result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
-                locations = list(zip(*(np.where(result >= 0.9))[::-1]))
+                locations = list(zip(*(np.where(result >= 0.84))[::-1]))
                 locations = merge_close_points(locations, 15)
                 locations = sorted(locations, key=lambda point: (point[1], point[0]), reverse=True)
                 locations = [[int(lx), int(ly)] for lx, ly in locations]

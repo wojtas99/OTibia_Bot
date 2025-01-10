@@ -251,6 +251,7 @@ def load_wad() -> None:
 
     numberEasyBot = process_count()
 
+
 def load_altaron() -> None:
     """
     Memory Addresses in Altaron

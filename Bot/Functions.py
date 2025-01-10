@@ -42,7 +42,7 @@ def load_items_images(list_widget) -> None:
                     ).convert('RGBA')
                     background.paste(frame_rgba, (0, 0), frame_rgba)
                     background = np.array(background)
-                    background = background[:20, :, :]
+                    background = background[:22, :, :]
                     background = cv.cvtColor(background, cv.COLOR_BGR2GRAY)
                     background = cv.GaussianBlur(background, (7, 7), 0)
                     background = np.array(background)
@@ -76,7 +76,7 @@ def load_items_images(list_widget) -> None:
                         ).convert('RGBA')
                         background.paste(frame_rgba, (0, 0), frame_rgba)
                         background = np.array(background)
-                        background = background[:20, :, :]
+                        background = background[:22, :, :]
                         background = cv.cvtColor(background, cv.COLOR_BGR2GRAY)
                         background = cv.GaussianBlur(background, (7, 7), 0)
                         background = np.array(background)
@@ -134,10 +134,17 @@ def read_my_stats():
 
 
 def read_my_wpt():
-    x = read_memory_address(Addresses.my_x_address, 0, 1)
-    y = read_memory_address(Addresses.my_y_address, 0, 1)
-    z = read_memory_address(Addresses.my_z_address, 0, 4)
-    return x, y, z
+    try:
+        x = read_memory_address(Addresses.my_x_address, 0, 1)
+        y = read_memory_address(Addresses.my_y_address, 0, 1)
+        z = read_memory_address(Addresses.my_z_address, 0, 4)
+        if x is None or y is None or z is None:
+            print("Failed to read coordinates.")
+            return None, None, None
+        return x, y, z
+    except Exception as e:
+        print(f"Exception in read_my_wpt: {e}")
+        return None, None, None
 
 
 def read_target_info():
