@@ -1,3 +1,5 @@
+import threading
+
 import win32gui
 import Addresses
 from Addresses import icon_image, coordinates_x, coordinates_y, screen_width, screen_height, screen_x, screen_y, walker_Lock
@@ -24,47 +26,7 @@ from PyQt5.QtCore import Qt
 from MemoryFunctions import read_memory_address
 from GeneralFunctions import WindowCapture, manage_collect, merge_close_points
 
-global threadIter
-
-
-def start_loot_thread(target_x, target_y, item_image) -> None:
-    """
-    Actual looting procedure: open the corpse and try matching items,
-    then collecting them into the correct container.
-    """
-    global threadIter
-    capture_screen = WindowCapture(screen_width[0] - screen_x[0], screen_height[0] - screen_y[0],
-                                   screen_x[0], screen_y[0])
-
-    # Right-click to open the corpse
-    x, y, z = read_my_wpt()
-    x = target_x - x
-    y = target_y - y
-    right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
-    time.sleep(0.5)
-
-    # Try to loot 2 passes (arbitrary choice)
-    for _ in range(2):
-        for file_name, value_list in item_image.items():
-            screenshot = capture_screen.get_screenshot()
-            screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
-            screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
-            for val in value_list[:-1]:
-                result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
-                locations = list(zip(*(np.where(result >= 0.84))[::-1]))
-                locations = merge_close_points(locations, 15)
-                locations = sorted(locations, key=lambda point: (point[1], point[0]), reverse=True)
-                locations = [[int(lx), int(ly)] for lx, ly in locations]
-                for lx, ly in locations:
-                    manage_collect(lx, ly, value_list[-1])
-                    time.sleep(0.5)
-    threadIter -= 1
-
-
-def start_loot(target_x, target_y, item_image) -> None:
-    thread = Thread(target=start_loot_thread, args=(target_x, target_y, item_image,))
-    thread.daemon = True
-    thread.start()
+lootLoop = 2
 
 
 class TargetLootTab(QWidget):
@@ -459,14 +421,20 @@ class TargetLootTab(QWidget):
         if self.startTarget_checkBox.checkState() == 2:
             thread.start()
 
+    def start_loot(self, item_image) -> None:
+        thread = Thread(target=self.start_loot_thread, args=(item_image,))
+        thread.daemon = True
+        if self.startLoot_checkBox.checkState() == 2:
+            thread.start()
+
     def start_target_loot_thread(self) -> None:
         """
         Automate targeting monsters and looting them.
         """
-        global threadIter
-        threadIter = 0
         # Main loop
+        global lootLoop
         load_items_images(self.lootList_listWidget)
+        self.start_loot(Addresses.item_list)
 
         while self.startTarget_checkBox.checkState() == 2:
             open_corpse = False
@@ -513,7 +481,9 @@ class TargetLootTab(QWidget):
                                 time.sleep(0.1)
                         else:
                             # Move onto the next target or re-target if out of range
-                            if walker_Lock.locked() and threadIter == 0:
+                            if walker_Lock.locked() and lootLoop > 1:
+                                print(lootLoop)
+                                print("ide")
                                 walker_Lock.release()
                             win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
                             win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
@@ -537,9 +507,39 @@ class TargetLootTab(QWidget):
 
                     # If we opened the corpse, start looting
                     if open_corpse and self.startLoot_checkBox.checkState() == 2:
-                        threadIter += 1
-                        start_loot(target_x, target_y, Addresses.item_list)
+                        # Right-click to open the corpse
+                        x, y, z = read_my_wpt()
+                        x = target_x - x
+                        y = target_y - y
+                        right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
+                        time.sleep(0.5)
+                        lootLoop = 0
 
-            # Release lock if no more threads are incrementing
-            if walker_Lock.locked() and threadIter == 0:
+            if walker_Lock.locked() and lootLoop > 1:
                 walker_Lock.release()
+
+    def start_loot_thread(self, item_image) -> None:
+        global lootLoop
+        """
+        Actual looting procedure: open the corpse and try matching items,
+        then collecting them into the correct container.
+        """
+        capture_screen = WindowCapture(screen_width[0] - screen_x[0], screen_height[0] - screen_y[0],
+                                       screen_x[0], screen_y[0])
+        while self.startLoot_checkBox.checkState() == 2:
+            while lootLoop < 2:
+                for file_name, value_list in item_image.items():
+                    screenshot = capture_screen.get_screenshot()
+                    screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
+                    screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
+                    for val in value_list[:-1]:
+                        result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
+                        locations = list(zip(*(np.where(result >= 0.84))[::-1]))
+                        locations = merge_close_points(locations, 15)
+                        locations = sorted(locations, key=lambda point: (point[1], point[0]), reverse=True)
+                        locations = [[int(lx), int(ly)] for lx, ly in locations]
+                        for lx, ly in locations:
+                            manage_collect(lx, ly, value_list[-1])
+                            time.sleep(0.5)
+                lootLoop += 1
+            time.sleep(0.1)

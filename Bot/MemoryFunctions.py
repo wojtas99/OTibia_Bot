@@ -5,29 +5,34 @@ import ctypes as c
 # Reads value from memory
 def read_memory_address(address_read, offsets, option):
     try:
-        address = address_read + Addresses.base_address + offsets
+        # Calculate the full address
+        address = Addresses.base_address + address_read + offsets
         address = c.c_void_p(address)
         buffer = c.create_string_buffer(256)
         bytes_read = c.c_size_t()
+
+        # Read memory
         result = c.windll.kernel32.ReadProcessMemory(
-            Addresses.process_handle, address, buffer, 256, c.byref(bytes_read)
+            Addresses.process_handle, address, buffer, c.sizeof(buffer), c.byref(bytes_read)
         )
         if not result:
             print(f"ReadProcessMemory failed at address: {hex(address.value)}")
             return None
+
+        # Return the requested type
         match option:
             case 1:  # Returns INT value
-                return int(c.c_int.from_buffer(buffer).value)
+                return c.cast(buffer, c.POINTER(c.c_int)).contents.value
             case 2:  # Returns LONG value
-                return c.c_ulonglong.from_buffer(buffer).value
+                return c.cast(buffer, c.POINTER(c.c_ulonglong)).contents.value
             case 3:  # Returns DOUBLE value
-                return c.c_double.from_buffer(buffer).value
+                return c.cast(buffer, c.POINTER(c.c_double)).contents.value
             case 4:  # Returns SHORT value
-                return c.c_short.from_buffer(buffer).value
+                return c.cast(buffer, c.POINTER(c.c_short)).contents.value
             case 7:  # Returns BYTE value
-                return c.c_byte.from_buffer(buffer).value
+                return c.cast(buffer, c.POINTER(c.c_byte)).contents.value
             case _:  # Returns buffer
-                return buffer
+                return buffer.raw
     except Exception as e:
         print(f"Exception in read_memory_address: {e}")
         return None
@@ -40,33 +45,39 @@ def read_pointer_address(address_read, offsets, option):
         address = c.c_void_p(address)
         buffer = c.create_string_buffer(256)
         bytes_read = c.c_size_t()
-        result = c.windll.kernel32.ReadProcessMemory(Addresses.process_handle, address, buffer, 256, c.byref(bytes_read))
-        if result:
-            for offset in offsets:
-                if option != 2 and Addresses.client_name != "Medivia":
-                    address = c.c_int.from_buffer(buffer).value
-                else:
-                    address = c.c_ulonglong.from_buffer(buffer).value
-                address += offset
-                address = c.c_void_p(address)
-                result = c.windll.kernel32.ReadProcessMemory(Addresses.process_handle, address, buffer, 256, c.byref(bytes_read))
-        else:
-            return 0
-        if result:
-            match option:
-                case 1:  # Returns INT value
-                    return int(c.c_int.from_buffer(buffer).value)
-                case 2:  # Returns LONG value
-                    return c.c_ulonglong.from_buffer(buffer).value
-                case 3:  # Returns DOUBLE value
-                    return c.c_double.from_buffer(buffer).value
-                case 4:  # Returns SHORT value
-                    return c.c_short.from_buffer(buffer).value
-                case _:  # Returns buffer
-                    return buffer
-        else:
-            return 0
 
+        # Read the base address
+        result = c.windll.kernel32.ReadProcessMemory(
+            Addresses.process_handle, address, buffer, c.sizeof(buffer), c.byref(bytes_read)
+        )
+        if not result:
+            print(f"Failed to read initial pointer at address: {hex(address.value)}")
+            return None
+
+        # Follow the pointer chain
+        for offset in offsets:
+            address_value = c.cast(buffer, c.POINTER(c.c_ulonglong)).contents.value if option == 2 else \
+                            c.cast(buffer, c.POINTER(c.c_int)).contents.value
+            address = c.c_void_p(address_value + offset)
+            result = c.windll.kernel32.ReadProcessMemory(
+                Addresses.process_handle, address, buffer, c.sizeof(buffer), c.byref(bytes_read)
+            )
+            if not result:
+                print(f"Failed to follow pointer chain at address: {hex(address.value)}")
+                return None
+
+        # Return the final value
+        match option:
+            case 1:  # Returns INT value
+                return c.cast(buffer, c.POINTER(c.c_int)).contents.value
+            case 2:  # Returns LONG value
+                return c.cast(buffer, c.POINTER(c.c_ulonglong)).contents.value
+            case 3:  # Returns DOUBLE value
+                return c.cast(buffer, c.POINTER(c.c_double)).contents.value
+            case 4:  # Returns SHORT value
+                return c.cast(buffer, c.POINTER(c.c_short)).contents.value
+            case _:  # Returns buffer
+                return buffer.raw
     except Exception as e:
-        print(f"Exception in read_memory_address: {e}")
+        print(f"Exception in read_pointer_address: {e}")
         return None

@@ -454,8 +454,8 @@ class WalkerTab(QWidget):
                         current_wpt += 1
 
                 if timer > 5:
-                    print("Bot is stuck, recalculating...")
                     current_wpt = (current_wpt + 1) % self.waypoint_list_widget.count()
+                    time.sleep(0.1)
 
             except Exception as e:
                 print(f"Error: {e}")
