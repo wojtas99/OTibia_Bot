@@ -437,86 +437,87 @@ class TargetLootTab(QWidget):
         self.start_loot(Addresses.item_list)
 
         while self.startTarget_checkBox.checkState() == 2:
-            open_corpse = False
-            timer = 0
-            target_id = read_memory_address(Addresses.attack_address, 0, 2)
-            # Attack if no target
-            if target_id == 0:
-                # Simulate pressing "~" key to switch target or approach
-                win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
-                win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
-                time.sleep(0.1)
+            try:
+                open_corpse = False
+                timer = 0
                 target_id = read_memory_address(Addresses.attack_address, 0, 2)
-            if target_id != 0:
-                target_x, target_y, target_name, target_hp = read_target_info()
+                # Attack if no target
+                if target_id == 0:
+                    # Simulate pressing "~" key to switch target or approach
+                    win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
+                    win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
+                    time.sleep(0.1)
+                    target_id = read_memory_address(Addresses.attack_address, 0, 2)
+                if target_id != 0:
+                    target_x, target_y, target_name, target_hp = read_target_info()
 
-                # Check if target matches the user’s list
-                if self.targetList_listWidget.findItems("*", Qt.MatchFixedString):
-                    # If user explicitly added "*", treat that as a wildcard
-                    target_name = "*"
+                    # Check if target matches the user’s list
+                    if self.targetList_listWidget.findItems("*", Qt.MatchFixedString):
+                        # If user explicitly added "*", treat that as a wildcard
+                        target_name = "*"
 
-                if self.targetList_listWidget.findItems(target_name, Qt.MatchFixedString):
-                    target_index = self.targetList_listWidget.findItems(target_name, Qt.MatchFixedString)[0]
-                    target_data = target_index.data(Qt.UserRole)
+                    if self.targetList_listWidget.findItems(target_name, Qt.MatchFixedString):
+                        target_index = self.targetList_listWidget.findItems(target_name, Qt.MatchFixedString)[0]
+                        target_data = target_index.data(Qt.UserRole)
 
-                    while read_memory_address(Addresses.attack_address, 0, 2) != 0:
-                        if timer > 15:
-                            # Press "~" again to try re-targeting or un-stuck
-                            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
-                            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
-                            timer = 0
-                            time.sleep(0.1)
-
-                        target_x, target_y, target_name, target_hp = read_target_info()
-                        x, y, z = read_my_wpt()
-
-                        # If within attack distance
-                        if (int(target_data['Distance']) >= abs(x - target_x)
-                                and int(target_data['Distance']) >= abs(y - target_y)) \
-                                or target_data['Distance'] == 0:
-                            if not walker_Lock.locked():
-                                walker_Lock.acquire()
-                            if self.chase_checkBox.checkState() == 2:
-                                walk(0, x, y, 0, target_x, target_y, 0)
+                        while read_memory_address(Addresses.attack_address, 0, 2) != 0:
+                            if timer > 15:
+                                # Press "~" again to try re-targeting or un-stuck
+                                win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
+                                win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
+                                timer = 0
                                 time.sleep(0.1)
-                        else:
-                            # Move onto the next target or re-target if out of range
-                            if walker_Lock.locked() and lootLoop > 1:
-                                print(lootLoop)
-                                print("ide")
-                                walker_Lock.release()
-                            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
-                            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
-                            time.sleep(0.1)
+
                             target_x, target_y, target_name, target_hp = read_target_info()
-                            time.sleep(0.4)
-                            timer += 0.5
+                            x, y, z = read_my_wpt()
 
-                        open_corpse = True
-                        timer += 0.1
-                        time.sleep(0.1)
+                            # If within attack distance
+                            if (int(target_data['Distance']) >= abs(x - target_x)
+                                    and int(target_data['Distance']) >= abs(y - target_y)) \
+                                    or target_data['Distance'] == 0:
+                                if not walker_Lock.locked():
+                                    walker_Lock.acquire()
+                                if self.chase_checkBox.checkState() == 2:
+                                    walk(0, x, y, 0, target_x, target_y, 0)
+                                    time.sleep(0.1)
+                            else:
+                                # Move onto the next target or re-target if out of range
+                                if walker_Lock.locked() and lootLoop > 1:
+                                    walker_Lock.release()
+                                win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
+                                win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
+                                time.sleep(0.1)
+                                target_x, target_y, target_name, target_hp = read_target_info()
+                                timer += 0.1
 
-                    # If we have to skin
-                    if self.startSkin_checkBox.checkState() == 2:
-                        x, y, z = read_my_wpt()
-                        x = target_x - x
-                        y = target_y - y
-                        press_hotkey(9)  # Example: F9 as skin hotkey
-                        left_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
-                        time.sleep(0.5)
+                            open_corpse = True
+                            timer += 0.1
+                            time.sleep(0.1)
 
-                    # If we opened the corpse, start looting
-                    if open_corpse and self.startLoot_checkBox.checkState() == 2:
-                        # Right-click to open the corpse
-                        x, y, z = read_my_wpt()
-                        x = target_x - x
-                        y = target_y - y
-                        right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
-                        time.sleep(0.5)
-                        lootLoop = 0
+                        # If we have to skin
+                        if self.startSkin_checkBox.checkState() == 2:
+                            x, y, z = read_my_wpt()
+                            x = target_x - x
+                            y = target_y - y
+                            press_hotkey(9)  # Example: F9 as skin hotkey
+                            left_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
+                            time.sleep(0.5)
 
-            if walker_Lock.locked() and lootLoop > 1:
-                walker_Lock.release()
+                        # If we opened the corpse, start looting
+                        if open_corpse and self.startLoot_checkBox.checkState() == 2:
+                            # Right-click to open the corpse
+                            x, y, z = read_my_wpt()
+                            x = target_x - x
+                            y = target_y - y
+                            right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
+                            time.sleep(0.5)
+                            lootLoop = 0
+
+                if walker_Lock.locked() and lootLoop > 1:
+                    walker_Lock.release()
+            except Exception as e:
+                print(f"Error: {e}")
+                time.sleep(1)
 
     def start_loot_thread(self, item_image) -> None:
         global lootLoop

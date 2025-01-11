@@ -435,16 +435,34 @@ class WalkerTab(QWidget):
                         timer += 0.01
                         time.sleep(0.01)
 
-                    elif wpt_action == 1:
+                    elif wpt_action == 1:  # Rope
                         time.sleep(0.5)
                         timer += 0.5
                         right_click(coordinates_x[10], coordinates_y[10])
                         time.sleep(0.1)
+                        left_click(coordinates_x[0], coordinates_y[0])
+                        x, y, z = read_my_wpt()
+                        map_x = wpt_data['X']
+                        map_y = wpt_data['Y']
+                        left_click(
+                            coordinates_x[0] + (map_x - x) * 75,
+                            coordinates_y[0] + (map_y - y) * 75
+                        )
+                        time.sleep(0.1)
 
                     elif wpt_action == 2:
+                        # Shovel
                         time.sleep(0.5)
                         timer += 0.5
                         right_click(coordinates_x[9], coordinates_y[9])
+                        time.sleep(0.1)
+                        x, y, z = read_my_wpt()
+                        map_x = wpt_data['X']
+                        map_y = wpt_data['Y']
+                        left_click(
+                            coordinates_x[0] + (map_x - x) * 75,
+                            coordinates_y[0] + (map_y - y) * 75
+                        )
                         time.sleep(0.1)
 
                     elif wpt_action == 3:
