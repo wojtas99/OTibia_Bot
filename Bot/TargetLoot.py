@@ -497,6 +497,9 @@ class TargetLootTab(QWidget):
                         # If we have to skin
                         if self.startSkin_checkBox.checkState() == 2:
                             x, y, z = read_my_wpt()
+                            while x is None:
+                                x, y, z = read_my_wpt()
+                                time.sleep(0.1)
                             x = target_x - x
                             y = target_y - y
                             press_hotkey(9)  # Example: F9 as skin hotkey
@@ -507,6 +510,9 @@ class TargetLootTab(QWidget):
                         if open_corpse and self.startLoot_checkBox.checkState() == 2:
                             # Right-click to open the corpse
                             x, y, z = read_my_wpt()
+                            while x is None:
+                                x, y, z = read_my_wpt()
+                                time.sleep(0.1)
                             x = target_x - x
                             y = target_y - y
                             right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
@@ -517,7 +523,7 @@ class TargetLootTab(QWidget):
                     walker_Lock.release()
             except Exception as e:
                 print(f"Error: {e}")
-                time.sleep(1)
+                time.sleep(0.1)
 
     def start_loot_thread(self, item_image) -> None:
         global lootLoop
