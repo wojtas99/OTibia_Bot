@@ -404,90 +404,98 @@ class WalkerTab(QWidget):
             thread.start()
 
     def follow_waypoints(self):
-            current_wpt = self.waypoint_list_widget.currentRow()
-            if current_wpt == -1:
-                current_wpt = 0
-            timer = 0
-            while self.start_cave_bot_checkbox.checkState():
-                self.waypoint_list_widget.setCurrentRow(current_wpt)
-                wpt_data = self.waypoint_list_widget.item(current_wpt).data(Qt.UserRole)
-                wpt_action = wpt_data['Action']
-                wpt_direction = wpt_data['Direction']
-                map_x = wpt_data['X']
-                map_y = wpt_data['Y']
-                map_z = wpt_data['Z']
+        current_wpt = self.waypoint_list_widget.currentRow()
+        if current_wpt == -1:
+            current_wpt = 0
+        timer = 0
+        walked = True
+        while self.start_cave_bot_checkbox.checkState():
+            self.waypoint_list_widget.setCurrentRow(current_wpt)
+            wpt_data = self.waypoint_list_widget.item(current_wpt).data(Qt.UserRole)
+            wpt_action = wpt_data['Action']
+            wpt_direction = wpt_data['Direction']
+            map_x = wpt_data['X']
+            map_y = wpt_data['Y']
+            map_z = wpt_data['Z']
+            while walked:
                 x, y, z = read_my_wpt()
-
-                # If we're already on the coordinate for a normal "Stand" waypoint
-                if x == map_x and y == map_y and z == map_z and wpt_action == 0:
-                    timer = 0
-                    current_wpt += 1
-                    if current_wpt == self.waypoint_list_widget.count():
-                        current_wpt = 0
-                    time.sleep(0.1)
-                    continue
                 time.sleep(0.01)
-                if not walker_Lock.locked():
-                    if wpt_action == 0:
-                        walk(wpt_direction, x, y, z, map_x, map_y, map_z)
-                        timer += 0.01
-                        time.sleep(0.01)
-
-                    elif wpt_action == 1:
-                        # Rope
-                        time.sleep(0.5)
-                        timer += 0.5
-                        right_click(coordinates_x[10], coordinates_y[10])
-                        time.sleep(0.1)
-                        left_click(coordinates_x[0], coordinates_y[0])
-                        x, y, z = read_my_wpt()
-                        map_x = wpt_data['X']
-                        map_y = wpt_data['Y']
-                        left_click(
-                            coordinates_x[0] + (map_x - x) * 75,
-                            coordinates_y[0] + (map_y - y) * 75
-                        )
-                        time.sleep(0.1)
-
-                    elif wpt_action == 2:
-                        # Shovel
-                        time.sleep(0.5)
-                        timer += 0.5
-                        right_click(coordinates_x[9], coordinates_y[9])
-                        time.sleep(0.1)
-                        x, y, z = read_my_wpt()
-                        map_x = wpt_data['X']
-                        map_y = wpt_data['Y']
-                        left_click(
-                            coordinates_x[0] + (map_x - x) * 75,
-                            coordinates_y[0] + (map_y - y) * 75
-                        )
-                        time.sleep(0.1)
-                    elif wpt_action == 3:
-                        # Ladder
-                        time.sleep(0.5)
-                        timer += 0.5
-                        right_click(coordinates_x[0], coordinates_y[0])  # e.g. click on Ladder
-                        current_wpt += 1
-                # If stuck for more than 5 seconds, search for the nearest waypoint
-                if timer > 5:
+                walked = False
+                while x is None:
                     x, y, z = read_my_wpt()
-                    while x is None:
-                        x, y, z = read_my_wpt()
-                        time.sleep(0.1)
-                    for index in range(current_wpt, self.waypoint_list_widget.count()):
-                        self.waypoint_list_widget.setCurrentRow(index)
-                        wpt_data = self.waypoint_list_widget.item(index).data(Qt.UserRole)
-                        map_x = wpt_data['X']
-                        map_y = wpt_data['Y']
-                        map_z = wpt_data['Z']
-                        time.sleep(0.01)
-                        if z == map_z and abs(map_x - x) < 7 and abs(map_y - y) < 6:
-                            current_wpt = index
-                            left_click(
-                                coordinates_x[0] + (map_x - x) * 75,
-                                coordinates_y[0] + (map_y - y) * 75
-                            )
-                            time.sleep(2)
-                            timer = 0
-                            break
+
+            # If stuck for more than 5 seconds, search for the nearest waypoint
+            if timer > 5:
+                x, y, z = read_my_wpt()
+                while x is None:
+                    x, y, z = read_my_wpt()
+                    time.sleep(0.1)
+                for index in range(current_wpt, self.waypoint_list_widget.count()):
+                    self.waypoint_list_widget.setCurrentRow(index)
+                    wpt_data = self.waypoint_list_widget.item(index).data(Qt.UserRole)
+                    map_x = wpt_data['X']
+                    map_y = wpt_data['Y']
+                    map_z = wpt_data['Z']
+                    time.sleep(0.01)
+                    if z == map_z and abs(map_x - x) < 7 and abs(map_y - y) < 6:
+                        current_wpt = index
+                        left_click(
+                            coordinates_x[0] + (map_x - x) * 75,
+                            coordinates_y[0] + (map_y - y) * 75
+                        )
+                        time.sleep(2)
+                        timer = 0
+                        break
+
+            # If we're already on the coordinate for a normal "Stand" waypoint
+            if x == map_x and y == map_y and z == map_z and wpt_action == 0:
+                timer = 0
+                current_wpt += 1
+                if current_wpt == self.waypoint_list_widget.count():
+                    current_wpt = 0
+                time.sleep(0.1)
+                continue
+
+            if not walker_Lock.locked():
+                if wpt_action == 0:
+                    walk(wpt_direction, x, y, z, map_x, map_y, map_z)
+                    walked = True
+                    timer += 0.1
+                    time.sleep(0.01)
+
+                elif wpt_action == 1:
+                    # Rope
+                    time.sleep(0.5)
+                    timer += 0.5
+                    right_click(coordinates_x[10], coordinates_y[10])
+                    time.sleep(0.1)
+                    left_click(coordinates_x[0], coordinates_y[0])
+                    x, y, z = read_my_wpt()
+                    map_x = wpt_data['X']
+                    map_y = wpt_data['Y']
+                    left_click(
+                        coordinates_x[0] + (map_x - x) * 75,
+                        coordinates_y[0] + (map_y - y) * 75
+                    )
+                    time.sleep(0.1)
+
+                elif wpt_action == 2:
+                    # Shovel
+                    time.sleep(0.5)
+                    timer += 0.5
+                    right_click(coordinates_x[9], coordinates_y[9])
+                    time.sleep(0.1)
+                    x, y, z = read_my_wpt()
+                    map_x = wpt_data['X']
+                    map_y = wpt_data['Y']
+                    left_click(
+                        coordinates_x[0] + (map_x - x) * 75,
+                        coordinates_y[0] + (map_y - y) * 75
+                    )
+                    time.sleep(0.1)
+                elif wpt_action == 3:
+                    # Ladder
+                    time.sleep(0.5)
+                    timer += 0.5
+                    right_click(coordinates_x[0], coordinates_y[0])  # e.g. click on Ladder
+                    current_wpt += 1

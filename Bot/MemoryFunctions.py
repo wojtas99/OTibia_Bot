@@ -96,8 +96,10 @@ def read_pointer_address(address_read, offsets, option):
             # Update current address with the offset
             if option == 2:  # LONG value
                 pointer_value = c.cast(local_buffer, c.POINTER(c.c_void_p)).contents.value
-            else:  # INT value
+            elif option != 2 and Addresses.client_name == 'Altaron':  # INT value
                 pointer_value = c.cast(local_buffer, c.POINTER(c.c_int)).contents.value
+            else:
+                pointer_value = c.cast(local_buffer, c.POINTER(c.c_void_p)).contents.value
             current_address = c.c_void_p(pointer_value + offset)
 
         # Final read to get the value at the resolved address

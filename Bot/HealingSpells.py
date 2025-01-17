@@ -547,15 +547,14 @@ class HealingTab(QWidget):
                             continue
 
                         # If the "Action" index is above 2, it might be a hotkey
-                        if (
-                            attack_data['Action'] > 2
+                        if ( attack_data['Action'] > 2
                             and (int(attack_data['HpFrom']) >= target_hp > int(attack_data['HpTo']))
                             and current_mp >= int(attack_data['MinMp'])
                             and (attack_data['Name'] == '*' or target_name in attack_data['Name'])
                             and (attack_data['Distance'] >= abs(x - target_x)
                                  and attack_data['Distance'] >= abs(y - target_y))
                         ):
-                            press_hotkey(attack_data['Action'] - 2)
+                            press_hotkey(int(attack_data['Action'] - 2))
                             time.sleep(random.uniform(0.3, 0.6))
                             break
             except Exception as e:

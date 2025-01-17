@@ -79,6 +79,7 @@ def load_items_images(list_widget) -> None:
                         background = background[:22, :, :]
                         background = cv.cvtColor(background, cv.COLOR_BGR2GRAY)
                         background = cv.GaussianBlur(background, (7, 7), 0)
+                        background = cv.resize(background, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
                         background = np.array(background)
                         Addresses.item_list[item_name].append(background)
                     item_image.close()

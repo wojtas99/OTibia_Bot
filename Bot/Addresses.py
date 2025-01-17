@@ -1,3 +1,5 @@
+import time
+
 import win32process
 import win32gui
 import ctypes as c
@@ -164,10 +166,11 @@ def load_medivia() -> None:
     Memory Addresses in Medivia
     :return: None
     """
-    global my_x_address, my_y_address, my_z_address, attack_address
+    global my_x_address, my_y_address, my_z_address, my_name_address, attack_address
     global target_name_offset, target_x_offset, target_y_offset, target_hp_offset
     global my_stats_ptr, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
-    global process_handle, base_address, game, game_name, client_name, background_image, numberEasyBot
+    global process_handle, base_address, game, game_name
+    global client_name, background_image, item_list, numberEasyBot, proc_id
 
     # Background image
     background_image = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALkSURBVEhLhVbZchpBDMwvxBzmncLGHAUGkvz/n6UPSaNdqKTjGlqta0azkP3xJ/Fb+JV4PB73+/12u31/f1+v18vlcj6fT6fT8Xj8+vra7/efn58fHx/b/4ENVsvVkn/ESljjX1Pefr6ZG4zAor+hCDYNmNkA5YylSmecNWBiDlm8mQ4DzLFWg9hyOLSvyixXYb2OTUD3hiJFADEQNhosFy/csq1qUQlUpCsr9mbPaHewYFGlRQ9HpFjZazmXtSEAlqv7rFgVQRINfExoRSKaBk0rZfIzV2O4QEV0zDail1AuAT5GkfokYLlaLDiEivEY2x00wIcVbpEo7X1Z55qFpJGUDhJ42aB4jcsYDYx5mxBHdaWPBjUBJxg2geKYA0r0q6q1nxsBNqMBmJDP0lMyXQkoEuWF5b8Is5cNrMwvOYKiiEpoRYI8hJMJOof+Cjki50eOPntF2mpj7rMXt4t82sx1JpfMVSNSGqIZYVDtUJjBh1NfOmZ5bmpGzL4HEd2en1qDZL7NgvUAmvmedbjZJRNQ5dSgW8VQEg4GZMAMRc4AzN6AQVZpNAKwIwI8irqwBE01kBGK0UcUG6z5hlm1qkSK3VWw6FFDjwY+/hj99MvCA8CVDajnAwNTKaMZSYucXDIAh/93rCCsrC5izHiZM+4tZgN54eAvok8nk6qhfgathHiYiptwZE0a6PdWuj64BWyilasf5A67gOKslnXGiMLXCKu33RVxVytVi4CVp6clbzSgLBvJwXVFCuQy9F5OYdYBc/kIi6OB1T6T2Kk8MBdv43qqN+3sRGGA3uenCDW5U8waCG2SNqrTcD/VMqHdms2fIsNBhg/hu/U6i5ER1UsnE8c6H1FApwua+zIkRTKAMPJpNqDY1sAqYLVuwqtBd7o65GqPQG7I3mjwvn7HXnwBdomYTXhfQxSKKzb4ZrOJBkZ/fce7O4B3d7++490dwLs7cDgc/PqOd/fdbocS/8J2+xfQVRnrv+UpjwAAAABJRU5ErkJggg=="
@@ -203,6 +206,8 @@ def load_medivia() -> None:
     base_address = modules[0]
 
     numberEasyBot = process_count()
+
+    c.windll.kernel32.CloseHandle(process_handle)
 
 
 # We are Dragons Game

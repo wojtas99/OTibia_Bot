@@ -48,7 +48,7 @@ class TargetLootTab(QWidget):
         self.status_label.setStyleSheet("color: red; font-weight: bold;")
 
         # Check Boxes
-        self.startLoot_checkBox = QCheckBox("Open Corpses", self)
+        self.startLoot_checkBox = QCheckBox("Start Looting", self)
         self.startTarget_checkBox = QCheckBox("Start Targeting", self)
         self.chase_checkBox = QCheckBox("Chase", self)
         self.startSkin_checkBox = QCheckBox("Skin", self)
@@ -171,7 +171,8 @@ class TargetLootTab(QWidget):
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
-        self.startTarget_checkBox.stateChanged.connect(self.start_target_loot)
+        self.startTarget_checkBox.stateChanged.connect(self.start_target)
+        self.startLoot_checkBox.stateChanged.connect(self.start_loot)
 
         layout1 = QHBoxLayout(self)
         layout2 = QHBoxLayout(self)
@@ -414,27 +415,25 @@ class TargetLootTab(QWidget):
         self.status_label.setStyleSheet("color: green; font-weight: bold;")
         self.status_label.setText(f"Profile '{profile_name}' loaded successfully.")
 
-    def start_target_loot(self) -> None:
+    def start_target(self) -> None:
         """Checkbox triggers a background thread to start targeting/looting."""
-        thread = Thread(target=self.start_target_loot_thread)
+        thread = Thread(target=self.start_target_thread)
         thread.daemon = True
         if self.startTarget_checkBox.checkState() == 2:
             thread.start()
 
-    def start_loot(self, item_image) -> None:
-        thread = Thread(target=self.start_loot_thread, args=(item_image,))
+    def start_loot(self) -> None:
+        thread = Thread(target=self.start_loot_thread)
         thread.daemon = True
         if self.startLoot_checkBox.checkState() == 2:
             thread.start()
 
-    def start_target_loot_thread(self) -> None:
+    def start_target_thread(self) -> None:
         """
         Automate targeting monsters and looting them.
         """
         # Main loop
         global lootLoop
-        load_items_images(self.lootList_listWidget)
-        self.start_loot(Addresses.item_list)
 
         while self.startTarget_checkBox.checkState() == 2:
             try:
@@ -525,8 +524,10 @@ class TargetLootTab(QWidget):
                 print(f"Error: {e}")
                 time.sleep(0.1)
 
-    def start_loot_thread(self, item_image) -> None:
+    def start_loot_thread(self) -> None:
         global lootLoop
+        load_items_images(self.lootList_listWidget)
+        item_image = Addresses.item_list
         """
         Actual looting procedure: open the corpse and try matching items,
         then collecting them into the correct container.
@@ -534,19 +535,22 @@ class TargetLootTab(QWidget):
         capture_screen = WindowCapture(screen_width[0] - screen_x[0], screen_height[0] - screen_y[0],
                                        screen_x[0], screen_y[0])
         while self.startLoot_checkBox.checkState() == 2:
-            while lootLoop < 2:
+            while ((lootLoop < 2 or not self.startTarget_checkBox.checkState())
+                   and self.startLoot_checkBox.checkState() == 2):
                 for file_name, value_list in item_image.items():
                     screenshot = capture_screen.get_screenshot()
                     screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
                     screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
+                    screenshot = cv.resize(screenshot, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
                     for val in value_list[:-1]:
                         result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
-                        locations = list(zip(*(np.where(result >= 0.84))[::-1]))
+                        locations = list(zip(*(np.where(result >= 0.95))[::-1]))
                         locations = merge_close_points(locations, 15)
                         locations = sorted(locations, key=lambda point: (point[1], point[0]), reverse=True)
-                        locations = [[int(lx), int(ly)] for lx, ly in locations]
+                        #locations = [[int(lx), int(ly)] for lx, ly in locations]
+                        locations = [[int(lx / 3), int(ly / 3)] for lx, ly in locations]
                         for lx, ly in locations:
                             manage_collect(lx, ly, value_list[-1])
-                            time.sleep(0.5)
+                            time.sleep(0.3)
                 lootLoop += 1
             time.sleep(0.1)
