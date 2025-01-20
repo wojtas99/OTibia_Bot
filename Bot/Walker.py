@@ -417,6 +417,15 @@ class WalkerTab(QWidget):
             map_x = wpt_data['X']
             map_y = wpt_data['Y']
             map_z = wpt_data['Z']
+            x, y, z = read_my_wpt()
+            if x == map_x and y == map_y and z == map_z and wpt_action == 0:
+                current_wpt += 1
+                if current_wpt == self.waypoint_list_widget.count():
+                    current_wpt = 0
+                continue
+            if wpt_action == 0:
+                walk(wpt_direction, x, y, z, map_x, map_y, map_z)
+            '''
             while walked:
                 x, y, z = read_my_wpt()
                 time.sleep(0.01)
@@ -499,3 +508,4 @@ class WalkerTab(QWidget):
                     timer += 0.5
                     right_click(coordinates_x[0], coordinates_y[0])  # e.g. click on Ladder
                     current_wpt += 1
+        '''

@@ -136,9 +136,18 @@ def read_my_stats():
 
 def read_my_wpt():
     try:
+        '''
         x = read_memory_address(Addresses.my_x_address, 0, 1)
         y = read_memory_address(Addresses.my_y_address, 0, 1)
         z = read_memory_address(Addresses.my_z_address, 0, 4)
+        '''
+        if Addresses.client_name == 'WAD':
+            print("Czytam x")
+            x = read_pointer_address(0x0129344C, [0x13C, 0X60, 0X144, 0XC], 1)
+            print("Czytam y")
+            y = read_pointer_address(0x0129344C, [0x13C, 0X60, 0X144, 0X10], 1)
+            print("Czytam z")
+            z = read_pointer_address(0x0129344C, [0x13C, 0X60, 0X144, 0XC], 1)
         if x is None or y is None or z is None:
             print("Failed to read coordinates.")
             return None, None, None

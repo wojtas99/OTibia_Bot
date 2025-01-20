@@ -219,16 +219,17 @@ def load_wad() -> None:
     global my_x_address, my_y_address, my_z_address, my_name_address, attack_address
     global target_name_offset, target_x_offset, target_y_offset, target_hp_offset
     global my_stats_ptr, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
-    global process_handle, base_address, game, game_name, client_name, background_image, numberEasyBot
+    global process_handle, base_address, game, game_name
+    global client_name, background_image, item_list, numberEasyBot, proc_id
 
     # Background Image
     background_image = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALkSURBVEhLhVbZchpBDMwvxBzmncLGHAUGkvz/n6UPSaNdqKTjGlqta0azkP3xJ/Fb+JV4PB73+/12u31/f1+v18vlcj6fT6fT8Xj8+vra7/efn58fHx/b/4ENVsvVkn/ESljjX1Pefr6ZG4zAor+hCDYNmNkA5YylSmecNWBiDlm8mQ4DzLFWg9hyOLSvyixXYb2OTUD3hiJFADEQNhosFy/csq1qUQlUpCsr9mbPaHewYFGlRQ9HpFjZazmXtSEAlqv7rFgVQRINfExoRSKaBk0rZfIzV2O4QEV0zDail1AuAT5GkfokYLlaLDiEivEY2x00wIcVbpEo7X1Z55qFpJGUDhJ42aB4jcsYDYx5mxBHdaWPBjUBJxg2geKYA0r0q6q1nxsBNqMBmJDP0lMyXQkoEuWF5b8Is5cNrMwvOYKiiEpoRYI8hJMJOof+Cjki50eOPntF2mpj7rMXt4t82sx1JpfMVSNSGqIZYVDtUJjBh1NfOmZ5bmpGzL4HEd2en1qDZL7NgvUAmvmedbjZJRNQ5dSgW8VQEg4GZMAMRc4AzN6AQVZpNAKwIwI8irqwBE01kBGK0UcUG6z5hlm1qkSK3VWw6FFDjwY+/hj99MvCA8CVDajnAwNTKaMZSYucXDIAh/93rCCsrC5izHiZM+4tZgN54eAvok8nk6qhfgathHiYiptwZE0a6PdWuj64BWyilasf5A67gOKslnXGiMLXCKu33RVxVytVi4CVp6clbzSgLBvJwXVFCuQy9F5OYdYBc/kIi6OB1T6T2Kk8MBdv43qqN+3sRGGA3uenCDW5U8waCG2SNqrTcD/VMqHdms2fIsNBhg/hu/U6i5ER1UsnE8c6H1FApwua+zIkRTKAMPJpNqDY1sAqYLVuwqtBd7o65GqPQG7I3mjwvn7HXnwBdomYTXhfQxSKKzb4ZrOJBkZ/fce7O4B3d7++490dwLs7cDgc/PqOd/fdbocS/8J2+xfQVRnrv+UpjwAAAABJRU5ErkJggg=="
 
     # Static Addresses
     # Character Addresses
-    my_x_address = 0xB3352C
-    my_y_address = 0xB33530
-    my_z_address = 0xB33534
+    my_x_address = 0X1C904F50
+    my_y_address = 0x1C904F50
+    my_z_address = 0x1C904F50
     my_name_address = 0x3F5234
     my_stats_ptr = 0X00B33250
     my_hp_offset = [0X518]
@@ -244,8 +245,8 @@ def load_wad() -> None:
     target_hp_offset = 0x6C
 
     # Game 'n' Client names
-    game_name = 'WADclient'
-    client_name = "WAD"
+    game_name = 'Tibia - Doktor Habilitowany - 0 - 0 - 0 - 0'
+    client_name = 'WAD'
 
     # Loading Addresses
     game = win32gui.FindWindow(None, game_name)

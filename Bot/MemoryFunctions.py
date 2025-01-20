@@ -90,13 +90,13 @@ def read_pointer_address(address_read, offsets, option):
             )
             if not result or bytes_read.value != c.sizeof(c.c_void_p):
                 error_code = c.windll.kernel32.GetLastError()
-                raise RuntimeError(f"Failed to read pointer at address {hex(current_address.value)}, error code: {error_code}")
+                raise RuntimeError(
+                    f"Failed to read pointer at address {hex(current_address.value)}, error code: {error_code}")
 
             # Update current address with the pointer value and offset
-            # Update current address with the offset
             if option == 2:  # LONG value
                 pointer_value = c.cast(local_buffer, c.POINTER(c.c_void_p)).contents.value
-            elif option != 2 and Addresses.client_name == 'Altaron':  # INT value
+            elif option != 2 and Addresses.client_name == 'Altaron' or Addresses.client_name == 'WAD':  # INT value
                 pointer_value = c.cast(local_buffer, c.POINTER(c.c_int)).contents.value
             else:
                 pointer_value = c.cast(local_buffer, c.POINTER(c.c_void_p)).contents.value
