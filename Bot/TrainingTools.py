@@ -4,7 +4,7 @@ import base64
 from PyQt5.QtCore import Qt
 import random
 import time
-from threading import Thread
+from threading import Thread, Event
 import win32api
 import win32con
 import win32gui
@@ -25,6 +25,8 @@ class TrainingTab(QWidget):
     def __init__(self):
         super().__init__()
 
+        # Sleep
+        self.stop_event = Event()
         # Load Icon
         self.setWindowIcon(
             QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(
@@ -148,7 +150,6 @@ class TrainingTab(QWidget):
         if self.burn_mana_checkbox.checkState() == 2:
             thread.start()
 
-
     def start_skill_thread(self) -> None:
         """
         Continuously checks the player's MP and uses hotkeys if needed.
@@ -159,8 +160,7 @@ class TrainingTab(QWidget):
                 current_hp, current_max_hp, current_mp, current_max_mp = read_my_stats()
                 hotkey_data = self.burn_mana_list_widget.item(index).data(Qt.UserRole)
                 hotkey_mana = hotkey_data['Mana']
-                time.sleep(random.uniform(1, 2))
                 if current_mp >= hotkey_mana:
                     # The text is like "F1", so skip 'F' => use int(...) for the number
                     press_hotkey(int(self.burn_mana_list_widget.item(index).text()[1:]))
-                    time.sleep(random.uniform(1, 2))
+                    time.sleep(random.uniform(0.1, 0.2))

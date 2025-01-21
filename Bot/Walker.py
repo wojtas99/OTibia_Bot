@@ -5,7 +5,7 @@ import json
 import os
 from threading import Thread
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import (
     QWidget, QListWidget, QLineEdit, QTextEdit, QCheckBox, QComboBox, QVBoxLayout,
     QHBoxLayout, QGroupBox, QPushButton, QListWidgetItem, QLabel, QGridLayout
@@ -408,8 +408,13 @@ class WalkerTab(QWidget):
         if current_wpt == -1:
             current_wpt = 0
         timer = 0
-        walked = True
+        timer_second = 0
+        walked = False
+        walker_stop = False
+        old_x, old_y = 0, 0
         while self.start_cave_bot_checkbox.checkState():
+            time.sleep(0.1)
+            timer_second += 0.1
             self.waypoint_list_widget.setCurrentRow(current_wpt)
             wpt_data = self.waypoint_list_widget.item(current_wpt).data(Qt.UserRole)
             wpt_action = wpt_data['Action']
@@ -418,13 +423,37 @@ class WalkerTab(QWidget):
             map_y = wpt_data['Y']
             map_z = wpt_data['Z']
             x, y, z = read_my_wpt()
+            if timer_second > 5:
+                for index in range(current_wpt, self.waypoint_list_widget.count()):
+                    QTimer.singleShot(0, lambda: self.waypoint_list_widget.setCurrentRow(index))
+                    wpt_data = self.waypoint_list_widget.item(index).data(Qt.UserRole)
+                    map_x = wpt_data['X']
+                    map_y = wpt_data['Y']
+                    map_z = wpt_data['Z']
+                    if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5:
+                        current_wpt = index
+                        timer_second = 0
+                        break
+            if walked:
+                if old_x == x and old_y == y:
+                    timer += 0.1
+                else:
+                    timer = 0
+                old_x, old_y = x, y
             if x == map_x and y == map_y and z == map_z and wpt_action == 0:
+                timer = 0
+                walked = False
                 current_wpt += 1
                 if current_wpt == self.waypoint_list_widget.count():
                     current_wpt = 0
                 continue
-            if wpt_action == 0:
+            if walker_Lock.locked() and not walker_stop:
+                left_click(coordinates_x[0], coordinates_y[0])
+                walker_stop = True
+            if not walked or timer >= 0.5 and not walker_Lock.locked():
                 walk(wpt_direction, x, y, z, map_x, map_y, map_z)
+                walked = True
+                walker_stop = False
             '''
             while walked:
                 x, y, z = read_my_wpt()

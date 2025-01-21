@@ -6,6 +6,8 @@ import ctypes as c
 import threading
 import psutil
 
+import Functions
+
 # Keystrokes codes
 lParam = [
     0X00480001, 0x00500001, 0X004D0001,  # 8, 2, 6
@@ -46,6 +48,7 @@ game = None
 base_address = None
 process_handle = None
 proc_id = None
+sqm_size = None
 
 # Game Name 'n' number of EasyBot processes
 client_name = None
@@ -245,7 +248,7 @@ def load_wad() -> None:
     target_hp_offset = 0x6C
 
     # Game 'n' Client names
-    game_name = 'Tibia - Doktor Habilitowany - 0 - 0 - 0 - 0'
+    game_name = 'Tibia - Doktor Habilitowany'
     client_name = 'WAD'
 
     # Loading Addresses
@@ -267,7 +270,7 @@ def load_altaron() -> None:
     global my_x_address, my_y_address, my_z_address, my_name_address, attack_address
     global target_name_offset, target_x_offset, target_y_offset, target_hp_offset
     global my_stats_ptr, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
-    global process_handle, base_address, game, game_name
+    global process_handle, base_address, game, game_name, sqm_size
     global client_name, background_image, item_list, numberEasyBot, proc_id
 
     # Background image
@@ -304,4 +307,5 @@ def load_altaron() -> None:
     base_address = modules[0]
 
     numberEasyBot = process_count()
+    sqm_size = int(Functions.read_pointer_address(0x02F73154, [0x0, 0x30], 1)/15)
     c.windll.kernel32.CloseHandle(process_handle)

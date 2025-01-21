@@ -3,7 +3,7 @@ import base64
 import time
 import json
 import os
-from threading import Thread
+from threading import Thread, Event
 from PyQt5.QtWidgets import (QWidget, QCheckBox, QComboBox, QLineEdit, QListWidget, QGridLayout,QGroupBox, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QListWidgetItem)
 from PyQt5.QtGui import QIcon, QPixmap, QIntValidator
 from PyQt5.QtCore import Qt
@@ -18,6 +18,8 @@ from Functions import read_my_stats, read_my_wpt, read_target_info, delete_item
 class HealingTab(QWidget):
     def __init__(self):
         super().__init__()
+
+        self.stop_event = Event()
 
         # Load Icon
         self.setWindowIcon(
@@ -561,14 +563,19 @@ class HealingTab(QWidget):
                 print(f"Error in start_attacking_thread: {e}")
                 time.sleep(random.uniform(0.1, 0.3))
 
+    from threading import Event
+
     def start_healing_thread(self):
         healed = True
         heal_multiplayer = 0.0
-        while self.start_heal_checkBox.checkState() == 2:
+        stop_event = Event()  # Use Event for thread-safe waiting
+
+        while self.start_heal_checkBox.checkState() == 2 and not stop_event.is_set():
             try:
                 if healed:
                     heal_multiplayer = random.uniform(0.9, 1.0)
                     healed = False
+
                 for heal_index in range(self.healList_listWidget.count()):
                     heal_data = self.healList_listWidget.item(heal_index).data(Qt.UserRole)
                     heal_type = heal_data['Type']
@@ -583,31 +590,34 @@ class HealingTab(QWidget):
                     if current_hp is None or current_max_hp is None or current_mp is None or current_max_mp is None:
                         print("Failed to read stats.")
                         continue
+
                     # HP-based healing
                     if heal_type.startswith("HP"):
                         hp_percentage = (current_hp * 100) / current_max_hp
                         if heal_option == "UH":
                             if heal_below >= hp_percentage >= heal_above:
-                                time.sleep(random.uniform(0.1, 0.2))
+                                stop_event.wait(random.uniform(0.1, 0.2))  # Replace sleep with wait
                                 use_on_me(coordinates_x[5], coordinates_y[5])
                                 healed = True
                         else:
                             # Potions or hotkeys (F1..F12)
                             if heal_below >= hp_percentage >= heal_above and current_mp >= heal_min_mp:
-                                time.sleep(random.uniform(0.1, 0.2))
+                                stop_event.wait(random.uniform(0.1, 0.2))
                                 press_hotkey(int(heal_option[1:]))
                                 healed = True
+
                     # MP-based healing
                     elif heal_type.startswith("MP"):
                         mp_percentage = (current_mp * 100) / current_max_mp
                         if heal_below >= mp_percentage >= heal_above:
-                            time.sleep(random.uniform(0.1, 0.2))
+                            stop_event.wait(random.uniform(0.1, 0.2))
                             press_hotkey(int(heal_option[1:]))
                             healed = True
 
                 # Delay to prevent overloading
-                time.sleep(random.uniform(0.1, 0.2))
+                stop_event.wait(random.uniform(0.1, 0.2))
 
             except Exception as e:
                 print(f"Error in healing thread: {e}")
+
 

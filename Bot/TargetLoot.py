@@ -30,8 +30,8 @@ lootLoop = 2
 
 
 class TargetLootTab(QWidget):
-    def __init__(self, parent=None):
-        super(TargetLootTab, self).__init__(parent)
+    def __init__(self):
+        super().__init__()
 
         # Load Icon
         self.setWindowIcon(
@@ -503,7 +503,7 @@ class TargetLootTab(QWidget):
                             y = target_y - y
                             press_hotkey(9)  # Example: F9 as skin hotkey
                             left_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
-                            time.sleep(0.5)
+                            time.sleep(0.1)
 
                         # If we opened the corpse, start looting
                         if open_corpse and self.startLoot_checkBox.checkState() == 2:
@@ -544,10 +544,9 @@ class TargetLootTab(QWidget):
                     screenshot = cv.resize(screenshot, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
                     for val in value_list[:-1]:
                         result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
-                        locations = list(zip(*(np.where(result >= 0.95))[::-1]))
+                        locations = list(zip(*(np.where(result >= 0.90))[::-1]))
                         locations = merge_close_points(locations, 15)
                         locations = sorted(locations, key=lambda point: (point[1], point[0]), reverse=True)
-                        #locations = [[int(lx), int(ly)] for lx, ly in locations]
                         locations = [[int(lx / 3), int(ly / 3)] for lx, ly in locations]
                         for lx, ly in locations:
                             manage_collect(lx, ly, value_list[-1])

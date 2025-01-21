@@ -26,6 +26,7 @@ def load_items_images(list_widget) -> None:
                 image_np = np.array(item_image)
                 image_bgr = cv.cvtColor(image_np, cv.COLOR_RGBA2BGR)
                 item_image = cv.cvtColor(image_bgr, cv.COLOR_BGR2GRAY)
+                item_image = cv.resize(item_image, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
                 Addresses.item_list[item_name] = []
                 Addresses.item_list[item_name].append(item_image)
                 Addresses.item_list[item_name].append(loot_container)
@@ -45,6 +46,7 @@ def load_items_images(list_widget) -> None:
                     background = background[:22, :, :]
                     background = cv.cvtColor(background, cv.COLOR_BGR2GRAY)
                     background = cv.GaussianBlur(background, (7, 7), 0)
+                    background = cv.resize(background, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
                     background = np.array(background)
                     Addresses.item_list[item_name].append(background)
                 item_image.close()
@@ -107,6 +109,7 @@ def load_items_images(list_widget) -> None:
                     background = background[:22, :, :]
                     background = cv.cvtColor(background, cv.COLOR_BGR2GRAY)
                     background = cv.GaussianBlur(background, (7, 7), 0)
+                    background = cv.resize(background, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
                     background = np.array(background)
                     Addresses.item_list[item_name].append(background)
                     Addresses.item_list[item_name].append(loot_container)
@@ -136,17 +139,14 @@ def read_my_stats():
 
 def read_my_wpt():
     try:
-        '''
+
         x = read_memory_address(Addresses.my_x_address, 0, 1)
         y = read_memory_address(Addresses.my_y_address, 0, 1)
         z = read_memory_address(Addresses.my_z_address, 0, 4)
-        '''
+
         if Addresses.client_name == 'WAD':
-            print("Czytam x")
             x = read_pointer_address(0x0129344C, [0x13C, 0X60, 0X144, 0XC], 1)
-            print("Czytam y")
             y = read_pointer_address(0x0129344C, [0x13C, 0X60, 0X144, 0X10], 1)
-            print("Czytam z")
             z = read_pointer_address(0x0129344C, [0x13C, 0X60, 0X144, 0XC], 1)
         if x is None or y is None or z is None:
             print("Failed to read coordinates.")
