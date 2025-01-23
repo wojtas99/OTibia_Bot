@@ -97,11 +97,10 @@ class WalkerThread(QThread):
             map_x = wpt_data['X']
             map_y = wpt_data['Y']
             map_z = wpt_data['Z']
-            if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5:
+            wpt_action = wpt_data['Action']
+            wpt_direction = wpt_data['Direction']
+            if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 == wpt_direction:
                 current_wpt = wpt
-                left_click(coordinates_x[0] + (map_x - x) * 75, coordinates_y[0] + (map_y - y) * 75)
-                QThread.msleep(random.randint(1000, 2000))
-                break
         return current_wpt
 
 

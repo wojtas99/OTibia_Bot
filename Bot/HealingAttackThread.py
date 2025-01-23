@@ -55,8 +55,8 @@ class HealThread(QThread):
                             press_hotkey(int(heal_option[1:]))
                             healed = True
                             QThread.msleep(random.randint(100, 200))
-
                     QThread.msleep(random.randint(100, 200))
+                QThread.msleep(random.randint(100, 200))
             except Exception as e:
                 print(e)
 
@@ -78,9 +78,9 @@ class AttackThread(QThread):
                     attack_data = self.attack_list.item(attack_index).data(Qt.UserRole)
                     if read_memory_address(Addresses.attack_address, 0, 2) != 0:
                         current_hp, current_max_hp, current_mp, current_max_mp = read_my_stats()
-                        target_x, target_y, target_name, target_hp = read_target_info()
+                        target_x, target_y, target_z, target_name, target_hp = read_target_info()
                         while (target_x or target_y) is None:
-                            target_x, target_y, target_name, target_hp = read_target_info()
+                            target_x, target_y, target_z, target_name, target_hp = read_target_info()
                         x, y, z = read_my_wpt()
                         while (x or y or z) is None:
                             x, y, z = read_my_wpt()

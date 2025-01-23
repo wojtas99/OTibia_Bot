@@ -6,7 +6,7 @@ import Addresses
 from Addresses import coordinates_x, coordinates_y, screen_width, screen_height, screen_x, screen_y, walker_Lock
 from Functions import read_target_info, read_my_wpt, load_items_images
 from GeneralFunctions import WindowCapture, merge_close_points, manage_collect
-from KeyboardFunctions import press_hotkey, press_key
+from KeyboardFunctions import press_hotkey, press_key, walk
 from MemoryFunctions import read_memory_address, read_pointer_address
 from MouseFunctions import right_click, left_click
 import cv2 as cv
@@ -16,12 +16,13 @@ lootLoop = 2
 
 class TargetThread(QThread):
 
-    def __init__(self, targets, loot_state, skin_state):
+    def __init__(self, targets, loot_state, skin_state, chase_state):
         super().__init__()
         self.running = True
         self.targets = targets
         self.loot_state = loot_state
         self.skin_state = skin_state
+        self.chase_state = chase_state
         self.state_lock = QMutex()
 
     def run(self):
@@ -39,7 +40,7 @@ class TargetThread(QThread):
                     QThread.msleep(random.randint(100, 150))
                     target_id = read_memory_address(Addresses.attack_address, 0, 2)
                 if target_id != 0:
-                    target_x, target_y, target_name, target_hp = read_target_info()
+                    target_x, target_y, target_z, target_name, target_hp = read_target_info()
                     target_name = "*"
                     if self.targets.findItems(target_name, Qt.MatchFixedString):
                         target_index = self.targets.findItems(target_name, Qt.MatchFixedString)[0]
@@ -50,7 +51,7 @@ class TargetThread(QThread):
                                 press_key('`')
                                 timer = 0
                                 QThread.msleep(random.randint(100, 150))
-                            target_x, target_y, target_name, target_hp = read_target_info()
+                            target_x, target_y, target_z, target_name, target_hp = read_target_info()
                             x, y, z = read_my_wpt()
                             # If within attack distance
                             if (int(target_data['Distance']) >= abs(x - target_x)
@@ -58,6 +59,8 @@ class TargetThread(QThread):
                                     or target_data['Distance'] == 0:
                                 if not walker_Lock.locked():
                                     walker_Lock.acquire()
+                                if self.chase_state:
+                                    walk(0, x, y, 0, target_x, target_y, 0)
                             else:
                                 if walker_Lock.locked() and lootLoop > 1:
                                     walker_Lock.release()
@@ -65,7 +68,7 @@ class TargetThread(QThread):
                                 sleep_value = random.randint(90, 150)
                                 QThread.msleep(sleep_value)
                                 timer += sleep_value
-                                target_x, target_y, target_name, target_hp = read_target_info()
+                                target_x, target_y, target_z, target_name, target_hp = read_target_info()
 
                             open_corpse = True
                             sleep_value = random.randint(90, 150)
@@ -88,6 +91,9 @@ class TargetThread(QThread):
                             if backpack == read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1):
                                 right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
                                 QThread.msleep(random.randint(500, 600))
+                        x, y, z = read_my_wpt()
+                        if z != target_z:
+                            walk(1, 0, 0, 0, 0, 0, 0)
                         lootLoop = 0
 
                 if walker_Lock.locked() and lootLoop > 1:
@@ -124,24 +130,27 @@ class LootThread(QThread):
                                        screen_x[0], screen_y[0])
 
         while self.running:
-            while (lootLoop < 2 or not self.target_state) and self.running:
-                for file_name, value_list in item_image.items():
-                    screenshot = capture_screen.get_screenshot()
-                    screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
-                    screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
-                    screenshot = cv.resize(screenshot, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
-                    for val in value_list[:-1]:
-                        result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
-                        locations = list(zip(*(np.where(result >= 0.9))[::-1]))
-                        locations = merge_close_points(locations, 35)
-                        locations = sorted(locations, key=lambda point: (point[1], point[0]), reverse=True)
-                        locations = [[int(lx / 3), int(ly / 3)] for lx, ly in locations]
-                        for lx, ly in locations:
-                            manage_collect(lx, ly, value_list[-1])
-                            QThread.msleep(random.randint(300, 350))
-                lootLoop += 1
+            try:
+                while (lootLoop < 2 or not self.target_state) and self.running:
+                    for file_name, value_list in item_image.items():
+                        screenshot = capture_screen.get_screenshot()
+                        screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
+                        screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
+                        screenshot = cv.resize(screenshot, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
+                        for val in value_list[:-1]:
+                            result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
+                            locations = list(zip(*(np.where(result >= 0.9))[::-1]))
+                            locations = merge_close_points(locations, 35)
+                            locations = sorted(locations, key=lambda point: (point[1], point[0]), reverse=True)
+                            locations = [[int(lx / 3), int(ly / 3)] for lx, ly in locations]
+                            for lx, ly in locations:
+                                manage_collect(lx, ly, value_list[-1])
+                                QThread.msleep(random.randint(300, 350))
+                    lootLoop += 1
+                    QThread.msleep(random.randint(80, 130))
                 QThread.msleep(random.randint(80, 130))
-            QThread.msleep(random.randint(80, 130))
+            except Exception as e:
+                print(e)
 
     def update_states(self, state):
         """Thread-safe method to update loot and skin states."""

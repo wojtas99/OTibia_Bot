@@ -42,19 +42,14 @@ def load_items_images(list_widget) -> None:
                     background = Image.open(
                         io.BytesIO(base64.b64decode(Addresses.background_image))
                     ).convert('RGBA')
-                    '''img = frame_rgba
-                    datas = img.getdata()
+                    datas = frame_rgba.getdata()
                     newData = []
                     for item in datas:
                         if item[0] == 255 and item[1] == 255 and item[2] == 255:
                             newData.append((255, 255, 255, 0))
                         else:
                             newData.append(item)
-                    img.putdata(newData)
-                    img = np.array(img)
-                    cv.imshow("test", img)
-                    cv.waitKey(0)
-                    cv.destroyAllWindows()'''
+                    frame_rgba.putdata(newData)
                     background.paste(frame_rgba, (0, 0), frame_rgba)
                     background = np.array(background)
                     background = background[:22, :, :]
@@ -179,14 +174,18 @@ def read_target_info():
         target_x = read_memory_address(target_x, Addresses.target_x_offset, 1)
         target_y = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
         target_y = read_memory_address(target_y, Addresses.target_y_offset, 1)
+        target_z = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
+        target_z = read_memory_address(target_z, Addresses.target_z_offset, 4)
         target_name = "*"
         target_hp = read_memory_address(read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address, Addresses.target_hp_offset, 7)
-        return target_x, target_y, target_name, target_hp
+        return target_x, target_y, target_z, target_name, target_hp
     if Addresses.client_name == "Medivia":
         target_x = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
         target_x = read_memory_address(target_x, Addresses.target_x_offset, 1)
         target_y = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
         target_y = read_memory_address(target_y, Addresses.target_y_offset, 1)
+        target_z = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
+        target_z = read_memory_address(target_z, Addresses.target_z_offset, 1) - Addresses.base_address
         target_name = "*"
         target_hp = read_memory_address(read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address, Addresses.target_hp_offset, 7)
-        return target_x, target_y, target_name, target_hp
+        return target_x, target_y, target_z, target_name, target_hp

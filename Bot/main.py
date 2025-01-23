@@ -3,6 +3,8 @@ import Addresses
 from Login import LoginTab
 import os
 
+from SelectTibia import SelectTibiaTab
+
 
 def main():
     # Make directories
@@ -14,7 +16,9 @@ def main():
     app = QApplication([])
     app.setStyle('Fusion')
     app.setStyleSheet(Addresses.dark_theme)
-    login_window = LoginTab()
+    #login_window = LoginTab()
+    #login_window.show()
+    login_window = SelectTibiaTab()
     login_window.show()
 
     app.exec()

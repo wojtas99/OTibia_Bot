@@ -39,7 +39,7 @@ class TargetLootTab(QWidget):
         # Check Boxes
         self.startLoot_checkBox = QCheckBox("Start Looting", self)
         self.startTarget_checkBox = QCheckBox("Start Targeting", self)
-        self.chase_checkBox = QCheckBox("Chase", self)
+        self.startChase_checkBox = QCheckBox("Chase", self)
         self.startSkin_checkBox = QCheckBox("Skin", self)
 
         # Combo Boxes
@@ -167,7 +167,7 @@ class TargetLootTab(QWidget):
         layout2 = QHBoxLayout(self)
 
         layout1.addWidget(self.startLoot_checkBox)
-        layout1.addWidget(self.chase_checkBox)
+        layout1.addWidget(self.startChase_checkBox)
         layout2.addWidget(self.startTarget_checkBox)
         layout2.addWidget(self.startSkin_checkBox)
 
@@ -408,7 +408,7 @@ class TargetLootTab(QWidget):
         if self.loot_thread:
             self.loot_thread.update_states(self.startTarget_checkBox)
         if state == Qt.Checked:
-            self.target_thread = TargetThread(self.targetList_listWidget, self.startLoot_checkBox.checkState(), self.startSkin_checkBox.checkState())
+            self.target_thread = TargetThread(self.targetList_listWidget, self.startLoot_checkBox.checkState(), self.startSkin_checkBox.checkState(), self.startChase_checkBox.checkState())
             self.target_thread.start()
         else:
             if self.target_thread:

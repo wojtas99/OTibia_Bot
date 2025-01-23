@@ -1,3 +1,4 @@
+import random
 import time
 
 import win32api
@@ -14,8 +15,8 @@ def walk(wpt_direction, my_x, my_y, my_z, map_x, map_y, map_z) -> None:
     z = map_z - my_z
     if wpt_direction != 0:
         if wpt_direction == 1 and (-2 <= y < 0 or (y == 0 == x)) and abs(z) <= 1:  # Walk North
-            win32api.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[0], lParam[0])
-            win32api.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[0], lParam[0])
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[0], lParam[0])
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[0], lParam[0])
             return
         if wpt_direction == 2 and 0 < y <= 2 and abs(z) <= 1:  # Walk South
             win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[1], lParam[1])
@@ -30,40 +31,41 @@ def walk(wpt_direction, my_x, my_y, my_z, map_x, map_y, map_z) -> None:
             win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[3], lParam[3])
             return
     else:
-        if x == 1 and y == -1 and z == 0:
-            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[4], lParam[4])
-            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[4], lParam[4])
+        '''if x == 1 and y == -1 and z == 0:  # Diagonal North East
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[4], lParam[4])  # 9
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[4], lParam[4])  # 9
             return
-        if x == 1 and y == 1 and z == 0:
-            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[6], lParam[6])
-            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[6], lParam[6])
+        if x == 1 and y == 1 and z == 0:  # Diagonal South East
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[6], lParam[6])  # 3
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[6], lParam[6])  # 3
             return
-        if x == -1 and y == -1 and z == 0:
-            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[5], lParam[5])
-            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[5], lParam[5])
+        if x == -1 and y == -1 and z == 0:  # Diagonal North West
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[5], lParam[5])  # 7
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[5], lParam[5])  # 7
             return
-        if x == -1 and y == 1 and z == 0:
+        if x == -1 and y == 1 and z == 0:  # Diagonal South West
             win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[7], lParam[7])
             win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[7], lParam[7])
+            return'''
+        if x == 1 and y == 0 and z == 0:  # Walk East
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[2], lParam[2])
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[2], lParam[2])
             return
-        if (x == 1 or x == 2) and -2 < y < 2 and z == 0:  # Walk East
-            win32api.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[2], lParam[2])
-            win32api.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[2], lParam[2])
+        if x == -1 and y == 0 and z == 0:  # Walk West
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[3], lParam[3])
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[3], lParam[3])
             return
-        if (x == -1 or x == -2) and -2 < y < 2 and z == 0:  # Walk West
-            win32api.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[3], lParam[3])
-            win32api.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[3], lParam[3])
-            return
-        if -2 < x < 2 and (y == 1 or y == 2) and z == 0:  # Walk South
+        if x == 0 and y == 1 and z == 0:  # Walk South
             win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[1], lParam[1])
             win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[1], lParam[1])
             return
-        if -2 < x < 2 and (y == -1 or y == -2) and z == 0:  # Walk North
+        if x == 0 and y == -1 and z == 0:  # Walk North
             win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[0], lParam[0])
             win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[0], lParam[0])
             return
-        if (abs(x) <= 7 and abs(y) <= 5 and z == 0) and 1 < abs(x) or 1 < abs(y):
+        if abs(x) <= 7 and abs(y) <= 5 and z == 0:  # Map click
             left_click(coordinates_x[0] + x * Addresses.sqm_size, coordinates_y[0] + y * Addresses.sqm_size)
+            time.sleep(random.uniform(0.5, 0.7))
             return
 
 

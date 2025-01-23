@@ -18,8 +18,9 @@ class MainWindowTab(QWidget):
 
         # Handle closing
         QApplication.instance().aboutToQuit.connect(lambda: win32gui.SetWindowText(Addresses.game, Addresses.game_name))
+
         # Load Icon
-        win32gui.SetWindowText(Addresses.game, Addresses.game_name + " - " + Addresses.numberEasyBot)
+        win32gui.SetWindowText(Addresses.game, Addresses.game_name + " - EasyBot" + Addresses.numberEasyBot)
         self.setWindowIcon(QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(base64.b64decode(icon_image)) else QIcon())
         # Set Title and Size
         self.setFixedSize(400, 100)

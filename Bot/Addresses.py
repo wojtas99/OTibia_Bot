@@ -12,12 +12,12 @@ import Functions
 lParam = [
     0X00480001, 0x00500001, 0X004D0001,  # 8, 2, 6
     0X004B0001, 0X00490001, 0X00470001,  # 4, 9, 7
-    0X00510001, 0X004F0001               # 3, 1
+    0X00510001, 0X004F0001  # 3, 1
 ]
 rParam = [
     0X26, 0x28, 0X27,  # 8, 2, 6
     0x25, 0x21, 0x24,  # 4, 9, 7
-    0x22, 0x23         # 3, 1
+    0x22, 0x23  # 3, 1
 ]
 
 # Locks
@@ -41,6 +41,7 @@ backpack_offset = None
 attack_address = None
 target_x_offset = None
 target_y_offset = None
+target_z_offset = None
 target_hp_offset = None
 target_name_offset = None
 monsters_on_screen = None
@@ -201,8 +202,8 @@ def load_medivia() -> None:
     target_hp_offset = 0xE8
 
     # Game 'n' Client names
-    game_name = 'Medivia'
     client_name = "Medivia"
+    game_name = fin_window_name(client_name)
 
     # Loading Addresses
     game = win32gui.FindWindow(None, game_name)
@@ -226,7 +227,7 @@ def load_wad() -> None:
     global my_x_address, my_y_address, my_z_address, my_name_address, attack_address
     global target_name_offset, target_x_offset, target_y_offset, target_hp_offset
     global my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
-    global process_handle, base_address, game, game_name
+    global process_handle, base_address, game, game_name, target_z_offset
     global client_name, background_image, item_list, numberEasyBot, proc_id
 
     # Background Image
@@ -252,8 +253,8 @@ def load_wad() -> None:
     target_hp_offset = 0x6C
 
     # Game 'n' Client names
-    game_name = 'Tibia - Doktor Habilitowany'
     client_name = 'WAD'
+    game_name = fin_window_name(client_name)
 
     # Loading Addresses
     game = win32gui.FindWindow(None, game_name)
@@ -272,7 +273,7 @@ def load_altaron() -> None:
     :return: None
     """
     global my_x_address, my_y_address, my_z_address, my_name_address, attack_address
-    global target_name_offset, target_x_offset, target_y_offset, target_hp_offset
+    global target_name_offset, target_x_offset, target_y_offset, target_hp_offset, target_z_offset
     global my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
     global process_handle, base_address, game, game_name, sqm_size, monsters_on_screen, monsters_on_screen_offset
     global client_name, background_image, item_list, numberEasyBot, proc_id, backpack_address, backpack_offset
@@ -298,13 +299,15 @@ def load_altaron() -> None:
     target_name_offset = 0x40
     target_x_offset = 0x34
     target_y_offset = 0x38
+    target_z_offset = 0x3C
     target_hp_offset = 0x58
 
     monsters_on_screen = 0x02F72D98
     monsters_on_screen_offset = [0x4, 0XDD0, 0X5FC, 0X370, 0X30]
 
-    game_name = 'Altaron (beta 0.18.10)'
     client_name = "Altaron"
+    game_name = fin_window_name(client_name)
+    print(game_name)
 
     # Loading Addresses
     game = win32gui.FindWindow(None, game_name)
@@ -314,6 +317,22 @@ def load_altaron() -> None:
     modules = win32process.EnumProcessModules(process_handle)
     base_address = modules[0]
 
-    numberEasyBot = process_count()
-    sqm_size = int(Functions.read_pointer_address(0x02F73154, [0x0, 0x30], 1)/15)
+    numberEasyBot = str(int(int(process_count()) / 2))
+    sqm_size = int(Functions.read_pointer_address(0x02F73154, [0x0, 0x30], 1) / 15)
     c.windll.kernel32.CloseHandle(process_handle)
+
+
+def fin_window_name(name) -> str:
+    """
+    Returns a list of window titles that contain "Medivia"
+    but do not contain "EasyBot" (case-insensitive).
+    """
+    matching_titles = []
+
+    def enum_window_callback(hwnd, _):
+        window_text = win32gui.GetWindowText(hwnd)
+        if name in window_text and "EasyBot" not in window_text:
+            matching_titles.append(window_text)
+
+    win32gui.EnumWindows(enum_window_callback, None)
+    return matching_titles[0]

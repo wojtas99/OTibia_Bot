@@ -515,20 +515,20 @@ class HealingTab(QWidget):
             if not self.heal_thread:
                 self.heal_thread = HealThread(self.healList_listWidget)
                 self.heal_thread.start()
-            else:
-                if self.heal_thread:
-                    self.heal_thread.stop()
-                    self.heal_thread = None
+        else:
+            if self.heal_thread:
+                self.heal_thread.stop()
+                self.heal_thread = None
 
     def start_attack_thread(self, state) -> None:
         if state == Qt.Checked:
             if not self.attack_thread:
                 self.attack_thread = AttackThread(self.attackList_listWidget)
                 self.attack_thread.start()
-            else:
-                if self.attack_thread:
-                    self.attack_thread.stop()
-                    self.attack_thread = None
+        else:
+            if self.attack_thread:
+                self.attack_thread.stop()
+                self.attack_thread = None
 
 
 
