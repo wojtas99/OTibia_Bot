@@ -18,11 +18,15 @@ from Functions import read_my_stats
 from MemoryFunctions import read_pointer_address
 from KeyboardFunctions import press_hotkey
 from MouseFunctions import right_click
+from TrainingThread import TrainingThread
 
 
 class TrainingTab(QWidget):
     def __init__(self):
         super().__init__()
+
+        # Thread Variables
+        self.training_thread = None
 
         # Load Icon
         self.setWindowIcon(QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(base64.b64decode(icon_image)) else QIcon())
@@ -89,7 +93,7 @@ class TrainingTab(QWidget):
         add_hotkey_button.clicked.connect(self.add_hotkey)
 
         # Check Boxes
-        self.burn_mana_checkbox.stateChanged.connect(self.start_skill)
+        self.burn_mana_checkbox.stateChanged.connect(self.start_training_thread)
 
         # Combo Boxes
         for i in range(1, 11):
@@ -193,31 +197,13 @@ class TrainingTab(QWidget):
                     self.food_y = y
                 return
 
-    def start_skill(self) -> None:
-        thread = Thread(target=self.start_skill_thread)
-        thread.daemon = True
-        if self.burn_mana_checkbox.checkState() == 2:
-            thread.start()
+    def start_training_thread(self, state) -> None:
+        if state == Qt.Checked:
+            if not self.training_thread:
+                self.training_thread = TrainingThread(self.burn_mana_list_widget)
+                self.training_thread.start()
+        else:
+            if self.training_thread:
+                self.training_thread.stop()
+                self.training_thread = None
 
-    def start_skill_thread(self) -> None:
-        timer = 0.0
-        while self.burn_mana_checkbox.checkState():
-            for index in range(self.burn_mana_list_widget.count()):
-                current_hp, current_max_hp, current_mp, current_max_mp = read_my_stats()
-                hotkey_data = self.burn_mana_list_widget.item(index).data(Qt.UserRole)
-                hotkey_mana = hotkey_data['Mana']
-                time.sleep(0.3)
-                if current_mp >= hotkey_mana:
-                    press_hotkey(int(self.burn_mana_list_widget.item(index).text()[1:]))
-                    time.sleep(0.5)
-                    timer += 0.5
-            timer += 1
-            if timer > 50:
-                timer = 0
-                if self.start_eat_checkbox.checkState() == 2:
-                    self.simulate_food_clicks()
-
-    def simulate_food_clicks(self) -> None:
-        for _ in range(4):
-            right_click(self.food_x + random.randint(-5, 5), self.food_y + random.randint(-5, 5))
-            time.sleep(1)

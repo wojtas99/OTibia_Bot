@@ -9,6 +9,7 @@ from PyQt5.QtGui import QIcon, QPixmap, QIntValidator
 from PyQt5.QtCore import Qt
 import Addresses
 from Addresses import icon_image, coordinates_x, coordinates_y
+from HealingAttackThread import HealThread, AttackThread
 from MemoryFunctions import read_memory_address
 from MouseFunctions import use_on_me, right_click, left_click
 from KeyboardFunctions import press_hotkey
@@ -19,7 +20,9 @@ class HealingTab(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.stop_event = Event()
+        # Thread Variables
+        self.attack_thread = None
+        self.heal_thread = None
 
         # Load Icon
         self.setWindowIcon(
@@ -182,7 +185,7 @@ class HealingTab(QWidget):
         )
 
         # CheckBox function
-        self.start_heal_checkBox.stateChanged.connect(self.check_startHeal_state)
+        self.start_heal_checkBox.stateChanged.connect(self.start_heal_thread)
 
         # Index changed
         self.hp_mana_comboBox.currentIndexChanged.connect(self.index_changed)
@@ -225,7 +228,7 @@ class HealingTab(QWidget):
         )
 
         # CheckBox function
-        self.start_attack_checkBox.stateChanged.connect(self.check_startAttack_state)
+        self.start_attack_checkBox.stateChanged.connect(self.start_attack_thread)
 
         # Layouts
         layout1 = QHBoxLayout(self)
@@ -493,7 +496,7 @@ class HealingTab(QWidget):
             "HpFrom": hp_from_val,
             "HpTo": hp_to_val,
             "MinMp": min_mp_val,
-            "Distance": dist_val
+            "Distance": dist_val,
         }
 
         attack_item = QListWidgetItem(attack_name)
@@ -507,117 +510,25 @@ class HealingTab(QWidget):
         self.spell_dist_lineEdit.clear()
         self.status_label.setText("Attack action added successfully!")
 
-    def check_startHeal_state(self) -> None:
-        thread = Thread(target=self.start_healing_thread)
-        thread.daemon = True
-        if self.start_heal_checkBox.checkState() == 2:
-            thread.start()
+    def start_heal_thread(self, state) -> None:
+        if state == Qt.Checked:
+            if not self.heal_thread:
+                self.heal_thread = HealThread(self.healList_listWidget)
+                self.heal_thread.start()
+            else:
+                if self.heal_thread:
+                    self.heal_thread.stop()
+                    self.heal_thread = None
 
-    def check_startAttack_state(self) -> None:
-        thread = Thread(target=self.start_attacking_thread)
-        thread.daemon = True
-        if self.start_attack_checkBox.checkState() == 2:
-            thread.start()
+    def start_attack_thread(self, state) -> None:
+        if state == Qt.Checked:
+            if not self.attack_thread:
+                self.attack_thread = AttackThread(self.attackList_listWidget)
+                self.attack_thread.start()
+            else:
+                if self.attack_thread:
+                    self.attack_thread.stop()
+                    self.attack_thread = None
 
-    def start_attacking_thread(self):
-        while self.start_attack_checkBox.checkState() == 2:
-            try:
-                for attack_index in range(self.attackList_listWidget.count()):
-                    attack_data = self.attackList_listWidget.item(attack_index).data(Qt.UserRole)
-
-                    # Ensure attack_data contains valid data
-                    if not attack_data:
-                        print(f"Invalid attack data at index {attack_index}.")
-                        continue
-
-                    target_hp = attack_data.get('HpFrom', None)
-                    if target_hp is None or attack_data.get('HpTo', None) is None:
-                        print(f"Invalid target HP range in attack data: {attack_data}")
-                        continue
-
-                    if read_memory_address(Addresses.attack_address, 0, 2) != 0:
-                        current_hp, current_max_hp, current_mp, current_max_mp = read_my_stats()
-                        target_x, target_y, target_name, target_hp = read_target_info()
-                        x, y, z = read_my_wpt()
-
-                        if current_hp is None or current_max_hp is None or current_mp is None or current_max_mp is None:
-                            print("Failed to read player stats.")
-                            continue
-
-                        if target_x is None or target_y is None or target_name is None or target_hp is None:
-                            print("Failed to read target info.")
-                            continue
-
-                        # If the "Action" index is above 2, it might be a hotkey
-                        if ( attack_data['Action'] > 2
-                            and (int(attack_data['HpFrom']) >= target_hp > int(attack_data['HpTo']))
-                            and current_mp >= int(attack_data['MinMp'])
-                            and (attack_data['Name'] == '*' or target_name in attack_data['Name'])
-                            and (attack_data['Distance'] >= abs(x - target_x)
-                                 and attack_data['Distance'] >= abs(y - target_y))
-                        ):
-                            press_hotkey(int(attack_data['Action'] - 2))
-                            time.sleep(random.uniform(0.3, 0.6))
-                            break
-            except Exception as e:
-                print(f"Error in start_attacking_thread: {e}")
-                time.sleep(random.uniform(0.1, 0.3))
-
-    from threading import Event
-
-    def start_healing_thread(self):
-        healed = True
-        heal_multiplayer = 0.0
-        stop_event = Event()  # Use Event for thread-safe waiting
-
-        while self.start_heal_checkBox.checkState() == 2 and not stop_event.is_set():
-            try:
-                if healed:
-                    heal_multiplayer = random.uniform(0.9, 1.0)
-                    healed = False
-
-                for heal_index in range(self.healList_listWidget.count()):
-                    heal_data = self.healList_listWidget.item(heal_index).data(Qt.UserRole)
-                    heal_type = heal_data['Type']
-                    heal_option = heal_data['Option']
-                    heal_below = heal_data['Below']
-                    heal_above = heal_data['Above']
-                    heal_min_mp = heal_data['MinMp']
-                    heal_below = heal_below * heal_multiplayer
-                    heal_above = heal_above * heal_multiplayer
-
-                    current_hp, current_max_hp, current_mp, current_max_mp = read_my_stats()
-                    if current_hp is None or current_max_hp is None or current_mp is None or current_max_mp is None:
-                        print("Failed to read stats.")
-                        continue
-
-                    # HP-based healing
-                    if heal_type.startswith("HP"):
-                        hp_percentage = (current_hp * 100) / current_max_hp
-                        if heal_option == "UH":
-                            if heal_below >= hp_percentage >= heal_above:
-                                stop_event.wait(random.uniform(0.1, 0.2))  # Replace sleep with wait
-                                use_on_me(coordinates_x[5], coordinates_y[5])
-                                healed = True
-                        else:
-                            # Potions or hotkeys (F1..F12)
-                            if heal_below >= hp_percentage >= heal_above and current_mp >= heal_min_mp:
-                                stop_event.wait(random.uniform(0.1, 0.2))
-                                press_hotkey(int(heal_option[1:]))
-                                healed = True
-
-                    # MP-based healing
-                    elif heal_type.startswith("MP"):
-                        mp_percentage = (current_mp * 100) / current_max_mp
-                        if heal_below >= mp_percentage >= heal_above:
-                            stop_event.wait(random.uniform(0.1, 0.2))
-                            press_hotkey(int(heal_option[1:]))
-                            healed = True
-
-                # Delay to prevent overloading
-                stop_event.wait(random.uniform(0.1, 0.2))
-
-            except Exception as e:
-                print(f"Error in healing thread: {e}")
 
 

@@ -41,6 +41,8 @@ target_x_offset = None
 target_y_offset = None
 target_hp_offset = None
 target_name_offset = None
+monsters_on_screen = None
+monsters_on_screen_offset = None
 
 # Game Addresses
 game_name = None
@@ -270,7 +272,7 @@ def load_altaron() -> None:
     global my_x_address, my_y_address, my_z_address, my_name_address, attack_address
     global target_name_offset, target_x_offset, target_y_offset, target_hp_offset
     global my_stats_ptr, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
-    global process_handle, base_address, game, game_name, sqm_size
+    global process_handle, base_address, game, game_name, sqm_size, monsters_on_screen, monsters_on_screen_offset
     global client_name, background_image, item_list, numberEasyBot, proc_id
 
     # Background image
@@ -294,6 +296,9 @@ def load_altaron() -> None:
     target_x_offset = 0x34
     target_y_offset = 0x38
     target_hp_offset = 0x58
+
+    monsters_on_screen = 0x02F72D98
+    monsters_on_screen_offset = [0x4, 0XDD0, 0X5FC, 0X370, 0X30]
 
     game_name = 'Altaron (beta 0.18.10)'
     client_name = "Altaron"

@@ -1,28 +1,26 @@
-import random
 import base64
-import time
 import json
 import os
-from threading import Thread
 
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
     QWidget, QListWidget, QLineEdit, QTextEdit, QCheckBox, QComboBox, QVBoxLayout,
     QHBoxLayout, QGroupBox, QPushButton, QListWidgetItem, QLabel, QGridLayout
 )
-from PyQt5.QtGui import QIcon, QPixmap, QIntValidator
+from PyQt5.QtGui import QIcon, QPixmap
 
-import Addresses
-from Addresses import icon_image, walker_Lock, coordinates_x, coordinates_y
+from Addresses import icon_image
 from Functions import read_my_wpt, delete_item
-from MemoryFunctions import read_memory_address
-from KeyboardFunctions import walk
-from MouseFunctions import left_click, right_click
+from WalkerThread import WalkerThread, RecordThread
 
 
 class WalkerTab(QWidget):
     def __init__(self):
         super().__init__()
+
+        # Thread Variables
+        self.record_thread = None
+        self.walker_thread = None
 
         # Load Icon
         self.setWindowIcon(
@@ -335,206 +333,36 @@ class WalkerTab(QWidget):
         self.waypoint_list_widget.clear()
         self.status_label.setText("")  # Clear status if you want
 
-    def start_record_thread(self) -> None:
-        thread = Thread(target=self.record_waypoints)
-        thread.daemon = True
-        if self.record_cave_bot_checkbox.checkState() == 2:
-            thread.start()
+    def start_record_thread(self, state):
+        if state == Qt.Checked:
+            self.record_thread = RecordThread()
+            self.record_thread.wpt_update.connect(self.update_waypointList)
+            self.record_thread.start()
+        else:
+            if self.record_thread:
+                self.record_thread.stop()
+                self.record_thread = None
 
-    def record_waypoints(self) -> None:
-        x, y, z = read_my_wpt()
+    def start_walker_thread(self, state):
+        if state == Qt.Checked:
+            if not self.walker_thread:
+                waypoints = [
+                    self.waypoint_list_widget.item(i).data(Qt.UserRole)
+                    for i in range(self.waypoint_list_widget.count())
+                ]
+                self.walker_thread = WalkerThread(waypoints)
+                self.walker_thread.index_update.connect(self.update_waypointList)
+                self.walker_thread.start()
+        else:
+            if self.walker_thread:
+                self.walker_thread.stop()
+                self.walker_thread = None
 
-        waypoint_data = {
-            "Action": 0,
-            "Direction": 0,
-            "X": x,
-            "Y": y,
-            "Z": z
-        }
-
-        waypoint = QListWidgetItem(f'Stand: {x} {y} {z}')
-        waypoint.setData(Qt.UserRole, waypoint_data)
-        self.waypoint_list_widget.addItem(waypoint)
-
-        old_x, old_y, old_z = x, y, z
-
-        while self.record_cave_bot_checkbox.checkState():
-            x, y, z = read_my_wpt()
-
-            if (x != old_x or y != old_y) and z == old_z:
-                waypoint_data = {
-                    "Action": 0,
-                    "Direction": 0,
-                    "X": x,
-                    "Y": y,
-                    "Z": z
-                }
-                waypoint = QListWidgetItem(f'Stand: {x} {y} {z}')
-                waypoint.setData(Qt.UserRole, waypoint_data)
-                self.waypoint_list_widget.addItem(waypoint)
-
-            if z != old_z:
-                if x < old_x:
-                    direction = 4  # West
-                elif x > old_x:
-                    direction = 3  # East
-                elif y > old_y:
-                    direction = 2  # South
-                else:
-                    direction = 1  # North
-
-                waypoint_data = {
-                    "Action": 0,
-                    "Direction": direction,
-                    "X": x,
-                    "Y": y,
-                    "Z": z
-                }
-                waypoint = QListWidgetItem(f'Stand: {x} {y} {z}')
-                waypoint.setData(Qt.UserRole, waypoint_data)
-                self.waypoint_list_widget.addItem(waypoint)
-
-            old_x, old_y, old_z = x, y, z
-            time.sleep(0.05)
-
-    def start_walker_thread(self) -> None:
-        thread = Thread(target=self.follow_waypoints)
-        thread.daemon = True
-        if self.start_cave_bot_checkbox.checkState() == 2:
-            thread.start()
-
-    def follow_waypoints(self):
-        current_wpt = self.waypoint_list_widget.currentRow()
-        if current_wpt == -1:
-            current_wpt = 0
-        timer = 0
-        timer_second = 0
-        walked = False
-        walker_stop = False
-        old_x, old_y = 0, 0
-        while self.start_cave_bot_checkbox.checkState():
-            time.sleep(0.1)
-            timer_second += 0.1
-            self.waypoint_list_widget.setCurrentRow(current_wpt)
-            wpt_data = self.waypoint_list_widget.item(current_wpt).data(Qt.UserRole)
-            wpt_action = wpt_data['Action']
-            wpt_direction = wpt_data['Direction']
-            map_x = wpt_data['X']
-            map_y = wpt_data['Y']
-            map_z = wpt_data['Z']
-            x, y, z = read_my_wpt()
-            if timer_second > 5:
-                for index in range(current_wpt, self.waypoint_list_widget.count()):
-                    QTimer.singleShot(0, lambda: self.waypoint_list_widget.setCurrentRow(index))
-                    wpt_data = self.waypoint_list_widget.item(index).data(Qt.UserRole)
-                    map_x = wpt_data['X']
-                    map_y = wpt_data['Y']
-                    map_z = wpt_data['Z']
-                    if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5:
-                        current_wpt = index
-                        timer_second = 0
-                        break
-            if walked:
-                if old_x == x and old_y == y:
-                    timer += 0.1
-                else:
-                    timer = 0
-                old_x, old_y = x, y
-            if x == map_x and y == map_y and z == map_z and wpt_action == 0:
-                timer = 0
-                walked = False
-                current_wpt += 1
-                if current_wpt == self.waypoint_list_widget.count():
-                    current_wpt = 0
-                continue
-            if walker_Lock.locked() and not walker_stop:
-                left_click(coordinates_x[0], coordinates_y[0])
-                walker_stop = True
-            if not walked or timer >= 0.5 and not walker_Lock.locked():
-                walk(wpt_direction, x, y, z, map_x, map_y, map_z)
-                walked = True
-                walker_stop = False
-            '''
-            while walked:
-                x, y, z = read_my_wpt()
-                time.sleep(0.01)
-                walked = False
-                while x is None:
-                    x, y, z = read_my_wpt()
-
-            # If stuck for more than 5 seconds, search for the nearest waypoint
-            if timer > 5:
-                x, y, z = read_my_wpt()
-                while x is None:
-                    x, y, z = read_my_wpt()
-                    time.sleep(0.1)
-                for index in range(current_wpt, self.waypoint_list_widget.count()):
-                    self.waypoint_list_widget.setCurrentRow(index)
-                    wpt_data = self.waypoint_list_widget.item(index).data(Qt.UserRole)
-                    map_x = wpt_data['X']
-                    map_y = wpt_data['Y']
-                    map_z = wpt_data['Z']
-                    time.sleep(0.01)
-                    if z == map_z and abs(map_x - x) < 7 and abs(map_y - y) < 6:
-                        current_wpt = index
-                        left_click(
-                            coordinates_x[0] + (map_x - x) * 75,
-                            coordinates_y[0] + (map_y - y) * 75
-                        )
-                        time.sleep(2)
-                        timer = 0
-                        break
-
-            # If we're already on the coordinate for a normal "Stand" waypoint
-            if x == map_x and y == map_y and z == map_z and wpt_action == 0:
-                timer = 0
-                current_wpt += 1
-                if current_wpt == self.waypoint_list_widget.count():
-                    current_wpt = 0
-                time.sleep(0.1)
-                continue
-
-            if not walker_Lock.locked():
-                if wpt_action == 0:
-                    walk(wpt_direction, x, y, z, map_x, map_y, map_z)
-                    walked = True
-                    timer += 0.1
-                    time.sleep(0.01)
-
-                elif wpt_action == 1:
-                    # Rope
-                    time.sleep(0.5)
-                    timer += 0.5
-                    right_click(coordinates_x[10], coordinates_y[10])
-                    time.sleep(0.1)
-                    left_click(coordinates_x[0], coordinates_y[0])
-                    x, y, z = read_my_wpt()
-                    map_x = wpt_data['X']
-                    map_y = wpt_data['Y']
-                    left_click(
-                        coordinates_x[0] + (map_x - x) * 75,
-                        coordinates_y[0] + (map_y - y) * 75
-                    )
-                    time.sleep(0.1)
-
-                elif wpt_action == 2:
-                    # Shovel
-                    time.sleep(0.5)
-                    timer += 0.5
-                    right_click(coordinates_x[9], coordinates_y[9])
-                    time.sleep(0.1)
-                    x, y, z = read_my_wpt()
-                    map_x = wpt_data['X']
-                    map_y = wpt_data['Y']
-                    left_click(
-                        coordinates_x[0] + (map_x - x) * 75,
-                        coordinates_y[0] + (map_y - y) * 75
-                    )
-                    time.sleep(0.1)
-                elif wpt_action == 3:
-                    # Ladder
-                    time.sleep(0.5)
-                    timer += 0.5
-                    right_click(coordinates_x[0], coordinates_y[0])  # e.g. click on Ladder
-                    current_wpt += 1
-        '''
+    def update_waypointList(self, option, waypoint):
+        """
+        Update the current waypoint in the UI.
+        """
+        if option == 0:
+            self.waypoint_list_widget.setCurrentRow(int(waypoint))
+        elif option == 1:
+            self.waypoint_list_widget.addItem(waypoint)

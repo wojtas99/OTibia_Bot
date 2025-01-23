@@ -4,8 +4,8 @@ import base64
 from Addresses import icon_image
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton, QApplication)
 from PyQt5.QtGui import QIcon, QPixmap
-from HealingSpells import HealingTab
-from TrainingTools import TrainingTab
+from HealingAttack import HealingTab
+from Training import TrainingTab
 from Walker import WalkerTab
 from TargetLoot import TargetLootTab
 from Settings import SettingsTab

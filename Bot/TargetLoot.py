@@ -1,21 +1,9 @@
-import threading
 
-import win32gui
-import Addresses
-from Addresses import icon_image, coordinates_x, coordinates_y, screen_width, screen_height, screen_x, screen_y, walker_Lock
+from Addresses import icon_image
 import base64
 import os
 import json
-import time
-import numpy as np
-import cv2 as cv
-from threading import Thread
-
-from MouseFunctions import left_click, right_click
-from Functions import read_my_wpt, read_target_info, delete_item, load_items_images
-from KeyboardFunctions import walk, press_hotkey
-
-import win32con
+from Functions import delete_item
 from PyQt5.QtWidgets import (
     QWidget, QCheckBox, QComboBox, QLineEdit, QListWidget, QGridLayout,
     QGroupBox, QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QListWidgetItem
@@ -23,15 +11,16 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
 
-from MemoryFunctions import read_memory_address
-from GeneralFunctions import WindowCapture, manage_collect, merge_close_points
-
-lootLoop = 2
+from TargetLootThread import TargetThread, LootThread
 
 
 class TargetLootTab(QWidget):
     def __init__(self):
         super().__init__()
+
+        # Thread Variables
+        self.loot_thread = None
+        self.target_thread = None
 
         # Load Icon
         self.setWindowIcon(
@@ -171,8 +160,8 @@ class TargetLootTab(QWidget):
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
-        self.startTarget_checkBox.stateChanged.connect(self.start_target)
-        self.startLoot_checkBox.stateChanged.connect(self.start_loot)
+        self.startTarget_checkBox.stateChanged.connect(self.start_target_thread)
+        self.startLoot_checkBox.stateChanged.connect(self.start_loot_thread)
 
         layout1 = QHBoxLayout(self)
         layout2 = QHBoxLayout(self)
@@ -415,141 +404,25 @@ class TargetLootTab(QWidget):
         self.status_label.setStyleSheet("color: green; font-weight: bold;")
         self.status_label.setText(f"Profile '{profile_name}' loaded successfully.")
 
-    def start_target(self) -> None:
-        """Checkbox triggers a background thread to start targeting/looting."""
-        thread = Thread(target=self.start_target_thread)
-        thread.daemon = True
-        if self.startTarget_checkBox.checkState() == 2:
-            thread.start()
+    def start_target_thread(self, state) -> None:
+        if self.loot_thread:
+            self.loot_thread.update_states(self.startTarget_checkBox)
+        if state == Qt.Checked:
+            self.target_thread = TargetThread(self.targetList_listWidget, self.startLoot_checkBox.checkState(), self.startSkin_checkBox.checkState())
+            self.target_thread.start()
+        else:
+            if self.target_thread:
+                self.target_thread.stop()
+                self.target_thread = None
 
-    def start_loot(self) -> None:
-        thread = Thread(target=self.start_loot_thread)
-        thread.daemon = True
-        if self.startLoot_checkBox.checkState() == 2:
-            thread.start()
+    def start_loot_thread(self, state) -> None:
+        if self.target_thread:
+            self.target_thread.update_states(0, state)
+        if state == Qt.Checked:
+            self.loot_thread = LootThread(self.lootList_listWidget, self.startTarget_checkBox.checkState())
+            self.loot_thread.start()
+        else:
+            if self.loot_thread:
+                self.loot_thread.stop()
+                self.loot_thread = None
 
-    def start_target_thread(self) -> None:
-        """
-        Automate targeting monsters and looting them.
-        """
-        # Main loop
-        global lootLoop
-
-        while self.startTarget_checkBox.checkState() == 2:
-            try:
-                open_corpse = False
-                timer = 0
-                target_id = read_memory_address(Addresses.attack_address, 0, 2)
-                # Attack if no target
-                if target_id == 0:
-                    # Simulate pressing "~" key to switch target or approach
-                    win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
-                    win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
-                    time.sleep(0.1)
-                    target_id = read_memory_address(Addresses.attack_address, 0, 2)
-                if target_id != 0:
-                    target_x, target_y, target_name, target_hp = read_target_info()
-
-                    # Check if target matches the user’s list
-                    if self.targetList_listWidget.findItems("*", Qt.MatchFixedString):
-                        # If user explicitly added "*", treat that as a wildcard
-                        target_name = "*"
-
-                    if self.targetList_listWidget.findItems(target_name, Qt.MatchFixedString):
-                        target_index = self.targetList_listWidget.findItems(target_name, Qt.MatchFixedString)[0]
-                        target_data = target_index.data(Qt.UserRole)
-
-                        while read_memory_address(Addresses.attack_address, 0, 2) != 0:
-                            if timer > 15:
-                                # Press "~" again to try re-targeting or un-stuck
-                                win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
-                                win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
-                                timer = 0
-                                time.sleep(0.1)
-
-                            target_x, target_y, target_name, target_hp = read_target_info()
-                            x, y, z = read_my_wpt()
-
-                            # If within attack distance
-                            if (int(target_data['Distance']) >= abs(x - target_x)
-                                    and int(target_data['Distance']) >= abs(y - target_y)) \
-                                    or target_data['Distance'] == 0:
-                                if not walker_Lock.locked():
-                                    walker_Lock.acquire()
-                                if self.chase_checkBox.checkState() == 2:
-                                    walk(0, x, y, 0, target_x, target_y, 0)
-                                    time.sleep(0.1)
-                            else:
-                                # Move onto the next target or re-target if out of range
-                                if walker_Lock.locked() and lootLoop > 1:
-                                    walker_Lock.release()
-                                win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, 0xC0, 0x290001)
-                                win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, 0xC0, 0xC0290001)
-                                time.sleep(0.1)
-                                target_x, target_y, target_name, target_hp = read_target_info()
-                                timer += 0.1
-
-                            open_corpse = True
-                            timer += 0.1
-                            time.sleep(0.1)
-
-                        # If we have to skin
-                        if self.startSkin_checkBox.checkState() == 2:
-                            x, y, z = read_my_wpt()
-                            while x is None:
-                                x, y, z = read_my_wpt()
-                                time.sleep(0.1)
-                            x = target_x - x
-                            y = target_y - y
-                            press_hotkey(9)  # Example: F9 as skin hotkey
-                            left_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
-                            time.sleep(0.1)
-
-                        # If we opened the corpse, start looting
-                        if open_corpse and self.startLoot_checkBox.checkState() == 2:
-                            # Right-click to open the corpse
-                            x, y, z = read_my_wpt()
-                            while x is None:
-                                x, y, z = read_my_wpt()
-                                time.sleep(0.1)
-                            x = target_x - x
-                            y = target_y - y
-                            right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
-                            time.sleep(0.5)
-                            lootLoop = 0
-
-                if walker_Lock.locked() and lootLoop > 1:
-                    walker_Lock.release()
-            except Exception as e:
-                print(f"Error: {e}")
-                time.sleep(0.1)
-
-    def start_loot_thread(self) -> None:
-        global lootLoop
-        load_items_images(self.lootList_listWidget)
-        item_image = Addresses.item_list
-        """
-        Actual looting procedure: open the corpse and try matching items,
-        then collecting them into the correct container.
-        """
-        capture_screen = WindowCapture(screen_width[0] - screen_x[0], screen_height[0] - screen_y[0],
-                                       screen_x[0], screen_y[0])
-        while self.startLoot_checkBox.checkState() == 2:
-            while ((lootLoop < 2 or not self.startTarget_checkBox.checkState())
-                   and self.startLoot_checkBox.checkState() == 2):
-                for file_name, value_list in item_image.items():
-                    screenshot = capture_screen.get_screenshot()
-                    screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
-                    screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
-                    screenshot = cv.resize(screenshot, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
-                    for val in value_list[:-1]:
-                        result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
-                        locations = list(zip(*(np.where(result >= 0.90))[::-1]))
-                        locations = merge_close_points(locations, 15)
-                        locations = sorted(locations, key=lambda point: (point[1], point[0]), reverse=True)
-                        locations = [[int(lx / 3), int(ly / 3)] for lx, ly in locations]
-                        for lx, ly in locations:
-                            manage_collect(lx, ly, value_list[-1])
-                            time.sleep(0.3)
-                lootLoop += 1
-            time.sleep(0.1)
