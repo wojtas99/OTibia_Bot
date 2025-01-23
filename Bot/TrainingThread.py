@@ -31,3 +31,28 @@ class TrainingThread(QThread):
 
     def stop(self):
         self.running = False
+
+
+class ClickThread(QThread):
+    def __init__(self, timer, hotkey):
+        super().__init__()
+        self.timer = timer
+        self.hotkey = hotkey
+        self.running = True
+
+    def run(self):
+        timer = 0
+        while self.running:
+            try:
+                if timer/1000 >= self.timer:
+                    press_hotkey(int(self.hotkey[1:]))
+                    timer = 0
+                sleep_value = random.randint(500, 600)
+                QThread.msleep(sleep_value)
+                timer += sleep_value
+
+            except Exception as e:
+                print(e)
+
+    def stop(self):
+        self.running = False

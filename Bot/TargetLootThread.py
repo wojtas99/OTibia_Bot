@@ -7,7 +7,7 @@ from Addresses import coordinates_x, coordinates_y, screen_width, screen_height,
 from Functions import read_target_info, read_my_wpt, load_items_images
 from GeneralFunctions import WindowCapture, merge_close_points, manage_collect
 from KeyboardFunctions import press_hotkey, press_key
-from MemoryFunctions import read_memory_address
+from MemoryFunctions import read_memory_address, read_pointer_address
 from MouseFunctions import right_click, left_click
 import cv2 as cv
 
@@ -83,8 +83,11 @@ class TargetThread(QThread):
                         x, y, z = read_my_wpt()
                         x = target_x - x
                         y = target_y - y
-                        right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
-                        QThread.msleep(random.randint(500, 600))
+                        backpack = read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1)
+                        for _ in range(3):
+                            if backpack == read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1):
+                                right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
+                                QThread.msleep(random.randint(500, 600))
                         lootLoop = 0
 
                 if walker_Lock.locked() and lootLoop > 1:

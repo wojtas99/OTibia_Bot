@@ -29,11 +29,13 @@ my_x_address = None
 my_y_address = None
 my_z_address = None
 my_name_address = None
-my_stats_ptr = None
+my_stats_address = None
 my_hp_offset = None
 my_hp_max_offset = None
 my_mp_offset = None
 my_mp_max_offset = None
+backpack_address = None
+backpack_offset = None
 
 # Target Addresses
 attack_address = None
@@ -173,7 +175,7 @@ def load_medivia() -> None:
     """
     global my_x_address, my_y_address, my_z_address, my_name_address, attack_address
     global target_name_offset, target_x_offset, target_y_offset, target_hp_offset
-    global my_stats_ptr, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
+    global my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
     global process_handle, base_address, game, game_name
     global client_name, background_image, item_list, numberEasyBot, proc_id
 
@@ -185,7 +187,7 @@ def load_medivia() -> None:
     my_x_address = 0XBEF560
     my_y_address = 0XBEF564
     my_z_address = 0XBEF568
-    my_stats_ptr = 0X00BEE4E0
+    my_stats_address = 0X00BEE4E0
     my_hp_offset = [0X558]
     my_hp_max_offset = [0X560]
     my_mp_offset = [0x590]
@@ -223,7 +225,7 @@ def load_wad() -> None:
     """
     global my_x_address, my_y_address, my_z_address, my_name_address, attack_address
     global target_name_offset, target_x_offset, target_y_offset, target_hp_offset
-    global my_stats_ptr, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
+    global my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
     global process_handle, base_address, game, game_name
     global client_name, background_image, item_list, numberEasyBot, proc_id
 
@@ -236,7 +238,7 @@ def load_wad() -> None:
     my_y_address = 0x1C904F50
     my_z_address = 0x1C904F50
     my_name_address = 0x3F5234
-    my_stats_ptr = 0X00B33250
+    my_stats_address = 0X00B33250
     my_hp_offset = [0X518]
     my_hp_max_offset = [0x520]
     my_mp_offset = [0x558]
@@ -271,9 +273,9 @@ def load_altaron() -> None:
     """
     global my_x_address, my_y_address, my_z_address, my_name_address, attack_address
     global target_name_offset, target_x_offset, target_y_offset, target_hp_offset
-    global my_stats_ptr, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
+    global my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
     global process_handle, base_address, game, game_name, sqm_size, monsters_on_screen, monsters_on_screen_offset
-    global client_name, background_image, item_list, numberEasyBot, proc_id
+    global client_name, background_image, item_list, numberEasyBot, proc_id, backpack_address, backpack_offset
 
     # Background image
     background_image = "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"
@@ -284,12 +286,13 @@ def load_altaron() -> None:
     my_y_address = 0X2F72D34
     my_z_address = 0x2F72D38
     my_name_address = 0x3F5234
-    my_stats_ptr = 0x02F72BC0
+    my_stats_address = 0x02F72BC0
     my_hp_offset = [0X44C]
     my_hp_max_offset = [0x450]
     my_mp_offset = [0x454]
     my_mp_max_offset = [0x458]
-
+    backpack_address = 0x02F72440
+    backpack_offset = [0x2F8, 0X0, 0X1C, 0X4]
     # Target Addresses
     attack_address = 0x2F72BC4
     target_name_offset = 0x40

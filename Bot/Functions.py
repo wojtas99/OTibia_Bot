@@ -42,12 +42,28 @@ def load_items_images(list_widget) -> None:
                     background = Image.open(
                         io.BytesIO(base64.b64decode(Addresses.background_image))
                     ).convert('RGBA')
+                    '''img = frame_rgba
+                    datas = img.getdata()
+                    newData = []
+                    for item in datas:
+                        if item[0] == 255 and item[1] == 255 and item[2] == 255:
+                            newData.append((255, 255, 255, 0))
+                        else:
+                            newData.append(item)
+                    img.putdata(newData)
+                    img = np.array(img)
+                    cv.imshow("test", img)
+                    cv.waitKey(0)
+                    cv.destroyAllWindows()'''
                     background.paste(frame_rgba, (0, 0), frame_rgba)
                     background = np.array(background)
                     background = background[:22, :, :]
                     background = cv.cvtColor(background, cv.COLOR_BGR2GRAY)
                     background = cv.GaussianBlur(background, (7, 7), 0)
                     background = cv.resize(background, None, fx=zoom_img, fy=zoom_img, interpolation=cv.INTER_CUBIC)
+                    '''cv.imshow("test", background)
+                    cv.waitKey(0)
+                    cv.destroyAllWindows()'''
                     background = np.array(background)
                     Addresses.item_list[item_name].append(background)
                 item_image.close()
@@ -125,16 +141,16 @@ def delete_item(list_widget, item) -> None:
 
 def read_my_stats():
     if Addresses.client_name == "Altaron":
-        current_hp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_hp_offset, 1)
-        current_max_hp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_hp_max_offset, 1)
-        current_mp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_mp_offset, 1)
-        current_max_mp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_mp_max_offset, 1)
+        current_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_offset, 1)
+        current_max_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_max_offset, 1)
+        current_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_offset, 1)
+        current_max_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_max_offset, 1)
         return current_hp, current_max_hp, current_mp, current_max_mp
     elif Addresses.client_name == "Medivia":
-        current_hp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_hp_offset, 3)
-        current_max_hp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_hp_max_offset, 3)
-        current_mp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_mp_offset, 3)
-        current_max_mp = read_pointer_address(Addresses.my_stats_ptr, Addresses.my_mp_max_offset, 3)
+        current_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_offset, 3)
+        current_max_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_max_offset, 3)
+        current_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_offset, 3)
+        current_max_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_max_offset, 3)
         return current_hp, current_max_hp, current_mp, current_max_mp
 
 
