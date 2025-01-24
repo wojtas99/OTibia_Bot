@@ -75,7 +75,7 @@ class WalkerThread(QThread):
                         current_wpt = (current_wpt + 1) % len(self.waypoints)
 
                 if timer > 5000:
-                    current_wpt = self.lost_wpt()
+                    current_wpt = self.lost_wpt(current_wpt)
                     timer = 0
                 sleep_value = random.randint(20, 30)
                 QThread.msleep(sleep_value)
@@ -87,7 +87,7 @@ class WalkerThread(QThread):
     def stop(self):
         self.running = False
 
-    def lost_wpt(self):
+    def lost_wpt(self, index):
         current_wpt = 0
         x, y, z = read_my_wpt()
         while (x or y or z) is None:
@@ -99,7 +99,8 @@ class WalkerThread(QThread):
             map_z = wpt_data['Z']
             wpt_action = wpt_data['Action']
             wpt_direction = wpt_data['Direction']
-            if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 == wpt_direction:
+            if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 == wpt_direction\
+                    and abs(index - wpt) < 7:
                 current_wpt = wpt
         return current_wpt
 

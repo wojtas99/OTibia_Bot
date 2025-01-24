@@ -272,7 +272,7 @@ class TargetLootTab(QWidget):
                 return
 
         # Distance data
-        monster_data = {"Distance": self.attackDist_comboBox.currentText()}
+        monster_data = {"Name": self.targetName_lineEdit.text(), "Distance": self.attackDist_comboBox.currentText()}
         if monster_data['Distance'] == 'All':
             monster_data['Distance'] = 0
 
@@ -300,7 +300,7 @@ class TargetLootTab(QWidget):
     def save_target_loot(self) -> None:
         """
         Saves the current targets and loot items to JSON,
-        but checks if profile name is not empty and there's at least 1 target in the list.
+        but checks if the profile name is not empty and there's at least 1 target in the list.
         """
         # Reset status/styles
         self.status_label.setText("")
@@ -313,11 +313,11 @@ class TargetLootTab(QWidget):
             self.status_label.setText("Please enter a profile name before saving.")
             return
 
-        if self.targetList_listWidget.count() == 0:
-            self.status_label.setText("Cannot save: no targets added.")
+        if self.targetList_listWidget.count() == 0 and self.lootList_listWidget.count() == 0:
+            self.status_label.setText("Cannot save: no targets or loot items added.")
             return
 
-        # If valid, save
+        # Prepare data to save
         target_list = [
             {
                 "name": self.targetList_listWidget.item(i).text(),
@@ -337,12 +337,17 @@ class TargetLootTab(QWidget):
         os.makedirs("Targeting", exist_ok=True)
         os.makedirs("Looting", exist_ok=True)
 
-        with open(f"Targeting/{target_loot_name}.json", "w") as f:
-            json.dump(target_list, f, indent=4)
-        with open(f"Looting/{target_loot_name}.json", "w") as f:
-            json.dump(looting_list, f, indent=4)
+        # Save JSON files
+        try:
+            with open(f"Targeting/{target_loot_name}.json", "w") as f:
+                json.dump(target_list, f, indent=4)
+            with open(f"Looting/{target_loot_name}.json", "w") as f:
+                json.dump(looting_list, f, indent=4)
+        except IOError as e:
+            self.status_label.setText(f"Error saving profile: {str(e)}")
+            return
 
-        # Add to the list widget if not already there
+        # Update profile list
         existing_names = [
             self.targetLootProfile_listWidget.item(i).text().upper()
             for i in range(self.targetLootProfile_listWidget.count())
@@ -352,7 +357,7 @@ class TargetLootTab(QWidget):
 
         self.targetLootProfile_lineEdit.clear()
 
-        # Success
+        # Success message
         self.status_label.setStyleSheet("color: green; font-weight: bold;")
         self.status_label.setText("Profile saved successfully!")
 
@@ -376,39 +381,49 @@ class TargetLootTab(QWidget):
         target_filename = f"Targeting/{profile_name}.json"
         loot_filename = f"Looting/{profile_name}.json"
 
-        if not os.path.exists(target_filename) or not os.path.exists(loot_filename):
+        if not os.path.exists(target_filename) and not os.path.exists(loot_filename):
             self.targetLootProfile_listWidget.setStyleSheet("border: 2px solid red;")
             self.status_label.setText(f"No files found for profile '{profile_name}'.")
             return
 
-        # Load target data
-        with open(target_filename, "r") as f:
-            target_list = json.load(f)
-            self.targetList_listWidget.clear()
-            for entry in target_list:
-                target = QListWidgetItem(entry["name"])
-                target.setData(Qt.UserRole, entry["data"])
-                self.targetList_listWidget.addItem(target)
+        try:
+            # Load target data
+            if os.path.exists(target_filename):
+                with open(target_filename, "r") as f:
+                    target_list = json.load(f)
+                    self.targetList_listWidget.clear()
+                    for entry in target_list:
+                        target = QListWidgetItem(entry["name"])
+                        target.setData(Qt.UserRole, entry["data"])
+                        target.setData(Qt.UserRole, entry["name"])
+                        self.targetList_listWidget.addItem(target)
 
-        # Load loot data
-        with open(loot_filename, "r") as f:
-            loot_list = json.load(f)
-            self.lootList_listWidget.clear()
-            for entry in loot_list:
-                item = QListWidgetItem(entry["name"])
-                item.setData(Qt.UserRole, entry["data"])
-                self.lootList_listWidget.addItem(item)
+            # Load loot data
+            if os.path.exists(loot_filename):
+                with open(loot_filename, "r") as f:
+                    loot_list = json.load(f)
+                    self.lootList_listWidget.clear()
+                    for entry in loot_list:
+                        item = QListWidgetItem(entry["name"])
+                        item.setData(Qt.UserRole, entry["data"])
+                        self.lootList_listWidget.addItem(item)
 
-        # Success
-        self.targetLootProfile_lineEdit.setStyleSheet("")
-        self.status_label.setStyleSheet("color: green; font-weight: bold;")
-        self.status_label.setText(f"Profile '{profile_name}' loaded successfully.")
+            # Success message
+            self.status_label.setStyleSheet("color: green; font-weight: bold;")
+            self.status_label.setText(f"Profile '{profile_name}' loaded successfully.")
+        except (IOError, json.JSONDecodeError) as e:
+            self.status_label.setText(f"Error loading profile: {str(e)}")
 
     def start_target_thread(self, state) -> None:
         if self.loot_thread:
-            self.loot_thread.update_states(self.startTarget_checkBox)
+            self.loot_thread.update_states(state)
         if state == Qt.Checked:
-            self.target_thread = TargetThread(self.targetList_listWidget, self.startLoot_checkBox.checkState(), self.startSkin_checkBox.checkState(), self.startChase_checkBox.checkState())
+            # Remember to pass value not the reference
+            targets = [
+                self.targetList_listWidget.item(i).data(Qt.UserRole)
+                for i in range(self.targetList_listWidget.count())
+            ]
+            self.target_thread = TargetThread(targets, self.startLoot_checkBox.checkState(), self.startSkin_checkBox.checkState(), self.startChase_checkBox.checkState())
             self.target_thread.start()
         else:
             if self.target_thread:

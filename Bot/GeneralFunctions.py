@@ -55,7 +55,7 @@ class WindowCapture:
         Raises:
             Exception: If the specified window cannot be found.
         """
-        window_name = Addresses.game_name + " - " + Addresses.numberEasyBot
+        window_name = Addresses.game_name + " - EasyBot" + Addresses.numberEasyBot
         self.hwnd = win32gui.FindWindow(None, window_name)
         if not self.hwnd:
             raise Exception('Window not found: {}'.format(window_name))

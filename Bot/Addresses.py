@@ -307,7 +307,6 @@ def load_altaron() -> None:
 
     client_name = "Altaron"
     game_name = fin_window_name(client_name)
-    print(game_name)
 
     # Loading Addresses
     game = win32gui.FindWindow(None, game_name)
