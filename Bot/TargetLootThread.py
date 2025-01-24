@@ -6,7 +6,7 @@ import Addresses
 from Addresses import coordinates_x, coordinates_y, screen_width, screen_height, screen_x, screen_y, walker_Lock
 from Functions import read_target_info, read_my_wpt, load_items_images
 from GeneralFunctions import WindowCapture, merge_close_points, manage_collect
-from KeyboardFunctions import press_hotkey, walk
+from KeyboardFunctions import press_hotkey, walk, press_key
 from MemoryFunctions import read_memory_address, read_pointer_address
 from MouseFunctions import right_click, left_click
 import cv2 as cv
@@ -37,7 +37,7 @@ class TargetThread(QThread):
                 # Attack if no target
                 if target_id == 0:
                     # Simulate pressing "~" key to switch target or approach
-                    press_hotkey(12)
+                    press_hotkey(10)
                     QThread.msleep(random.randint(100, 150))
                     target_id = read_memory_address(Addresses.attack_address, 0, 2)
                 if target_id != 0:
@@ -48,7 +48,7 @@ class TargetThread(QThread):
                         while read_memory_address(Addresses.attack_address, 0, 2) != 0:
                             if timer/1000 > 15:
                                 # Press "~" again to try re-targeting or un-stuck
-                                press_hotkey(12)
+                                press_hotkey(10)
                                 timer = 0
                                 QThread.msleep(random.randint(100, 150))
                             target_x, target_y, target_z, target_name, target_hp = read_target_info()
@@ -64,7 +64,7 @@ class TargetThread(QThread):
                             else:
                                 if walker_Lock.locked() and lootLoop > 1:
                                     walker_Lock.release()
-                                press_hotkey(12)
+                                press_hotkey(10)
                                 sleep_value = random.randint(90, 150)
                                 QThread.msleep(sleep_value)
                                 timer += sleep_value
@@ -138,13 +138,13 @@ class LootThread(QThread):
                     if lootLoop == 0:
                         take_screen = True
                     for file_name, value_list in item_image.items():
-                        if take_screen or not self.target_state:
-                            take_screen = False
-                            screenshot = capture_screen.get_screenshot()
-                            screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
-                            screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
-                            screenshot = cv.resize(screenshot, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
                         for val in value_list[:-1]:
+                            if take_screen or not self.target_state:
+                                take_screen = False
+                                screenshot = capture_screen.get_screenshot()
+                                screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
+                                screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
+                                screenshot = cv.resize(screenshot, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
                             result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
                             locations = list(zip(*(np.where(result >= 0.9))[::-1]))
                             if locations:

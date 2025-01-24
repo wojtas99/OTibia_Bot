@@ -185,7 +185,7 @@ def read_target_info():
         target_y = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
         target_y = read_memory_address(target_y, Addresses.target_y_offset, 1)
         target_z = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_z = read_memory_address(target_z, Addresses.target_z_offset, 1) - Addresses.base_address
+        target_z = read_memory_address(target_z, Addresses.target_z_offset, 4)
         target_name = "*"
         target_hp = read_memory_address(read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address, Addresses.target_hp_offset, 7)
         return target_x, target_y, target_z, target_name, target_hp
