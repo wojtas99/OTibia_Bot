@@ -147,18 +147,19 @@ def read_my_stats():
         current_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_offset, 3)
         current_max_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_max_offset, 3)
         return current_hp, current_max_hp, current_mp, current_max_mp
+    elif Addresses.client_name == "WADclient":
+        current_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_offset, 3)
+        current_max_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_max_offset, 3)
+        current_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_offset, 3)
+        current_max_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_max_offset, 3)
+        return current_hp, current_max_hp, current_mp, current_max_mp
 
 
 def read_my_wpt():
     try:
         x = read_memory_address(Addresses.my_x_address, 0, 1)
         y = read_memory_address(Addresses.my_y_address, 0, 1)
-        z = read_memory_address(Addresses.my_z_address, 0, 4)
-
-        if Addresses.client_name == 'WAD':
-            x = read_pointer_address(0x0129344C, [0x13C, 0X60, 0X144, 0XC], 1)
-            y = read_pointer_address(0x0129344C, [0x13C, 0X60, 0X144, 0X10], 1)
-            z = read_pointer_address(0x0129344C, [0x13C, 0X60, 0X144, 0XC], 1)
+        z = read_memory_address(Addresses.my_z_address, 0, 7)
         if x is None or y is None or z is None:
             print("Failed to read coordinates.")
             return None, None, None
@@ -179,7 +180,7 @@ def read_target_info():
         target_name = "*"
         target_hp = read_memory_address(read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address, Addresses.target_hp_offset, 7)
         return target_x, target_y, target_z, target_name, target_hp
-    if Addresses.client_name == "Medivia":
+    elif Addresses.client_name == "Medivia":
         target_x = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
         target_x = read_memory_address(target_x, Addresses.target_x_offset, 1)
         target_y = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
@@ -189,3 +190,16 @@ def read_target_info():
         target_name = "*"
         target_hp = read_memory_address(read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address, Addresses.target_hp_offset, 7)
         return target_x, target_y, target_z, target_name, target_hp
+    elif Addresses.client_name == "WADclient":
+        target_x = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
+        target_x = read_memory_address(target_x, Addresses.target_x_offset, 1)
+        target_y = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
+        target_y = read_memory_address(target_y, Addresses.target_y_offset, 1)
+        target_z = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
+        target_z = read_memory_address(target_z, Addresses.target_z_offset, 7)
+        target_name = "*"
+        target_hp = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
+        target_hp = read_memory_address(target_hp, Addresses.target_hp_offset, 7)
+        return target_x, target_y, target_z, target_name, target_hp
+
+

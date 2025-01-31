@@ -55,6 +55,9 @@ process_handle = None
 proc_id = None
 sqm_size = None
 
+#  Variables
+tibia_version = None
+
 # Game Name 'n' number of EasyBot processes
 client_name = None
 numberEasyBot = None
@@ -228,36 +231,42 @@ def load_wad() -> None:
     :return: None
     """
     global my_x_address, my_y_address, my_z_address, my_name_address, attack_address
-    global target_name_offset, target_x_offset, target_y_offset, target_hp_offset
+    global target_name_offset, target_x_offset, target_y_offset, target_hp_offset, target_z_offset
     global my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset
-    global process_handle, base_address, game, game_name, target_z_offset
-    global client_name, background_image, item_list, numberEasyBot, proc_id
-
+    global process_handle, base_address, game, game_name, tibia_version, monsters_on_screen, monsters_on_screen_offset
+    global client_name, background_image, item_list, numberEasyBot, proc_id, backpack_address, backpack_offset
     # Background Image
     background_image = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALkSURBVEhLhVbZchpBDMwvxBzmncLGHAUGkvz/n6UPSaNdqKTjGlqta0azkP3xJ/Fb+JV4PB73+/12u31/f1+v18vlcj6fT6fT8Xj8+vra7/efn58fHx/b/4ENVsvVkn/ESljjX1Pefr6ZG4zAor+hCDYNmNkA5YylSmecNWBiDlm8mQ4DzLFWg9hyOLSvyixXYb2OTUD3hiJFADEQNhosFy/csq1qUQlUpCsr9mbPaHewYFGlRQ9HpFjZazmXtSEAlqv7rFgVQRINfExoRSKaBk0rZfIzV2O4QEV0zDail1AuAT5GkfokYLlaLDiEivEY2x00wIcVbpEo7X1Z55qFpJGUDhJ42aB4jcsYDYx5mxBHdaWPBjUBJxg2geKYA0r0q6q1nxsBNqMBmJDP0lMyXQkoEuWF5b8Is5cNrMwvOYKiiEpoRYI8hJMJOof+Cjki50eOPntF2mpj7rMXt4t82sx1JpfMVSNSGqIZYVDtUJjBh1NfOmZ5bmpGzL4HEd2en1qDZL7NgvUAmvmedbjZJRNQ5dSgW8VQEg4GZMAMRc4AzN6AQVZpNAKwIwI8irqwBE01kBGK0UcUG6z5hlm1qkSK3VWw6FFDjwY+/hj99MvCA8CVDajnAwNTKaMZSYucXDIAh/93rCCsrC5izHiZM+4tZgN54eAvok8nk6qhfgathHiYiptwZE0a6PdWuj64BWyilasf5A67gOKslnXGiMLXCKu33RVxVytVi4CVp6clbzSgLBvJwXVFCuQy9F5OYdYBc/kIi6OB1T6T2Kk8MBdv43qqN+3sRGGA3uenCDW5U8waCG2SNqrTcD/VMqHdms2fIsNBhg/hu/U6i5ER1UsnE8c6H1FApwua+zIkRTKAMPJpNqDY1sAqYLVuwqtBd7o65GqPQG7I3mjwvn7HXnwBdomYTXhfQxSKKzb4ZrOJBkZ/fce7O4B3d7++490dwLs7cDgc/PqOd/fdbocS/8J2+xfQVRnrv+UpjwAAAABJRU5ErkJggg=="
 
     # Static Addresses
     # Character Addresses
-    my_x_address = 0X1C904F50
-    my_y_address = 0x1C904F50
-    my_z_address = 0x1C904F50
+    my_x_address = 0xAD552C
+    my_y_address = 0xAD5530
+    my_z_address = 0xAD5534
     my_name_address = 0x3F5234
-    my_stats_address = 0X00B33250
+    my_stats_address = 0x00AD5250
     my_hp_offset = [0X518]
     my_hp_max_offset = [0x520]
     my_mp_offset = [0x558]
     my_mp_max_offset = [0x560]
-
+    backpack_address = 0x003F87E4
+    backpack_offset = [0xF8, 0X308, 0X638, 0X490, 0X320]
 
     # Target Addresses
-    attack_address = 0xB33254
+    attack_address = 0xAD5254
     target_name_offset = 0x54
     target_x_offset = 0xC
     target_y_offset = 0x10
+    target_z_offset = 0x14
     target_hp_offset = 0x6C
+    monsters_on_screen = 0x0F2DEBD0
+    monsters_on_screen_offset = [0X0, 0X64, 0X64, 0x48]
+
+    # Tibia Version
+    tibia_version = 8.0
 
     # Game 'n' Client names
-    client_name = 'WAD'
+    client_name = 'WADclient'
     game_name = fin_window_name(client_name)
 
     # Loading Addresses
@@ -267,7 +276,6 @@ def load_wad() -> None:
     process_handle = c.windll.kernel32.OpenProcess(0x1F0FFF, False, proc_id)
     modules = win32process.EnumProcessModules(process_handle)
     base_address = modules[0]
-
     numberEasyBot = process_count()
 
 
@@ -298,6 +306,7 @@ def load_altaron() -> None:
     my_mp_max_offset = [0x458]
     backpack_address = 0x02F72440
     backpack_offset = [0x2F8, 0X0, 0X1C, 0X4]
+
     # Target Addresses
     attack_address = 0x2F72BC4
     target_name_offset = 0x40
@@ -305,9 +314,8 @@ def load_altaron() -> None:
     target_y_offset = 0x38
     target_z_offset = 0x3C
     target_hp_offset = 0x58
-
-    monsters_on_screen = 0x02F72D98
-    monsters_on_screen_offset = [0x4, 0XDD0, 0X5FC, 0X370, 0X30]
+    monsters_on_screen = 0x02F71ED0
+    monsters_on_screen_offset = [0X708, 0X200, 0XE00, 0X30]
 
     client_name = "Altaron"
     game_name = fin_window_name(client_name)

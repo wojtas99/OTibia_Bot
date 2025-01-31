@@ -99,8 +99,7 @@ class WalkerThread(QThread):
             map_z = wpt_data['Z']
             wpt_action = wpt_data['Action']
             wpt_direction = wpt_data['Direction']
-            if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 == wpt_direction\
-                    and abs(index - wpt) < 7:
+            if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 == wpt_direction:
                 current_wpt = wpt
         return current_wpt
 

@@ -32,9 +32,8 @@ class HealingTab(QWidget):
 
         # Set Title and Size
         self.setWindowTitle("Spells & Healing")
-        self.setFixedSize(450, 550)  # Slightly increased to fit new save/load UI
+        self.setFixedSize(450, 550)
 
-        # --- Status "bar" label at the bottom (acts like a status bar)
         self.status_label = QLabel("", self)
         self.status_label.setStyleSheet("color: Red; font-weight: bold;")
         self.status_label.setAlignment(Qt.AlignCenter)
@@ -55,8 +54,9 @@ class HealingTab(QWidget):
         self.hp_above_lineEdit = QLineEdit(self)
         self.hp_above_lineEdit.setFixedWidth(40)
         self.min_mp_lineEdit = QLineEdit(self)
-        self.min_mp_lineEdit.setFixedWidth(70)
+        self.min_mp_lineEdit.setFixedWidth(40)
         self.targetName_lineEdit = QLineEdit(self)
+        self.targetName_lineEdit.setFixedWidth(100)
         self.hpFrom_lineEdit = QLineEdit(self)
         self.hpTo_lineEdit = QLineEdit(self)
         self.hpFrom_lineEdit.setFixedWidth(40)
@@ -64,7 +64,11 @@ class HealingTab(QWidget):
         self.hpFrom_lineEdit.setMaxLength(3)
         self.hpTo_lineEdit.setMaxLength(2)
         self.min_mp_spell_lineEdit = QLineEdit(self)
-        self.min_mp_spell_lineEdit.setFixedWidth(70)
+        self.min_mp_spell_lineEdit.setFixedWidth(40)
+        self.min_hp_spell_lineEdit = QLineEdit(self)
+        self.min_hp_spell_lineEdit.setFixedWidth(40)
+        self.monster_count_lineEdit = QLineEdit(self)
+        self.monster_count_lineEdit.setFixedWidth(40)
         self.spell_dist_lineEdit = QLineEdit(self)
         self.spell_dist_lineEdit.setMaxLength(1)
         self.spell_dist_lineEdit.setFixedWidth(40)
@@ -82,6 +86,7 @@ class HealingTab(QWidget):
         self.hpFrom_lineEdit.setValidator(int_validator_3)
         self.hpTo_lineEdit.setValidator(int_validator_2)
         self.min_mp_spell_lineEdit.setValidator(int_validator_4)
+        self.min_hp_spell_lineEdit.setValidator(int_validator_2)
         self.spell_dist_lineEdit.setValidator(int_validator_1)
 
         # List Widgets
@@ -236,6 +241,7 @@ class HealingTab(QWidget):
         layout3 = QHBoxLayout(self)
         layout4 = QHBoxLayout(self)
         layout5 = QHBoxLayout(self)
+        layout6 = QHBoxLayout(self)
 
         layout1.addWidget(QLabel("Name:", self))
         layout1.addWidget(self.targetName_lineEdit)
@@ -250,14 +256,19 @@ class HealingTab(QWidget):
         layout3.addWidget(QLabel("%", self))
         layout4.addWidget(QLabel("Min MP:", self))
         layout4.addWidget(self.min_mp_spell_lineEdit)
-        layout4.addWidget(add_attack_button)
-        layout5.addWidget(self.start_attack_checkBox)
+        layout4.addWidget(QLabel("Min HP%:", self))
+        layout4.addWidget(self.min_hp_spell_lineEdit)
+        layout5.addWidget(QLabel("Count", self))
+        layout5.addWidget(self.monster_count_lineEdit)
+        layout5.addWidget(add_attack_button)
+        layout6.addWidget(self.start_attack_checkBox)
 
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
         groupbox_layout.addLayout(layout3)
         groupbox_layout.addLayout(layout4)
         groupbox_layout.addLayout(layout5)
+        groupbox_layout.addLayout(layout6)
         self.layout.addWidget(groupbox, 1, 1)
 
     # ---------------------- Save & Load Functions --------------------------
@@ -481,13 +492,15 @@ class HealingTab(QWidget):
         hp_from_val = int(self.hpFrom_lineEdit.text())
         hp_to_val = int(self.hpTo_lineEdit.text())
         min_mp_val = int(self.min_mp_spell_lineEdit.text())
+        min_hp_val = int(self.min_hp_spell_lineEdit.text())
         dist_val = int(self.spell_dist_lineEdit.text())
+        count_val = int(self.monster_count_lineEdit.text())
 
         attack_name = (
-            f"{monsters_name} {hp_from_val} > "
-            f"{self.actionList_comboBox.currentText()} > "
-            f"{hp_to_val}  MinMP={min_mp_val}"
-            f" Distance < {dist_val}"
+            f"{monsters_name} {hp_from_val}>"
+            f"{self.actionList_comboBox.currentText()}>"
+            f"{hp_to_val}  MinMP={min_mp_val} MinHP%={min_hp_val}"
+            f" Distance<{dist_val} Count={count_val}+"
         )
 
         attack_data = {
@@ -496,7 +509,9 @@ class HealingTab(QWidget):
             "HpFrom": hp_from_val,
             "HpTo": hp_to_val,
             "MinMp": min_mp_val,
+            "MinHp": min_hp_val,
             "Distance": dist_val,
+            "Count": count_val
         }
 
         attack_item = QListWidgetItem(attack_name)
@@ -506,6 +521,8 @@ class HealingTab(QWidget):
         self.hpFrom_lineEdit.clear()
         self.hpTo_lineEdit.clear()
         self.min_mp_spell_lineEdit.clear()
+        self.min_hp_spell_lineEdit.clear()
+        self.monster_count_lineEdit.clear()
         self.targetName_lineEdit.clear()
         self.spell_dist_lineEdit.clear()
         self.status_label.setText("Attack action added successfully!")

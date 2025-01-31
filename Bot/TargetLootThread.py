@@ -6,7 +6,7 @@ import Addresses
 from Addresses import coordinates_x, coordinates_y, screen_width, screen_height, screen_x, screen_y, walker_Lock
 from Functions import read_target_info, read_my_wpt, load_items_images
 from GeneralFunctions import WindowCapture, merge_close_points, manage_collect
-from KeyboardFunctions import press_hotkey, walk, press_key
+from KeyboardFunctions import press_hotkey, walk, chase_monster
 from MemoryFunctions import read_memory_address, read_pointer_address
 from MouseFunctions import right_click, left_click
 import cv2 as cv
@@ -42,11 +42,13 @@ class TargetThread(QThread):
                     target_id = read_memory_address(Addresses.attack_address, 0, 2)
                 if target_id != 0:
                     target_x, target_y, target_z, target_name, target_hp = read_target_info()
+                    if target_hp <= 0:
+                        continue
                     if any(target['Name'] == target_name for target in self.targets):
                         target_index = next(i for i, target in enumerate(self.targets) if target['Name'] == target_name)
                         target_data = self.targets[target_index]
                         while read_memory_address(Addresses.attack_address, 0, 2) != 0:
-                            if timer/1000 > 15:
+                            if timer / 1000 > 15:
                                 # Press "~" again to try re-targeting or un-stuck
                                 press_hotkey(10)
                                 timer = 0
@@ -54,13 +56,14 @@ class TargetThread(QThread):
                             target_x, target_y, target_z, target_name, target_hp = read_target_info()
                             x, y, z = read_my_wpt()
                             # If within attack distance
-                            if (int(target_data['Distance']) >= abs(x - target_x)
-                                and int(target_data['Distance']) >= abs(y - target_y)) \
-                                    or target_data['Distance'] == 0:
+                            if (((int(target_data['Distance']) >= abs(x - target_x)
+                                 and int(target_data['Distance']) >= abs(y - target_y))
+                                or target_data['Distance'] == 0)
+                                    and abs(x - target_x) < 7 and abs(y - target_y) < 5):
                                 if not walker_Lock.locked():
                                     walker_Lock.acquire()
                                 if self.chase_state:
-                                    walk(0, x, y, 0, target_x, target_y, 0)
+                                    chase_monster(x, y, target_x, target_y)
                             else:
                                 if walker_Lock.locked() and lootLoop > 1:
                                     walker_Lock.release()
@@ -86,14 +89,20 @@ class TargetThread(QThread):
                         x, y, z = read_my_wpt()
                         x = target_x - x
                         y = target_y - y
+                        right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
+                        QThread.msleep(random.randint(500, 600))
+                        '''
                         backpack = read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1)
                         for _ in range(3):
-                            if backpack == read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1):
+                            if backpack == read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset,1):
                                 right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
                                 QThread.msleep(random.randint(500, 600))
+                        '''
                         x, y, z = read_my_wpt()
+                        '''
                         if z != target_z:
                             walk(1, 0, 0, 0, 0, 0, 0)
+                        '''
                         lootLoop = 0
                         while self.chase_state and lootLoop < 2:
                             QThread.msleep(random.randint(100, 150))
