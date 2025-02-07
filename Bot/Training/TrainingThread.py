@@ -2,8 +2,8 @@ import random
 
 from PyQt5.QtCore import QThread, Qt
 
-from Functions import read_my_stats
-from KeyboardFunctions import press_hotkey
+from Functions.MemoryFunctions import *
+from Functions.KeyboardFunctions import press_hotkey
 
 
 class TrainingThread(QThread):

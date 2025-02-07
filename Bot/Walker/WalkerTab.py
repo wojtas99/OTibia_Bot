@@ -10,8 +10,9 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QIcon, QPixmap
 
 from Addresses import icon_image
-from Functions import read_my_wpt, delete_item
-from WalkerThread import WalkerThread, RecordThread
+from Functions.GeneralFunctions import delete_item
+from Functions.MemoryFunctions import *
+from Walker.WalkerThread import WalkerThread, RecordThread
 
 
 class WalkerTab(QWidget):
@@ -21,14 +22,12 @@ class WalkerTab(QWidget):
         # Thread Variables
         self.record_thread = None
         self.walker_thread = None
-
         # Load Icon
         self.setWindowIcon(
             QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(
                 base64.b64decode(icon_image)
             ) else QIcon()
         )
-
         # Set Title and Size
         self.setWindowTitle("Walker")
         self.setFixedSize(350, 400)  # Increased size to fit the status label
@@ -74,7 +73,7 @@ class WalkerTab(QWidget):
 
         # Populate list with existing profiles
         # (assuming "Waypoints" folder already exists)
-        for file in os.listdir("Waypoints"):
+        for file in os.listdir("Save/Waypoints"):
             if file.endswith(".json"):
                 self.waypoint_profile_list_widget.addItem(file.split(".")[0])
 
@@ -120,16 +119,22 @@ class WalkerTab(QWidget):
 
         directions = [
             "Center", "North", "South", "East", "West",
-            "North-East", "North-West", "South-East", "South-West"
+            "North-East", "North-West", "South-East", "South-West", "Lure"
         ]
         self.waypoint_option_combobox.addItems(directions)
 
         stand_waypoint_button = QPushButton("Stand", self)
+        stand_waypoint_button.setFixedWidth(40)
         rope_waypoint_button = QPushButton("Rope", self)
+        rope_waypoint_button.setFixedWidth(40)
         shovel_waypoint_button = QPushButton("Shovel", self)
+        shovel_waypoint_button.setFixedWidth(40)
         ladder_waypoint_button = QPushButton("Ladder", self)
+        ladder_waypoint_button.setFixedWidth(40)
         action_waypoint_button = QPushButton("Action", self)
+        action_waypoint_button.setFixedWidth(40)
         label_waypoint_button = QPushButton("Label", self)
+        label_waypoint_button.setFixedWidth(40)
 
         # Connect to add_waypoint with different indexes
         stand_waypoint_button.clicked.connect(lambda: self.add_waypoint(0))
@@ -204,9 +209,7 @@ class WalkerTab(QWidget):
             }
             for i in range(self.waypoint_list_widget.count())
         ]
-
-        os.makedirs("Waypoints", exist_ok=True)  # Just to ensure directory exists
-        with open(f"Waypoints/{waypoint_profile_name}.json", "w") as f:
+        with open(f"Save/Waypoints/{waypoint_profile_name}.json", "w") as f:
             json.dump(waypoint_list, f, indent=4)
 
         # Optionally, add it to the profile list if not already there
@@ -241,7 +244,7 @@ class WalkerTab(QWidget):
             return
 
         waypoint_profile_name = current_item.text()
-        filename = f"Waypoints/{waypoint_profile_name}.json"
+        filename = f"Save/Waypoints/{waypoint_profile_name}.json"
         if not os.path.exists(filename):
             self.waypoint_profile_list_widget.setStyleSheet("border: 2px solid red;")
             self.status_label.setText(f"No file found for profile: {waypoint_profile_name}")
@@ -335,7 +338,7 @@ class WalkerTab(QWidget):
 
     def start_record_thread(self, state):
         if state == Qt.Checked:
-            self.record_thread = RecordThread()
+            self.record_thread = RecordThread(self.waypoint_option_combobox)
             self.record_thread.wpt_update.connect(self.update_waypointList)
             self.record_thread.start()
         else:

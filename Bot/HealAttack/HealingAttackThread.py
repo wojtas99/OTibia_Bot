@@ -1,13 +1,9 @@
 import random
-
 from PyQt5.QtCore import QThread, Qt
-
-import Addresses
 from Addresses import coordinates_x, coordinates_y
-from Functions import read_my_stats, read_target_info, read_my_wpt
-from KeyboardFunctions import press_hotkey
-from MemoryFunctions import read_memory_address, read_pointer_address
-from MouseFunctions import use_on_me
+from Functions.KeyboardFunctions import press_hotkey
+from Functions.MemoryFunctions import *
+from Functions.MouseFunctions import use_on_me
 
 
 def read_heal_data(heal_data):
@@ -71,11 +67,6 @@ def attack_monster(attack_data) -> bool:
     x, y, z = read_my_wpt()
     target_x, target_y, target_z, target_name, target_hp = read_target_info()
     current_hp, current_max_hp, current_mp, current_max_mp = read_my_stats()
-    if Addresses.client_name == "WADclient":
-        #monsters = int((read_pointer_address(Addresses.monsters_on_screen, Addresses.monsters_on_screen_offset, 1) - 47)/25)
-        monsters = 10
-    elif Addresses.client_name == "Altaron":
-        monsters = 10
     hp_percentage = (current_hp * 100) / current_max_hp
     if (attack_data['Action'] > 2
             and (int(attack_data['HpFrom']) >= target_hp > int(attack_data['HpTo']))
@@ -101,11 +92,10 @@ class AttackThread(QThread):
             try:
                 for attack_index in range(self.attack_list.count()):
                     attack_data = self.attack_list.item(attack_index).data(Qt.UserRole)
-                    if read_memory_address(Addresses.attack_address, 0, 2) != 0:
+                    if read_targeting_status() != 0:
                         if attack_monster(attack_data):
                             press_hotkey(int(attack_data['Action'] - 2))
                             QThread.msleep(random.randint(150, 250))
-                            break
                 QThread.msleep(random.randint(100, 200))
             except Exception as e:
                 print(e)

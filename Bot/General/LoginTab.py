@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton, QLabel, QLineEdi
 from PyQt5.QtGui import QIcon, QPixmap
 import base64
 from Addresses import icon_image
-from SelectTibia import SelectTibiaTab
+from General.SelectTibiaTab import SelectTibiaTab
 import configparser
 
 config = configparser.ConfigParser()

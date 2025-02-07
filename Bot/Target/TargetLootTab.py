@@ -3,7 +3,7 @@ from Addresses import icon_image
 import base64
 import os
 import json
-from Functions import delete_item
+from Functions.GeneralFunctions import delete_item
 from PyQt5.QtWidgets import (
     QWidget, QCheckBox, QComboBox, QLineEdit, QListWidget, QGridLayout,
     QGroupBox, QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QListWidgetItem
@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
 
-from TargetLootThread import TargetThread, LootThread
+from Target.TargetLootThread import TargetThread, LootThread
 
 
 class TargetLootTab(QWidget):
@@ -108,12 +108,7 @@ class TargetLootTab(QWidget):
         load_target_loot_button.clicked.connect(self.load_target_loot)
 
         # Populate the profile list with existing files
-        if not os.path.exists("Targeting"):
-            os.makedirs("Targeting")
-        if not os.path.exists("Looting"):
-            os.makedirs("Looting")
-
-        for file in os.listdir("Targeting"):
+        for file in os.listdir("Save/Targeting"):
             if file.endswith(".json"):
                 self.targetLootProfile_listWidget.addItem(file.split('.')[0])
 
@@ -333,15 +328,11 @@ class TargetLootTab(QWidget):
             for i in range(self.lootList_listWidget.count())
         ]
 
-        # Ensure directories exist
-        os.makedirs("Targeting", exist_ok=True)
-        os.makedirs("Looting", exist_ok=True)
-
         # Save JSON files
         try:
-            with open(f"Targeting/{target_loot_name}.json", "w") as f:
+            with open(f"Save/Targeting/{target_loot_name}.json", "w") as f:
                 json.dump(target_list, f, indent=4)
-            with open(f"Looting/{target_loot_name}.json", "w") as f:
+            with open(f"Save/Looting/{target_loot_name}.json", "w") as f:
                 json.dump(looting_list, f, indent=4)
         except IOError as e:
             self.status_label.setText(f"Error saving profile: {str(e)}")
@@ -378,8 +369,8 @@ class TargetLootTab(QWidget):
             return
 
         profile_name = current_item.text()
-        target_filename = f"Targeting/{profile_name}.json"
-        loot_filename = f"Looting/{profile_name}.json"
+        target_filename = f"Save/Targeting/{profile_name}.json"
+        loot_filename = f"Save/Looting/{profile_name}.json"
 
         if not os.path.exists(target_filename) and not os.path.exists(loot_filename):
             self.targetLootProfile_listWidget.setStyleSheet("border: 2px solid red;")

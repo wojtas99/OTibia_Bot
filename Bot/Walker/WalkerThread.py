@@ -3,9 +3,9 @@ from PyQt5.QtCore import QThread, pyqtSignal, Qt
 from PyQt5.QtWidgets import QListWidgetItem
 
 from Addresses import walker_Lock, coordinates_x, coordinates_y
-from Functions import read_my_wpt
-from KeyboardFunctions import walk
-from MouseFunctions import left_click, right_click
+from Functions.MemoryFunctions import *
+from Functions.KeyboardFunctions import walk
+from Functions.MouseFunctions import left_click, right_click
 
 
 class WalkerThread(QThread):
@@ -35,7 +35,7 @@ class WalkerThread(QThread):
                     timer = 0
                     current_wpt = (current_wpt + 1) % len(self.waypoints)
                     continue
-                if not walker_Lock.locked():
+                if not walker_Lock.locked() or wpt_direction == 9:
                     if wpt_action == 0:
                         walk(wpt_direction, x, y, z, map_x, map_y, map_z)
                     elif wpt_action == 1:
@@ -73,11 +73,10 @@ class WalkerThread(QThread):
                         timer += sleep_value
                         right_click(coordinates_x[0], coordinates_y[0])  # e.g. click on Ladder
                         current_wpt = (current_wpt + 1) % len(self.waypoints)
-
                 if timer > 5000:
                     current_wpt = self.lost_wpt(current_wpt)
                     timer = 0
-                sleep_value = random.randint(20, 30)
+                sleep_value = random.randint(50, 100)
                 QThread.msleep(sleep_value)
                 if not walker_Lock.locked():
                     timer += sleep_value
@@ -99,7 +98,7 @@ class WalkerThread(QThread):
             map_z = wpt_data['Z']
             wpt_action = wpt_data['Action']
             wpt_direction = wpt_data['Direction']
-            if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 == wpt_direction:
+            if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 and (wpt_direction == 0 or wpt_direction == 5):
                 current_wpt = wpt
         return current_wpt
 
@@ -107,15 +106,16 @@ class WalkerThread(QThread):
 class RecordThread(QThread):
     wpt_update = pyqtSignal(int, object)
 
-    def __init__(self):
+    def __init__(self, comboBox):
         super().__init__()
         self.running = True
+        self.comboBox = comboBox
 
     def run(self):
         x, y, z = read_my_wpt()
         waypoint_data = {
             "Action": 0,
-            "Direction": 0,
+            "Direction": int(self.comboBox.currentIndex()),
             "X": x,
             "Y": y,
             "Z": z
@@ -130,7 +130,7 @@ class RecordThread(QThread):
                 if (x != old_x or y != old_y) and z == old_z:
                     waypoint_data = {
                         "Action": 0,
-                        "Direction": 0,
+                        "Direction": int(self.comboBox.currentIndex()),
                         "X": x,
                         "Y": y,
                         "Z": z

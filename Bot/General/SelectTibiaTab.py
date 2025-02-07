@@ -3,7 +3,7 @@ import base64
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton)
 from PyQt5.QtGui import QIcon, QPixmap
 from Addresses import icon_image
-from MainWindow import MainWindowTab
+from General.MainWindowTab import MainWindowTab
 
 
 class SelectTibiaTab(QWidget):
@@ -23,15 +23,18 @@ class SelectTibiaTab(QWidget):
         self.altaron_button = QPushButton('Altaron', self)
         self.wad_button = QPushButton('We Are Dragons', self)
         self.medivia_button = QPushButton('Medivia', self)
+        self.giveria_button = QPushButton('Giveria', self)
         # Buttons Functions
         self.wad_button.clicked.connect(self.load_wad_button)
         self.medivia_button.clicked.connect(self.load_medivia_button)
         self.altaron_button.clicked.connect(self.load_altaron_button)
+        self.giveria_button.clicked.connect(self.load_giveria_button)
 
         # Add widgets to layout
         self.layout.addWidget(self.altaron_button)
         self.layout.addWidget(self.wad_button)
         self.layout.addWidget(self.medivia_button)
+        self.layout.addWidget(self.giveria_button)
 
     def load_wad_button(self) -> None:
         Addresses.load_wad()
@@ -47,6 +50,12 @@ class SelectTibiaTab(QWidget):
 
     def load_altaron_button(self) -> None:
         Addresses.load_altaron()
+        self.close()
+        self.main_window = MainWindowTab()
+        self.main_window.show()
+
+    def load_giveria_button(self) -> None:
+        Addresses.load_giveria()
         self.close()
         self.main_window = MainWindowTab()
         self.main_window.show()

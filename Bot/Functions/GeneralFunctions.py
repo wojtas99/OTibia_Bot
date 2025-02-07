@@ -1,13 +1,15 @@
 import base64
 import io
 import requests
+import win32con
+import win32gui
+import win32ui
 from PIL import Image, ImageSequence
 import numpy as np
 import cv2 as cv
 from PyQt5.QtCore import Qt
 from bs4 import BeautifulSoup
 import Addresses
-from MemoryFunctions import read_pointer_address, read_memory_address
 
 
 def load_items_images(list_widget) -> None:
@@ -56,9 +58,6 @@ def load_items_images(list_widget) -> None:
                     background = cv.cvtColor(background, cv.COLOR_BGR2GRAY)
                     background = cv.GaussianBlur(background, (7, 7), 0)
                     background = cv.resize(background, None, fx=zoom_img, fy=zoom_img, interpolation=cv.INTER_CUBIC)
-                    '''cv.imshow("test", background)
-                    cv.waitKey(0)
-                    cv.destroyAllWindows()'''
                     background = np.array(background)
                     Addresses.item_list[item_name].append(background)
                 item_image.close()
@@ -127,79 +126,58 @@ def load_items_images(list_widget) -> None:
                     Addresses.item_list[item_name].append(loot_container)
 
 
+def merge_close_points(points, distance_threshold):
+    merged_points = []
+    merged_indices = set()
+
+    def merge_distance(point1, point2):
+        return np.sqrt(np.sum((point1 - point2) ** 2))
+    for i in range(len(points)):
+        if i not in merged_indices:
+            current_point = points[i]
+            merged_point = np.array(current_point)
+            for j in range(i + 1, len(points)):
+                if merge_distance(np.array(current_point), np.array(points[j])) < distance_threshold:
+                    merged_point = (merged_point + np.array(points[j])) / 2
+                    merged_indices.add(j)
+            merged_points.append(tuple(merged_point))
+    return merged_points
+
+
+class WindowCapture:
+    def __init__(self, w, h, x, y):
+        window_name = Addresses.game_name + " - EasyBot"
+        self.hwnd = win32gui.FindWindow(None, window_name)
+        self.w = w
+        self.h = h
+        self.x = x
+        self.y = y
+
+    def get_screenshot(self):
+        wDC = win32gui.GetWindowDC(self.hwnd)
+        dc_obj = win32ui.CreateDCFromHandle(wDC)
+        cDC = dc_obj.CreateCompatibleDC()
+        data_bitmap = win32ui.CreateBitmap()
+        data_bitmap.CreateCompatibleBitmap(dc_obj, self.w, self.h)
+        cDC.SelectObject(data_bitmap)
+        cDC.BitBlt((0, 0), (self.w, self.h), dc_obj, (self.x, self.y), win32con.SRCCOPY)
+        signed_ints_array = data_bitmap.GetBitmapBits(True)
+        img = np.frombuffer(signed_ints_array, dtype='uint8')
+        img.shape = (self.h, self.w, 4)
+        dc_obj.DeleteDC()
+        cDC.DeleteDC()
+        win32gui.ReleaseDC(self.hwnd, wDC)
+        win32gui.DeleteObject(data_bitmap.GetHandle())
+        img = img[..., :3]
+        img = np.ascontiguousarray(img)
+        return img
+
+
 def delete_item(list_widget, item) -> None:
     # Get the index of the clicked item
     index = list_widget.row(item)
     # Remove the item using the index
     list_widget.takeItem(index)
 
-
-def read_my_stats():
-    if Addresses.client_name == "Altaron":
-        current_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_offset, 1)
-        current_max_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_max_offset, 1)
-        current_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_offset, 1)
-        current_max_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_max_offset, 1)
-        return current_hp, current_max_hp, current_mp, current_max_mp
-    elif Addresses.client_name == "Medivia":
-        current_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_offset, 3)
-        current_max_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_max_offset, 3)
-        current_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_offset, 3)
-        current_max_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_max_offset, 3)
-        return current_hp, current_max_hp, current_mp, current_max_mp
-    elif Addresses.client_name == "WADclient":
-        current_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_offset, 3)
-        current_max_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_max_offset, 3)
-        current_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_offset, 3)
-        current_max_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_max_offset, 3)
-        return current_hp, current_max_hp, current_mp, current_max_mp
-
-
-def read_my_wpt():
-    try:
-        x = read_memory_address(Addresses.my_x_address, 0, 1)
-        y = read_memory_address(Addresses.my_y_address, 0, 1)
-        z = read_memory_address(Addresses.my_z_address, 0, 7)
-        if x is None or y is None or z is None:
-            print("Failed to read coordinates.")
-            return None, None, None
-        return x, y, z
-    except Exception as e:
-        print(f"Exception in read_my_wpt: {e}")
-        return None, None, None
-
-
-def read_target_info():
-    if Addresses.client_name == "Altaron":
-        target_x = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_x = read_memory_address(target_x, Addresses.target_x_offset, 1)
-        target_y = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_y = read_memory_address(target_y, Addresses.target_y_offset, 1)
-        target_z = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_z = read_memory_address(target_z, Addresses.target_z_offset, 4)
-        target_name = "*"
-        target_hp = read_memory_address(read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address, Addresses.target_hp_offset, 7)
-        return target_x, target_y, target_z, target_name, target_hp
-    elif Addresses.client_name == "Medivia":
-        target_x = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_x = read_memory_address(target_x, Addresses.target_x_offset, 1)
-        target_y = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_y = read_memory_address(target_y, Addresses.target_y_offset, 1)
-        target_z = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_z = read_memory_address(target_z, Addresses.target_z_offset, 4)
-        target_name = "*"
-        target_hp = read_memory_address(read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address, Addresses.target_hp_offset, 7)
-        return target_x, target_y, target_z, target_name, target_hp
-    elif Addresses.client_name == "WADclient":
-        target_x = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_x = read_memory_address(target_x, Addresses.target_x_offset, 1)
-        target_y = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_y = read_memory_address(target_y, Addresses.target_y_offset, 1)
-        target_z = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_z = read_memory_address(target_z, Addresses.target_z_offset, 7)
-        target_name = "*"
-        target_hp = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_hp = read_memory_address(target_hp, Addresses.target_hp_offset, 7)
-        return target_x, target_y, target_z, target_name, target_hp
 
 

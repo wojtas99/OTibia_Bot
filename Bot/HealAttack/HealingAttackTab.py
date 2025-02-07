@@ -1,19 +1,10 @@
-import random
-import base64
-import time
-import json
-import os
-from threading import Thread, Event
+import base64, json, os
 from PyQt5.QtWidgets import (QWidget, QCheckBox, QComboBox, QLineEdit, QListWidget, QGridLayout,QGroupBox, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QListWidgetItem)
 from PyQt5.QtGui import QIcon, QPixmap, QIntValidator
 from PyQt5.QtCore import Qt
-import Addresses
-from Addresses import icon_image, coordinates_x, coordinates_y
-from HealingAttackThread import HealThread, AttackThread
-from MemoryFunctions import read_memory_address
-from MouseFunctions import use_on_me, right_click, left_click
-from KeyboardFunctions import press_hotkey
-from Functions import read_my_stats, read_my_wpt, read_target_info, delete_item
+from Addresses import icon_image
+from HealAttack.HealingAttackThread import HealThread, AttackThread
+from Functions.GeneralFunctions import delete_item
 
 
 class HealingTab(QWidget):
@@ -133,7 +124,7 @@ class HealingTab(QWidget):
         groupbox_layout.addWidget(self.attackList_listWidget)
         self.layout.addWidget(groupbox, 1, 0)
 
-        for file in os.listdir("HealingAttack"):
+        for file in os.listdir("Save/HealingAttack"):
             if file.endswith(".json"):
                 self.savedAttackHealList_listWidget.addItem(file.split('.')[0])
 
@@ -309,7 +300,7 @@ class HealingTab(QWidget):
             "attacking": attack_list
         }
 
-        filename = f"HealingAttack/{profile_name}.json"
+        filename = f"Save/HealingAttack/{profile_name}.json"
         with open(filename, "w") as f:
             json.dump(data_to_save, f, indent=4)
 
@@ -334,7 +325,7 @@ class HealingTab(QWidget):
         else:
             self.savedAttackHealList_listWidget.setStyleSheet("")
         profile_name = profile_name.text()
-        filename = f"HealingAttack/{profile_name}.json"
+        filename = f"Save/HealingAttack/{profile_name}.json"
         if not os.path.exists(filename):
             self.status_label.setText(f"No file found for '{profile_name}'.")
             return

@@ -4,12 +4,13 @@ import base64
 from Addresses import icon_image
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton, QApplication)
 from PyQt5.QtGui import QIcon, QPixmap
-from HealingAttack import HealingTab
-from Training import TrainingTab
-from Walker import WalkerTab
-from TargetLoot import TargetLootTab
-from Settings import SettingsTab
-from SmartHotkeys import SmartHotkeysTab
+from HealAttack.HealingAttackTab import HealingTab
+
+from Target.TargetLootTab import TargetLootTab
+from Settings.SettingsTab import SettingsTab
+from SmartHotkeys.SmartHotkeysTab import SmartHotkeysTab
+from Training.TrainingTab import TrainingTab
+from Walker.WalkerTab import WalkerTab
 
 
 class MainWindowTab(QWidget):
@@ -20,11 +21,11 @@ class MainWindowTab(QWidget):
         QApplication.instance().aboutToQuit.connect(lambda: win32gui.SetWindowText(Addresses.game, Addresses.game_name))
 
         # Load Icon
-        win32gui.SetWindowText(Addresses.game, Addresses.game_name + " - EasyBot" + Addresses.numberEasyBot)
+        win32gui.SetWindowText(Addresses.game, Addresses.game_name + " - EasyBot")
         self.setWindowIcon(QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(base64.b64decode(icon_image)) else QIcon())
         # Set Title and Size
         self.setFixedSize(400, 100)
-        self.setWindowTitle("EasyBot - " + Addresses.numberEasyBot)
+        self.setWindowTitle("EasyBot")
 
         # Instances
         self.targetLootTab_instance = None

@@ -1,4 +1,3 @@
-import Addresses
 from Addresses import icon_image, coordinates_x, coordinates_y
 import win32gui
 import base64
@@ -13,11 +12,9 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
-
-from Functions import read_my_wpt, read_target_info, delete_item
-from MouseFunctions import right_click, left_click
-from MemoryFunctions import read_memory_address
-
+from Functions.GeneralFunctions import delete_item
+from Functions.MouseFunctions import right_click, left_click
+from Functions.MemoryFunctions import *
 
 class SmartHotkeysTab(QWidget):
     def __init__(self):

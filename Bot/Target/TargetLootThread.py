@@ -1,14 +1,13 @@
 import random
 
 import numpy as np
-from PyQt5.QtCore import QThread, Qt, QMutex, QMutexLocker
-import Addresses
+from PyQt5.QtCore import QThread, QMutex, QMutexLocker
 from Addresses import coordinates_x, coordinates_y, screen_width, screen_height, screen_x, screen_y, walker_Lock
-from Functions import read_target_info, read_my_wpt, load_items_images
-from GeneralFunctions import WindowCapture, merge_close_points, manage_collect
-from KeyboardFunctions import press_hotkey, walk, chase_monster
-from MemoryFunctions import read_memory_address, read_pointer_address
-from MouseFunctions import right_click, left_click
+from Functions.GeneralFunctions import load_items_images
+from Functions.MemoryFunctions import *
+from Functions.GeneralFunctions import WindowCapture, merge_close_points
+from Functions.KeyboardFunctions import press_hotkey, chase_monster
+from Functions.MouseFunctions import right_click, left_click, manage_collect
 import cv2 as cv
 
 lootLoop = 2
@@ -33,13 +32,13 @@ class TargetThread(QThread):
             try:
                 open_corpse = False
                 timer = 0
-                target_id = read_memory_address(Addresses.attack_address, 0, 2)
+                target_id = read_targeting_status()
                 # Attack if no target
                 if target_id == 0:
                     # Simulate pressing "~" key to switch target or approach
                     press_hotkey(10)
                     QThread.msleep(random.randint(100, 150))
-                    target_id = read_memory_address(Addresses.attack_address, 0, 2)
+                    target_id = read_targeting_status()
                 if target_id != 0:
                     target_x, target_y, target_z, target_name, target_hp = read_target_info()
                     if target_hp <= 0:
@@ -47,7 +46,7 @@ class TargetThread(QThread):
                     if any(target['Name'] == target_name for target in self.targets):
                         target_index = next(i for i, target in enumerate(self.targets) if target['Name'] == target_name)
                         target_data = self.targets[target_index]
-                        while read_memory_address(Addresses.attack_address, 0, 2) != 0:
+                        while read_targeting_status() != 0:
                             if timer / 1000 > 15:
                                 # Press "~" again to try re-targeting or un-stuck
                                 press_hotkey(10)

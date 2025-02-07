@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (
     QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox, QListWidgetItem, QLabel
 )
 from PyQt5.QtGui import QIcon, QPixmap
-from TrainingThread import TrainingThread, ClickThread
+from Training.TrainingThread import TrainingThread, ClickThread
 
 
 class TrainingTab(QWidget):
