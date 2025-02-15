@@ -243,11 +243,11 @@ def load_giveria() -> None:
     my_z_address = 0x00DF6B94
     my_z_address_offset = [0x250, 0x2C]
     my_name_address = 0x3F5234
-    my_stats_address = 0x00E2CACC
-    my_hp_offset = [0XD0, 0X1B4, 0X40, 0X3C]
-    my_hp_max_offset = [0XD0, 0X1B4, 0X40, 0X40]
-    my_mp_offset = [0XD0, 0X1B4, 0X40, 0X44]
-    my_mp_max_offset = [0XD0, 0X1B4, 0X40, 0X48]
+    my_stats_address = 0x0069A988
+    my_hp_offset = [0X0, 0X8, 0X1B4, 0X40, 0X3C]
+    my_hp_max_offset = [0X0, 0X8, 0X1B4, 0X40, 0X40]
+    my_mp_offset = [0X0, 0X8, 0X1B4, 0X40, 0X44]
+    my_mp_max_offset = [0X0, 0X8, 0X1B4, 0X40, 0X48]
     backpack_address = 0x02F72440
     backpack_offset = [0x2F8, 0X0, 0X1C, 0X4]
 
