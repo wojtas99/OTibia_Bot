@@ -39,6 +39,9 @@ class TargetThread(QThread):
                     press_hotkey(10)
                     QThread.msleep(random.randint(100, 150))
                     target_id = read_targeting_status()
+                if target_id == 0:
+                    if walker_Lock.locked() and lootLoop > 1:
+                        walker_Lock.release()
                 if target_id != 0:
                     target_x, target_y, target_z, target_name, target_hp = read_target_info()
                     if target_hp <= 0:
@@ -105,9 +108,6 @@ class TargetThread(QThread):
                         lootLoop = 0
                         while self.chase_state and lootLoop < 2:
                             QThread.msleep(random.randint(100, 150))
-
-                if walker_Lock.locked() and lootLoop > 1:
-                    walker_Lock.release()
             except Exception as e:
                 print(f"Error: {e}")
 

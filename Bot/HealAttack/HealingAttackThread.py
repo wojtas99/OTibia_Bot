@@ -41,20 +41,20 @@ class HealThread(QThread):
                         if heal_option == "UH":
                             if heal_below >= hp_percentage >= heal_above:
                                 use_on_me(coordinates_x[5], coordinates_y[5])
-                                QThread.msleep(random.randint(100, 200))
+                                QThread.msleep(random.randint(10, 50))
                                 healed = True
                         else:
                             if heal_below >= hp_percentage >= heal_above and current_mp >= heal_min_mp:
                                 press_hotkey(int(heal_option[1:]))
-                                QThread.msleep(random.randint(100, 200))
+                                QThread.msleep(random.randint(10, 50))
                                 healed = True
                     elif heal_type.startswith("MP"):
                         if heal_below >= mp_percentage >= heal_above:
                             press_hotkey(int(heal_option[1:]))
-                            QThread.msleep(random.randint(100, 200))
+                            QThread.msleep(random.randint(10, 50))
                             healed = True
-                    QThread.msleep(random.randint(100, 200))
-                QThread.msleep(random.randint(100, 200))
+                    QThread.msleep(random.randint(10, 50))
+                QThread.msleep(random.randint(10, 50))
             except Exception as e:
                 print(e)
 

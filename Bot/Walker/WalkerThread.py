@@ -40,13 +40,13 @@ class WalkerThread(QThread):
                     current_wpt = (current_wpt + 1) % len(self.waypoints)
                     continue
                 if not walker_Lock.locked() or wpt_direction == 9:
+                    if old_x == x and old_y == y:
+                        timer2 += 0.2
+                    else:
+                        timer2 = 0
+                    old_x, old_y = x, y
                     if wpt_action == 0:
-                        if old_x == x and old_y == y:
-                            timer2 += 0.1
-                        else:
-                            timer2 = 0
                         walk(wpt_direction, x, y, z, map_x, map_y, map_z)
-                        old_x, old_y = x, y
                     elif wpt_action == 1:
                         # Rope
                         sleep_value = random.randint(500, 600)
@@ -96,19 +96,22 @@ class WalkerThread(QThread):
         self.running = False
 
     def find_wpt(self, index):
-        current_wpt = 0
+        current_wpt = index
         x, y, z = read_my_wpt()
         while (x or y or z) is None:
             x, y, z = read_my_wpt()
-        for wpt in range(0, len(self.waypoints)):
+        for wpt in range(current_wpt, len(self.waypoints)):
             wpt_data = self.waypoints[wpt]
             map_x = wpt_data['X']
             map_y = wpt_data['Y']
             map_z = wpt_data['Z']
             wpt_action = wpt_data['Action']
             wpt_direction = wpt_data['Direction']
-            if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 and (wpt_direction == 0 or wpt_direction == 5):
+            if (z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 and (wpt_direction == 0 or wpt_direction == 9)
+                    and 0 > index - wpt >= -5):
                 current_wpt = wpt
+                if wpt_direction == 0:
+                    return current_wpt
         return current_wpt
 
     def lost_wpt(self, index):
@@ -123,7 +126,7 @@ class WalkerThread(QThread):
             map_z = wpt_data['Z']
             wpt_action = wpt_data['Action']
             wpt_direction = wpt_data['Direction']
-            if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 and (wpt_direction == 0 or wpt_direction == 5):
+            if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 and (wpt_direction == 0 or wpt_direction == 9):
                 current_wpt = wpt
         return current_wpt
 
