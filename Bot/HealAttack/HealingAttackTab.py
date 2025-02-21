@@ -1,5 +1,6 @@
 import base64, json, os
-from PyQt5.QtWidgets import (QWidget, QCheckBox, QComboBox, QLineEdit, QListWidget, QGridLayout,QGroupBox, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QListWidgetItem)
+from PyQt5.QtWidgets import (QWidget, QCheckBox, QComboBox, QLineEdit, QListWidget, QGridLayout, QGroupBox, QVBoxLayout,
+                             QHBoxLayout, QLabel, QPushButton, QListWidgetItem, QFormLayout, QSizePolicy)
 from PyQt5.QtGui import QIcon, QPixmap, QIntValidator
 from PyQt5.QtCore import Qt
 from Addresses import icon_image
@@ -20,7 +21,6 @@ class HealingTab(QWidget):
             QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(
                 base64.b64decode(icon_image)) else QIcon()
         )
-
         # Set Title and Size
         self.setWindowTitle("Spells & Healing")
         self.setFixedSize(450, 550)
@@ -34,6 +34,7 @@ class HealingTab(QWidget):
         self.start_attack_checkBox = QCheckBox("Start Attack", self)
 
         # Combo Boxes
+        self.attackType_comboBox = QComboBox(self)
         self.hp_mana_comboBox = QComboBox(self)
         self.hotkey_rune_list_comboBox = QComboBox(self)
         self.actionList_comboBox = QComboBox(self)
@@ -47,7 +48,6 @@ class HealingTab(QWidget):
         self.min_mp_lineEdit = QLineEdit(self)
         self.min_mp_lineEdit.setFixedWidth(40)
         self.targetName_lineEdit = QLineEdit(self)
-        self.targetName_lineEdit.setFixedWidth(100)
         self.hpFrom_lineEdit = QLineEdit(self)
         self.hpTo_lineEdit = QLineEdit(self)
         self.hpFrom_lineEdit.setFixedWidth(40)
@@ -60,9 +60,9 @@ class HealingTab(QWidget):
         self.min_hp_spell_lineEdit.setFixedWidth(40)
         self.monster_count_lineEdit = QLineEdit(self)
         self.monster_count_lineEdit.setFixedWidth(40)
-        self.spell_dist_lineEdit = QLineEdit(self)
-        self.spell_dist_lineEdit.setMaxLength(1)
-        self.spell_dist_lineEdit.setFixedWidth(40)
+        self.minCreatures_lineEdit = QLineEdit(self)
+        self.minCreatures_lineEdit.setMaxLength(1)
+        self.minCreatures_lineEdit.setFixedWidth(40)
         self.profile_name_lineEdit = QLineEdit(self)
 
         # Validators to ensure numeric input
@@ -78,7 +78,7 @@ class HealingTab(QWidget):
         self.hpTo_lineEdit.setValidator(int_validator_2)
         self.min_mp_spell_lineEdit.setValidator(int_validator_4)
         self.min_hp_spell_lineEdit.setValidator(int_validator_2)
-        self.spell_dist_lineEdit.setValidator(int_validator_1)
+        self.minCreatures_lineEdit.setValidator(int_validator_1)
 
         # List Widgets
         self.healList_listWidget = QListWidget(self)
@@ -95,38 +95,129 @@ class HealingTab(QWidget):
 
         # Layout
         self.layout = QGridLayout(self)
+        self.layout.setAlignment(Qt.AlignLeft)
         self.setLayout(self.layout)
 
         # Initialize sections
         self.heal_list()
-        self.attack_hotkey_rune()
-        self.add_heal_spell()
-        self.add_attack_spell()
+        self.attackList()
+        #self.add_heal_spell()
+        #self.add_attack_spell()
         self.save_load_list()
         self.save_load_profile()
-
         # Finally add the status label at the bottom row
         self.layout.addWidget(self.status_label, 3, 0, 1, 2)
-
-    def heal_list(self) -> None:
-        groupbox = QGroupBox("Heal Hotkeys && Runes")
-        groupbox_layout = QVBoxLayout(self)
-        groupbox.setLayout(groupbox_layout)
-
-        groupbox_layout.addWidget(self.healList_listWidget)
-        self.layout.addWidget(groupbox, 0, 0)
-
-    def attack_hotkey_rune(self) -> None:
-        groupbox = QGroupBox("Attack Hotkeys && Runes")
-        groupbox_layout = QVBoxLayout(self)
-        groupbox.setLayout(groupbox_layout)
-
-        groupbox_layout.addWidget(self.attackList_listWidget)
-        self.layout.addWidget(groupbox, 1, 0)
 
         for file in os.listdir("Save/HealingAttack"):
             if file.endswith(".json"):
                 self.savedAttackHealList_listWidget.addItem(file.split('.')[0])
+
+    def heal_list(self) -> None:
+        groupbox = QGroupBox("Healing")
+        groupbox_layout = QVBoxLayout(self)
+        groupbox.setLayout(groupbox_layout)
+
+        # Button
+        add_healing_button = QPushButton("Add", self)
+        add_healing_button.clicked.connect(self.add_heal)
+
+        # ComboBoxes
+        self.hp_mana_comboBox.addItems(["HP%", "MP%"])
+        self.hotkey_rune_list_comboBox.addItems(
+             [f"F{i}" for i in range(1, 13)] + ["UH", "Potion"]
+        )
+
+        # CheckBox function
+        self.start_heal_checkBox.stateChanged.connect(self.start_heal_thread)
+
+        # Index changed
+        self.hp_mana_comboBox.currentIndexChanged.connect(self.index_changed)
+
+        # Layouts
+        layout1 = QHBoxLayout(self)
+        layout2 = QHBoxLayout(self)
+
+        layout1.addWidget(QLabel("When:"))
+        layout1.addWidget(self.hp_mana_comboBox)
+        layout1.addWidget(QLabel("Press:"))
+        layout1.addWidget(self.hotkey_rune_list_comboBox)
+        layout1.addWidget(QLabel("Value:", self))
+        layout1.addWidget(self.hp_below_lineEdit)
+        tmp = QLabel("-", self)
+        tmp.setFixedWidth(10)
+        layout1.addWidget(tmp)
+        layout1.addWidget(self.hp_above_lineEdit)
+        layout1.addWidget(self.min_mp_lineEdit)
+        layout2.addWidget(add_healing_button)
+        layout2.addWidget(self.start_heal_checkBox)
+
+        groupbox_layout.addWidget(self.healList_listWidget)
+        groupbox_layout.addWidget(self.attackType_comboBox)
+        groupbox_layout.addLayout(layout1)
+        groupbox_layout.addLayout(layout2)
+        self.layout.addWidget(groupbox, 0, 0, 1, 2)
+
+    def attackList(self) -> None:
+        groupbox = QGroupBox("Attack Hotkeys && Runes")
+        groupbox_layout = QVBoxLayout(self)
+        groupbox.setLayout(groupbox_layout)
+
+        # Button
+        add_attack_button = QPushButton("Add", self)
+        add_attack_button.clicked.connect(self.add_attack)
+
+        # ComboBox
+        self.attackType_comboBox.addItems(
+            ["Exori, Exori Gran", "Exori Mas, Exevo Mas San",
+             "Exevo Gran Mas Vis, Exevo Gran Mas Flam",
+             "Avalanche, Great Fire Ball, etc.",
+             "Exori Hur, Exori Flam, etc."]
+        )
+
+        self.actionList_comboBox.addItems(
+            [f"F{i}" for i in range(1, 13)] + ["HMM", "GFB", "SD"]
+        )
+
+        # CheckBox function
+        self.start_attack_checkBox.stateChanged.connect(self.start_attack_thread)
+
+        # Layouts
+        layout1 = QHBoxLayout(self)
+        layout2 = QHBoxLayout(self)
+        layout3 = QHBoxLayout(self)
+        layout4 = QHBoxLayout(self)
+
+        layout1.addWidget(self.actionList_comboBox)
+        layout1.addWidget(QLabel("Min. Creatures:", self), alignment=Qt.AlignLeft)
+        layout1.addWidget(self.minCreatures_lineEdit)
+        self.minCreatures_lineEdit.setPlaceholderText("1")
+        layout1.addWidget(QLabel("HP:", self), alignment=Qt.AlignLeft)
+        layout1.addWidget(self.hpFrom_lineEdit)
+        layout1.addWidget(QLabel(" -", self), alignment=Qt.AlignLeft)
+        layout1.addWidget(self.hpTo_lineEdit, alignment=Qt.AlignLeft)
+        layout1.addWidget(QLabel("Min MP:", self))
+        layout1.addWidget(self.min_mp_spell_lineEdit)
+
+        self.min_mp_spell_lineEdit.setPlaceholderText("300")
+        self.hpFrom_lineEdit.setPlaceholderText("100")
+        self.hpTo_lineEdit.setPlaceholderText("0")
+
+        layout2.addWidget(self.targetName_lineEdit)
+        self.targetName_lineEdit.setPlaceholderText("Orc, Minotaur, etc., * - All monsters")
+        '''if client == 8.0:
+            layout2.addWidget(QLabel("Below Tibia 8.0 Min HP%:", self))
+            layout2.addWidget(self.min_hp_spell_lineEdit)'''
+
+        layout4.addWidget(self.attackType_comboBox)
+        layout4.addWidget(add_attack_button)
+        layout4.addWidget(self.start_attack_checkBox)
+
+        groupbox_layout.addWidget(self.attackList_listWidget)
+        groupbox_layout.addLayout(layout1)
+        groupbox_layout.addLayout(layout2)
+        groupbox_layout.addLayout(layout3)
+        groupbox_layout.addLayout(layout4)
+        self.layout.addWidget(groupbox, 1, 0, 1, 2)
 
     def save_load_list(self) -> None:
         groupbox = QGroupBox("Save && Load")
@@ -207,60 +298,7 @@ class HealingTab(QWidget):
         groupbox_layout.addLayout(layout2)
         groupbox_layout.addLayout(layout3)
         groupbox_layout.addLayout(layout4)
-        self.layout.addWidget(groupbox, 0, 1)
-
-    def add_attack_spell(self) -> None:
-        groupbox = QGroupBox("Attack Hotkeys & Runes")
-        groupbox_layout = QVBoxLayout(self)
-        groupbox.setLayout(groupbox_layout)
-
-        # Button
-        add_attack_button = QPushButton("Add", self)
-        add_attack_button.clicked.connect(self.add_attack)
-
-        # ComboBox
-        self.actionList_comboBox.addItems(
-            ["HMM", "GFB", "SD"] + [f"F{i}" for i in range(1, 13)]
-        )
-
-        # CheckBox function
-        self.start_attack_checkBox.stateChanged.connect(self.start_attack_thread)
-
-        # Layouts
-        layout1 = QHBoxLayout(self)
-        layout2 = QHBoxLayout(self)
-        layout3 = QHBoxLayout(self)
-        layout4 = QHBoxLayout(self)
-        layout5 = QHBoxLayout(self)
-        layout6 = QHBoxLayout(self)
-
-        layout1.addWidget(QLabel("Name:", self))
-        layout1.addWidget(self.targetName_lineEdit)
-        layout2.addWidget(QLabel("Action:", self))
-        layout2.addWidget(self.actionList_comboBox)
-        layout2.addWidget(QLabel("Dist:", self))
-        layout2.addWidget(self.spell_dist_lineEdit)
-        layout3.addWidget(QLabel("From:", self))
-        layout3.addWidget(self.hpFrom_lineEdit)
-        layout3.addWidget(QLabel("% To:", self))
-        layout3.addWidget(self.hpTo_lineEdit)
-        layout3.addWidget(QLabel("%", self))
-        layout4.addWidget(QLabel("Min MP:", self))
-        layout4.addWidget(self.min_mp_spell_lineEdit)
-        layout4.addWidget(QLabel("Min HP%:", self))
-        layout4.addWidget(self.min_hp_spell_lineEdit)
-        layout5.addWidget(QLabel("Count", self))
-        layout5.addWidget(self.monster_count_lineEdit)
-        layout5.addWidget(add_attack_button)
-        layout6.addWidget(self.start_attack_checkBox)
-
-        groupbox_layout.addLayout(layout1)
-        groupbox_layout.addLayout(layout2)
-        groupbox_layout.addLayout(layout3)
-        groupbox_layout.addLayout(layout4)
-        groupbox_layout.addLayout(layout5)
-        groupbox_layout.addLayout(layout6)
-        self.layout.addWidget(groupbox, 1, 1)
+        self.layout.addWidget(groupbox, 1, 0, 1, 2)
 
     # ---------------------- Save & Load Functions --------------------------
 
@@ -442,7 +480,7 @@ class HealingTab(QWidget):
         self.targetName_lineEdit.setStyleSheet("")
         self.hpFrom_lineEdit.setStyleSheet("")
         self.hpTo_lineEdit.setStyleSheet("")
-        self.spell_dist_lineEdit.setStyleSheet("")
+        self.minCreatures_lineEdit.setStyleSheet("")
 
         self.status_label.setStyleSheet("color: Red; font-weight: bold;")
 
@@ -465,8 +503,8 @@ class HealingTab(QWidget):
                 self.status_label.setText("Please fill in the 'To' field.")
             has_error = True
 
-        if not self.spell_dist_lineEdit.text().strip():
-            self.spell_dist_lineEdit.setStyleSheet("border: 2px solid red;")
+        if not self.minCreatures_lineEdit.text().strip():
+            self.minCreatures_lineEdit.setStyleSheet("border: 2px solid red;")
             if not has_error:
                 self.status_label.setText("Please fill in the 'Dist' field.")
             has_error = True
@@ -484,7 +522,7 @@ class HealingTab(QWidget):
         hp_to_val = int(self.hpTo_lineEdit.text())
         min_mp_val = int(self.min_mp_spell_lineEdit.text())
         min_hp_val = int(self.min_hp_spell_lineEdit.text())
-        dist_val = int(self.spell_dist_lineEdit.text())
+        dist_val = int(self.minCreatures_lineEdit.text())
         count_val = int(self.monster_count_lineEdit.text())
 
         attack_name = (
@@ -515,7 +553,7 @@ class HealingTab(QWidget):
         self.min_hp_spell_lineEdit.clear()
         self.monster_count_lineEdit.clear()
         self.targetName_lineEdit.clear()
-        self.spell_dist_lineEdit.clear()
+        self.minCreatures_lineEdit.clear()
         self.status_label.setText("Attack action added successfully!")
 
     def start_heal_thread(self, state) -> None:

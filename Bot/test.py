@@ -1,3 +1,64 @@
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QToolButton
+from PyQt5.QtCore import Qt
+
+
+class ArrowSelector(QWidget):
+    def __init__(self, items, parent=None):
+        """
+        Inicjalizacja widgetu z listą elementów.
+
+        :param items: lista elementów (np. list[str]), które będą wybierane.
+        :param parent: opcjonalny rodzic widgetu.
+        """
+        super().__init__(parent)
+        self.items = items
+        self.index = 0
+
+        # Utworzenie layoutu horyzontalnego
+        layout = QHBoxLayout(self)
+
+        # Przycisk z lewej strony
+        self.leftButton = QToolButton(self)
+        self.leftButton.setArrowType(Qt.LeftArrow)
+        self.leftButton.clicked.connect(self.on_left_clicked)
+
+        self.label = QLabel(self.items[self.index], self)
+        self.label.setAlignment(Qt.AlignCenter)
+
+        # Przycisk z prawej strony
+        self.rightButton = QToolButton(self)
+        self.rightButton.setArrowType(Qt.RightArrow)
+        self.rightButton.clicked.connect(self.on_right_clicked)
+
+        # Dodanie elementów do layoutu
+        layout.addWidget(self.leftButton)
+        layout.addWidget(self.label)
+        layout.addWidget(self.rightButton)
+
+        self.setLayout(layout)
+
+    def on_left_clicked(self):
+        """Obsługa kliknięcia w lewą strzałkę."""
+        self.index = (self.index - 1) % len(self.items)
+        self.label.setText(self.items[self.index])
+
+    def on_right_clicked(self):
+        """Obsługa kliknięcia w prawą strzałkę."""
+        self.index = (self.index + 1) % len(self.items)
+        self.label.setText(self.items[self.index])
+
+    def current_item(self):
+        """Zwraca aktualnie wybrany element."""
+        return self.items[self.index]
+
+    def set_items(self, items):
+        """Pozwala na zmianę listy elementów."""
+        self.items = items
+        self.index = 0
+        self.label.setText(self.items[self.index])
+
+
+
 import ctypes as c
 
 import win32gui
@@ -34,21 +95,26 @@ def read_memory_address(address_read, offsets, option):
         case _:
             return bytes(buffer)
 
-for i in range(0, 5):
-    wartosci = read_memory_address(0x5771BD41A40, 0xC8, 2)
-
+i = 0
+while True:
+    wartosci = read_memory_address(0x2C6B9D41A40, 0xC8, 2)
 
     wartosci = wartosci + 0x08*i
-
+    i += 1
     wartosci = read_memory_address(wartosci, 0, 2)
-
-    if not wartosci:
+    if wartosci == 0:
         break
-
     x = read_memory_address(wartosci, 0x38, 1)
+    if not x:
+        break
+    if x == 65535 or x < 10:
+        break
     print("X = ", x)
     y = read_memory_address(wartosci, 0x3C, 1)
     print("Y = ", y)
-    z = read_memory_address(wartosci, 0x40, 1)
+    z = read_memory_address(wartosci, 0x40, 4)
     print("Z = ", z)
-    i += 1
+    print()
+    print(i)
+
+

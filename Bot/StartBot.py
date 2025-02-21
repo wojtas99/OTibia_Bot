@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import QApplication
 import Addresses
 import os
+
+from General.MainWindowTab import MainWindowTab
 from General.SelectTibiaTab import SelectTibiaTab
 
 
@@ -17,7 +19,7 @@ def main():
     app.setStyleSheet(Addresses.dark_theme)
     #login_window = LoginTab()
     #login_window.show()
-    login_window = SelectTibiaTab()
+    login_window = MainWindowTab()
     login_window.show()
 
     app.exec()
