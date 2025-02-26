@@ -10,6 +10,8 @@ import cv2 as cv
 from PyQt5.QtCore import Qt
 from bs4 import BeautifulSoup
 import Addresses
+import os
+import json
 
 
 def load_items_images(list_widget) -> None:
@@ -174,10 +176,24 @@ class WindowCapture:
 
 
 def delete_item(list_widget, item) -> None:
-    # Get the index of the clicked item
     index = list_widget.row(item)
-    # Remove the item using the index
     list_widget.takeItem(index)
+
+
+def manage_profile(action: str, directory: str, profile_name: str, data: dict = None):
+    file_path = os.path.join(directory, f"{profile_name}.json")
+    if action.lower() == "save":
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        with open(file_path, "w") as f:
+            json.dump(data, f, indent=4)
+        return True
+    elif action.lower() == "load":
+        if not os.path.exists(file_path):
+            return {}
+        with open(file_path, "r") as f:
+            return json.load(f)
+
 
 
 

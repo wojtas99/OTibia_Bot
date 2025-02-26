@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QIcon, QPixmap
 
 from Addresses import icon_image
-from Functions.GeneralFunctions import delete_item
+from Functions.GeneralFunctions import delete_item, manage_profile
 from Functions.MemoryFunctions import *
 from Walker.WalkerThread import WalkerThread, RecordThread
 
@@ -185,47 +185,42 @@ class WalkerTab(QWidget):
 
     def save_waypoint_profile(self) -> None:
         """
-        Save the current list of waypoints to a JSON file, but first validate
-        that the profile name is not empty. If empty, highlight in red and
-        display an error in the status label.
+        Zapis profilu waypointów przy użyciu funkcji manage_profile.
         """
-        # Clear previous styles/messages
+        # Czyszczenie poprzednich komunikatów/obwiedzin
         self.status_label.setText("")
         self.status_label.setStyleSheet("color: red; font-weight: bold;")
         self.waypoint_profile_line_edit.setStyleSheet("")
 
-        waypoint_profile_name = self.waypoint_profile_line_edit.text().strip()
-        if not waypoint_profile_name:
-            # Highlight the line edit in red
+        profile_name = self.waypoint_profile_line_edit.text().strip()
+        if not profile_name:
             self.waypoint_profile_line_edit.setStyleSheet("border: 2px solid red;")
-            self.status_label.setText("Please enter a profile name before saving.")
+            self.status_label.setText("Podaj nazwę profilu przed zapisaniem.")
             return
 
-        # If valid, proceed with saving
-        waypoint_list = [
-            {
-                "name": self.waypoint_list_widget.item(i).text(),
-                "data": self.waypoint_list_widget.item(i).data(Qt.UserRole)
-            }
-            for i in range(self.waypoint_list_widget.count())
-        ]
-        with open(f"Save/Waypoints/{waypoint_profile_name}.json", "w") as f:
-            json.dump(waypoint_list, f, indent=4)
+        # Przygotowanie danych do zapisu: lista waypointów, gdzie każdy wpis to słownik z nazwą i danymi
+        waypoint_list = []
+        for i in range(self.waypoint_list_widget.count()):
+            item = self.waypoint_list_widget.item(i)
+            waypoint_list.append({
+                "name": item.text(),
+                "data": item.data(Qt.UserRole)
+            })
 
-        # Optionally, add it to the profile list if not already there
-        existing_names = [
-            self.waypoint_profile_list_widget.item(i).text()
-            for i in range(self.waypoint_profile_list_widget.count())
-        ]
-        if waypoint_profile_name not in existing_names:
-            self.waypoint_profile_list_widget.addItem(waypoint_profile_name)
+        if manage_profile("save", "Save/Waypoints", profile_name, waypoint_list):
+            self.status_label.setStyleSheet("color: green; font-weight: bold;")
+            self.status_label.setText("Profil zapisany pomyślnie!")
+            self.waypoint_profile_line_edit.clear()
 
-        self.waypoint_profile_line_edit.clear()
-
-        # Show success
-        self.status_label.setStyleSheet("color: green; font-weight: bold;")
-        self.status_label.setText("Waypoints saved successfully!")
-
+            # Dodaj profil do listy, jeśli jeszcze nie istnieje
+            existing_names = [
+                self.waypoint_profile_list_widget.item(i).text()
+                for i in range(self.waypoint_profile_list_widget.count())
+            ]
+            if profile_name not in existing_names:
+                self.waypoint_profile_list_widget.addItem(profile_name)
+        else:
+            self.status_label.setText("Błąd przy zapisie profilu.")
     def load_waypoint_profile(self) -> None:
         """
         Loads a selected waypoint profile from JSON, if any item is selected in the list.
