@@ -3,7 +3,7 @@ from Addresses import icon_image
 import base64
 import os
 import json
-from Functions.GeneralFunctions import delete_item
+from Functions.GeneralFunctions import delete_item, manage_profile
 from PyQt5.QtWidgets import (
     QWidget, QCheckBox, QComboBox, QLineEdit, QListWidget, QGridLayout,
     QGroupBox, QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QListWidgetItem
@@ -29,7 +29,7 @@ class TargetLootTab(QWidget):
 
         # Set Title and Size
         self.setWindowTitle("Targeting")
-        self.setFixedSize(350, 450)  # Increased to fit the status label
+        self.setFixedSize(350, 450)
 
         # --- Status "bar" label at the bottom
         self.status_label = QLabel("", self)
@@ -37,16 +37,22 @@ class TargetLootTab(QWidget):
         self.status_label.setStyleSheet("color: red; font-weight: bold;")
 
         # Check Boxes
-        self.startLoot_checkBox = QCheckBox("Start Looting", self)
-        self.startTarget_checkBox = QCheckBox("Start Targeting", self)
-        self.startChase_checkBox = QCheckBox("Chase", self)
-        self.startSkin_checkBox = QCheckBox("Skin", self)
+        self.startLoot_checkBox = QCheckBox("Looting", self)
+        self.startLoot_checkBox.stateChanged.connect(self.start_loot_thread)
+        self.startTarget_checkBox = QCheckBox("Targeting", self)
+        self.startTarget_checkBox.stateChanged.connect(self.start_target_thread)
 
         # Combo Boxes
         self.attackDist_comboBox = QComboBox(self)
+        self.attackDist_comboBox.addItems(["All", "1", "2", "3", "4", "5", "6", "7"])
+        self.stance_comboBox = QComboBox(self)
+        self.stance_comboBox.addItems(["Do Nothing", "Chase", "Diagonal", "Chase-Diagonal"])
+        self.skin_comboBox = QComboBox(self)
+        self.skin_comboBox.addItems(["No", "Knife"])
+        self.skin_comboBox.addItems([f"F{i}" for i in range(1, 13)])
 
         # Line Edits
-        self.targetLootProfile_lineEdit = QLineEdit(self)
+        self.profile_lineEdit = QLineEdit(self)
         self.targetName_lineEdit = QLineEdit(self)
         self.itemName_lineEdit = QLineEdit(self)
         self.lootOption_lineEdit = QLineEdit(self)
@@ -54,9 +60,9 @@ class TargetLootTab(QWidget):
         self.lootOption_lineEdit.setMaxLength(2)
 
         # List Widgets
-        self.targetLootProfile_listWidget = QListWidget(self)
+        self.profile_listWidget = QListWidget(self)
         self.targetList_listWidget = QListWidget(self)
-        self.targetList_listWidget.setFixedHeight(150)
+        self.targetList_listWidget.setFixedSize(150, 150)
         self.lootList_listWidget = QListWidget(self)
 
         # Main Layout
@@ -64,37 +70,70 @@ class TargetLootTab(QWidget):
         self.setLayout(self.layout)
 
         # Initialize UI components
-        self.target_list()
-        self.save_load_target_loot()
-        self.set_target()
-        self.loot_list()
-        self.target_loot()
+        self.targetList()
+        self.profileList()
+        self.lootList()
 
         # Finally, add the status label at the bottom
         self.layout.addWidget(self.status_label, 3, 0, 1, 2)
 
-    def target_list(self) -> None:
-        groupbox = QGroupBox("Target List", self)
-        groupbox_layout = QVBoxLayout(self)
+    def targetList(self) -> None:
+        groupbox = QGroupBox("Targeting", self)
+        groupbox_layout = QHBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
         # Buttons
-        clear_targets_button = QPushButton("Clear List", self)
-        clear_targets_button.clicked.connect(self.clear_targets_list)
+        clearTargetList_button = QPushButton("Clear List", self)
+        addTarget_button = QPushButton("Add", self)
+
+        # Button Functions
+        clearTargetList_button.clicked.connect(self.clearTarget_list)
+        addTarget_button.clicked.connect(self.add_target)
 
         # Double-click to delete
         self.targetList_listWidget.itemDoubleClicked.connect(
             lambda item: delete_item(self.targetList_listWidget, item)
         )
 
-        layout1 = QHBoxLayout()
-        layout1.addWidget(clear_targets_button)
+        # Layouts
+        groupbox2_layout = QVBoxLayout(self)
+        layout1 = QVBoxLayout(self)
+        layout2 = QHBoxLayout(self)
+        layout3 = QHBoxLayout(self)
+        layout4 = QHBoxLayout(self)
+        layout5 = QHBoxLayout(self)
+        layout6 = QHBoxLayout(self)
 
-        groupbox_layout.addWidget(self.targetList_listWidget)
+        layout1.addWidget(self.targetList_listWidget)
+        layout1.addWidget(clearTargetList_button)
+
+        layout2.addWidget(self.targetName_lineEdit)
+        layout2.addWidget(addTarget_button)
+
+        layout3.addWidget(QLabel("Stance:", self))
+        layout3.addWidget(self.stance_comboBox)
+
+        layout4.addWidget(QLabel("Skin:", self))
+        layout4.addWidget(self.skin_comboBox)
+
+        layout5.addWidget(self.startTarget_checkBox)
+        layout5.addWidget(self.startLoot_checkBox)
+
+        layout6.addWidget(QLabel("Dist:", self))
+        layout6.addWidget(self.attackDist_comboBox)
+
+        self.targetName_lineEdit.setPlaceholderText("Orc, * - All Monsters")
+
+        groupbox2_layout.addLayout(layout2)
+        groupbox2_layout.addLayout(layout6)
+        groupbox2_layout.addLayout(layout3)
+        groupbox2_layout.addLayout(layout4)
+        groupbox2_layout.addLayout(layout5)
         groupbox_layout.addLayout(layout1)
-        self.layout.addWidget(groupbox, 0, 0, 2, 1)
+        groupbox_layout.addLayout(groupbox2_layout)
+        self.layout.addWidget(groupbox, 0, 0, 1, 2)
 
-    def save_load_target_loot(self) -> None:
+    def profileList(self) -> None:
         groupbox = QGroupBox("Save && Load", self)
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
@@ -104,73 +143,28 @@ class TargetLootTab(QWidget):
         load_target_loot_button = QPushButton("Load", self)
 
         # Button functions
-        save_target_loot_button.clicked.connect(self.save_target_loot)
-        load_target_loot_button.clicked.connect(self.load_target_loot)
+        save_target_loot_button.clicked.connect(self.save_profile)
+        load_target_loot_button.clicked.connect(self.load_profile)
 
         # Populate the profile list with existing files
         for file in os.listdir("Save/Targeting"):
             if file.endswith(".json"):
-                self.targetLootProfile_listWidget.addItem(file.split('.')[0])
+                self.profile_listWidget.addItem(file.split('.')[0])
 
         layout1 = QHBoxLayout(self)
         layout2 = QHBoxLayout(self)
 
         layout1.addWidget(QLabel("Name:", self))
-        layout1.addWidget(self.targetLootProfile_lineEdit)
+        layout1.addWidget(self.profile_lineEdit)
         layout2.addWidget(save_target_loot_button)
         layout2.addWidget(load_target_loot_button)
 
-        groupbox_layout.addWidget(self.targetLootProfile_listWidget)
+        groupbox_layout.addWidget(self.profile_listWidget)
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
         self.layout.addWidget(groupbox, 2, 0)
 
-    def set_target(self) -> None:
-        groupbox = QGroupBox("Define Target", self)
-        groupbox_layout = QVBoxLayout(self)
-        groupbox.setLayout(groupbox_layout)
-
-        # Button
-        add_target_button = QPushButton("Add", self)
-        add_target_button.setFixedWidth(50)
-        add_target_button.clicked.connect(self.add_target)
-
-        # ComboBox
-        self.attackDist_comboBox.addItems(["All", "1", "2", "3", "4", "5"])
-
-        layout1 = QHBoxLayout(self)
-        layout2 = QHBoxLayout(self)
-
-        layout1.addWidget(self.targetName_lineEdit)
-        layout1.addWidget(add_target_button)
-        layout2.addWidget(QLabel("Attack Distance:", self))
-        layout2.addWidget(self.attackDist_comboBox)
-
-        groupbox_layout.addLayout(layout1)
-        groupbox_layout.addLayout(layout2)
-        self.layout.addWidget(groupbox, 0, 1, 1, 1)
-
-    def target_loot(self) -> None:
-        groupbox = QGroupBox("Start", self)
-        groupbox_layout = QVBoxLayout(self)
-        groupbox.setLayout(groupbox_layout)
-
-        self.startTarget_checkBox.stateChanged.connect(self.start_target_thread)
-        self.startLoot_checkBox.stateChanged.connect(self.start_loot_thread)
-
-        layout1 = QHBoxLayout(self)
-        layout2 = QHBoxLayout(self)
-
-        layout1.addWidget(self.startLoot_checkBox)
-        layout1.addWidget(self.startChase_checkBox)
-        layout2.addWidget(self.startTarget_checkBox)
-        layout2.addWidget(self.startSkin_checkBox)
-
-        groupbox_layout.addLayout(layout1)
-        groupbox_layout.addLayout(layout2)
-        self.layout.addWidget(groupbox, 1, 1, 1, 1)
-
-    def loot_list(self) -> None:
+    def lootList(self) -> None:
         groupbox = QGroupBox("Loot List", self)
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
@@ -195,11 +189,6 @@ class TargetLootTab(QWidget):
         self.layout.addWidget(groupbox, 2, 1)
 
     def add_item(self) -> None:
-        """
-        Adds an item to the lootList_listWidget, but checks if the fields
-        (item name, loot container) are not empty.
-        """
-        # Reset styles and clear the status label
         self.status_label.setText("")
         self.status_label.setStyleSheet("color: red; font-weight: bold;")
         self.itemName_lineEdit.setStyleSheet("")
@@ -218,38 +207,28 @@ class TargetLootTab(QWidget):
             self.status_label.setText("Please enter a loot container number.")
             return
 
-        # If item already exists in the list, do nothing
         for index in range(self.lootList_listWidget.count()):
             if item_name.upper() == self.lootList_listWidget.item(index).text().upper():
                 return
 
-        # Valid. Add to the list
-        try:
-            item_data = {"Loot": int(loot_container)}
-        except ValueError:
-            # If the loot_container is not a valid integer
-            self.lootOption_lineEdit.setStyleSheet("border: 2px solid red;")
-            self.status_label.setText("Loot container must be a number.")
-            return
+        item_data = {
+            "Name": self.itemName_lineEdit.text(),
+            "Loot": int(self.lootOption_lineEdit.text())
+        }
 
         item = QListWidgetItem(item_name)
         item.setData(Qt.UserRole, item_data)
         self.lootList_listWidget.addItem(item)
 
-        # Clear fields
-        self.itemName_lineEdit.clear()
-        self.lootOption_lineEdit.clear()
-
         # Show success
         self.status_label.setStyleSheet("color: green; font-weight: bold;")
-        self.status_label.setText("Item added successfully!")
+        self.status_label.setText(f"'{self.itemName_lineEdit.text()}' has been added successfully!")
+
+        # Clear fields
+        self.lootOption_lineEdit.clear()
+        self.itemName_lineEdit.clear()
 
     def add_target(self) -> None:
-        """
-        Adds a monster to the targetList_listWidget, but checks if the
-        monster name is not empty.
-        """
-        # Reset styles and clear status
         self.status_label.setText("")
         self.status_label.setStyleSheet("color: red; font-weight: bold;")
         self.targetName_lineEdit.setStyleSheet("")
@@ -260,150 +239,90 @@ class TargetLootTab(QWidget):
             self.status_label.setText("Please enter a monster name.")
             return
 
-        # Check if monster already exists in the list
         for index in range(self.targetList_listWidget.count()):
             existing_name = self.targetList_listWidget.item(index).text().split(' | ')[0].upper()
             if monster_name.upper() == existing_name:
                 return
 
-        # Distance data
-        monster_data = {"Name": self.targetName_lineEdit.text(), "Distance": self.attackDist_comboBox.currentText()}
-        if monster_data['Distance'] == 'All':
-            monster_data['Distance'] = 0
+        target_data = {
+            "Name": monster_name,
+            "Dist": self.attackDist_comboBox.currentIndex(),
+            "Stance": self.stance_comboBox.currentIndex(),
+            "Skin": self.skin_comboBox.currentIndex()
+        }
 
         monster = QListWidgetItem(monster_name)
-        monster.setData(Qt.UserRole, monster_data)
+        monster.setData(Qt.UserRole, target_data)
         self.targetList_listWidget.addItem(monster)
 
         # Clear field
         self.targetName_lineEdit.clear()
         self.attackDist_comboBox.setCurrentIndex(0)
+        self.stance_comboBox.setCurrentIndex(0)
+        self.skin_comboBox.setCurrentIndex(0)
 
         # Success message
         self.status_label.setStyleSheet("color: green; font-weight: bold;")
-        self.status_label.setText("Target added successfully!")
+        self.status_label.setText(f"Target '{monster_name}' has been added!")
 
-    def delete_target(self) -> None:
-        selected_monster = self.targetList_listWidget.currentItem()
-        if selected_monster:
-            self.targetList_listWidget.takeItem(self.targetList_listWidget.row(selected_monster))
-
-    def clear_targets_list(self) -> None:
+    def clearTarget_list(self) -> None:
         self.targetList_listWidget.clear()
         self.status_label.setText("")  # optional
 
-    def save_target_loot(self) -> None:
-        """
-        Saves the current targets and loot items to JSON,
-        but checks if the profile name is not empty and there's at least 1 target in the list.
-        """
-        # Reset status/styles
-        self.status_label.setText("")
-        self.status_label.setStyleSheet("color: red; font-weight: bold;")
-        self.targetLootProfile_lineEdit.setStyleSheet("")
-
-        target_loot_name = self.targetLootProfile_lineEdit.text().strip()
-        if not target_loot_name:
-            self.targetLootProfile_lineEdit.setStyleSheet("border: 2px solid red;")
-            self.status_label.setText("Please enter a profile name before saving.")
+    def save_profile(self) -> None:
+        profile_name = self.profile_lineEdit.text().strip()
+        if not profile_name:
             return
-
-        if self.targetList_listWidget.count() == 0 and self.lootList_listWidget.count() == 0:
-            self.status_label.setText("Cannot save: no targets or loot items added.")
-            return
-
-        # Prepare data to save
         target_list = [
-            {
-                "name": self.targetList_listWidget.item(i).text(),
-                "data": self.targetList_listWidget.item(i).data(Qt.UserRole)
-            }
+            self.targetList_listWidget.item(i).data(Qt.UserRole)
             for i in range(self.targetList_listWidget.count())
         ]
-        looting_list = [
-            {
-                "name": self.lootList_listWidget.item(i).text(),
-                "data": self.lootList_listWidget.item(i).data(Qt.UserRole)
-            }
+        loot_list = [
+            self.lootList_listWidget.item(i).data(Qt.UserRole)
             for i in range(self.lootList_listWidget.count())
         ]
+        data_to_save = {
+            "targets": target_list,
+            "loot": loot_list
+        }
 
-        # Save JSON files
-        try:
-            with open(f"Save/Targeting/{target_loot_name}.json", "w") as f:
-                json.dump(target_list, f, indent=4)
-            with open(f"Save/Looting/{target_loot_name}.json", "w") as f:
-                json.dump(looting_list, f, indent=4)
-        except IOError as e:
-            self.status_label.setText(f"Error saving profile: {str(e)}")
-            return
+        if manage_profile("save", "Save/Targeting", profile_name, data_to_save):
+            self.status_label.setStyleSheet("color: green; font-weight: bold;")
+            self.status_label.setText(f"Profile '{profile_name}' has been saved!")
+            existing_names = [
+                self.profile_listWidget.item(i).text()
+                for i in range(self.profile_listWidget.count())
+            ]
+            if profile_name not in existing_names:
+                self.profile_listWidget.addItem(profile_name)
+            self.profile_lineEdit.clear()
 
-        # Update profile list
-        existing_names = [
-            self.targetLootProfile_listWidget.item(i).text().upper()
-            for i in range(self.targetLootProfile_listWidget.count())
-        ]
-        if target_loot_name.upper() not in existing_names:
-            self.targetLootProfile_listWidget.addItem(target_loot_name)
-
-        self.targetLootProfile_lineEdit.clear()
-
-        # Success message
-        self.status_label.setStyleSheet("color: green; font-weight: bold;")
-        self.status_label.setText("Profile saved successfully!")
-
-    def load_target_loot(self) -> None:
-        """
-        Loads a selected target/loot profile, or highlights if none is selected.
-        """
-        # Reset status/styles
+    def load_profile(self) -> None:
         self.status_label.setText("")
         self.status_label.setStyleSheet("color: red; font-weight: bold;")
-        self.targetLootProfile_listWidget.setStyleSheet("")
+        self.profile_listWidget.setStyleSheet("")
 
-        current_item = self.targetLootProfile_listWidget.currentItem()
-        if not current_item:
-            # Highlight list if nothing selected
-            self.targetLootProfile_listWidget.setStyleSheet("border: 2px solid red;")
+        profile_name = self.profile_listWidget.currentItem()
+        if not profile_name:
+            self.profile_listWidget.setStyleSheet("border: 2px solid red;")
             self.status_label.setText("Please select a profile from the list.")
             return
-
-        profile_name = current_item.text()
-        target_filename = f"Save/Targeting/{profile_name}.json"
-        loot_filename = f"Save/Looting/{profile_name}.json"
-
-        if not os.path.exists(target_filename) and not os.path.exists(loot_filename):
-            self.targetLootProfile_listWidget.setStyleSheet("border: 2px solid red;")
-            self.status_label.setText(f"No files found for profile '{profile_name}'.")
-            return
-
-        try:
-            # Load target data
-            if os.path.exists(target_filename):
-                with open(target_filename, "r") as f:
-                    target_list = json.load(f)
-                    self.targetList_listWidget.clear()
-                    for entry in target_list:
-                        target = QListWidgetItem(entry["name"])
-                        target.setData(Qt.UserRole, entry["data"])
-                        target.setData(Qt.UserRole, entry["name"])
-                        self.targetList_listWidget.addItem(target)
-
-            # Load loot data
-            if os.path.exists(loot_filename):
-                with open(loot_filename, "r") as f:
-                    loot_list = json.load(f)
-                    self.lootList_listWidget.clear()
-                    for entry in loot_list:
-                        item = QListWidgetItem(entry["name"])
-                        item.setData(Qt.UserRole, entry["data"])
-                        self.lootList_listWidget.addItem(item)
-
-            # Success message
-            self.status_label.setStyleSheet("color: green; font-weight: bold;")
-            self.status_label.setText(f"Profile '{profile_name}' loaded successfully.")
-        except (IOError, json.JSONDecodeError) as e:
-            self.status_label.setText(f"Error loading profile: {str(e)}")
+        else:
+            self.profile_listWidget.setStyleSheet("")
+        profile_name = profile_name.text()
+        filename = f"Save/Targeting/{profile_name}.json"
+        self.targetList_listWidget.clear()
+        self.lootList_listWidget.clear()
+        with open(filename, "r") as f:
+            loaded_data = json.load(f)
+        for target_data in loaded_data.get("targets", []):
+            target_item = QListWidgetItem(target_data['Name'])
+            target_item.setData(Qt.UserRole, target_data)
+            self.targetList_listWidget.addItem(target_item)
+        for loot_data in loaded_data.get("loot", []):
+            loot_item = QListWidgetItem(loot_data['Name'])
+            loot_item.setData(Qt.UserRole, loot_data)
+            self.lootList_listWidget.addItem(loot_item)
 
     def start_target_thread(self, state) -> None:
         if self.loot_thread:
@@ -414,7 +333,7 @@ class TargetLootTab(QWidget):
                 self.targetList_listWidget.item(i).data(Qt.UserRole)
                 for i in range(self.targetList_listWidget.count())
             ]
-            self.target_thread = TargetThread(targets, self.startLoot_checkBox.checkState(), self.startSkin_checkBox.checkState(), self.startChase_checkBox.checkState())
+            self.target_thread = TargetThread(targets, self.startLoot_checkBox.checkState())
             self.target_thread.start()
         else:
             if self.target_thread:

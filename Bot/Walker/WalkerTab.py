@@ -40,7 +40,6 @@ class WalkerTab(QWidget):
 
         # Widgets
         self.waypointList_listWidget = QListWidget(self)
-        #self.waypoint_listWidget.setFixedWidth(10)
         self.profile_listWidget = QListWidget(self)
         self.profile_lineEdit = QLineEdit(self)
         self.action_textEdit = QTextEdit(self)
@@ -107,10 +106,10 @@ class WalkerTab(QWidget):
         ladder_waypoint_button = QPushButton("Ladder", self)
         action_waypoint_button = QPushButton("Action", self)
         label_waypoint_button = QPushButton("Label", self)
-        clear_waypoint_list_button = QPushButton("Clear List", self)
+        clearWaypointList_button = QPushButton("Clear List", self)
 
         # Connect to add_waypoint with different indexes
-        clear_waypoint_list_button.clicked.connect(self.clear_waypointList)
+        clearWaypointList_button.clicked.connect(self.clear_waypointList)
         stand_waypoint_button.clicked.connect(lambda: self.add_waypoint(0))
         rope_waypoint_button.clicked.connect(lambda: self.add_waypoint(1))
         shovel_waypoint_button.clicked.connect(lambda: self.add_waypoint(2))
@@ -131,7 +130,7 @@ class WalkerTab(QWidget):
         layout4 = QHBoxLayout(self)
 
         layout1.addWidget(self.waypointList_listWidget)
-        layout1.addWidget(clear_waypoint_list_button)
+        layout1.addWidget(clearWaypointList_button)
 
         layout2.addWidget(self.option_comboBox)
 
@@ -180,15 +179,15 @@ class WalkerTab(QWidget):
             "waypoints": waypoint_list,
         }
         if manage_profile("save", "Save/Waypoints", profile_name, data_to_save):
-            self.status_label.setStyleSheet("color: green; font-weight: bold;")
-            self.status_label.setText(f"Profile '{profile_name}' has been saved!")
-
             existing_names = [
                 self.profile_listWidget.item(i).text()
                 for i in range(self.profile_listWidget.count())
             ]
             if profile_name not in existing_names:
                 self.profile_listWidget.addItem(profile_name)
+            self.profile_listWidget.clear()
+            self.status_label.setStyleSheet("color: green; font-weight: bold;")
+            self.status_label.setText(f"Profile '{profile_name}' has been saved!")
 
     def load_profile(self) -> None:
         profile_name = self.profile_listWidget.currentItem()
@@ -238,7 +237,6 @@ class WalkerTab(QWidget):
             "Action": index
         }
 
-        # Clear any previous error messages
         self.status_label.setText("")
         self.status_label.setStyleSheet("color: red; font-weight: bold;")
         self.action_textEdit.setStyleSheet("")
@@ -289,9 +287,6 @@ class WalkerTab(QWidget):
 
         self.status_label.setStyleSheet("color: green; font-weight: bold;")
         self.status_label.setText("Waypoint added successfully!")
-
-    def delete_waypoint(self) -> None:
-        self.waypointList_listWidget.takeItem(self.waypointList_listWidget.currentRow())
 
     def clear_waypointList(self) -> None:
         self.waypointList_listWidget.clear()

@@ -12,7 +12,6 @@ def main():
     os.makedirs("Save/Targeting", exist_ok=True)
     os.makedirs("Save/Settings", exist_ok=True)
     os.makedirs("Save/Waypoints", exist_ok=True)
-    os.makedirs("Save/Looting", exist_ok=True)
     os.makedirs("Save/HealingAttack", exist_ok=True)
     app = QApplication([])
     app.setStyle('Fusion')

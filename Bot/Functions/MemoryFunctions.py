@@ -22,6 +22,8 @@ def read_memory_address(address_read, offsets, option):
             return c.cast(buffer, c.POINTER(c.c_double)).contents.value
         case 4:
             return c.cast(buffer, c.POINTER(c.c_short)).contents.value
+        case 5:
+            return buffer.value.decode('utf-8')
         case 7:
             return c.cast(buffer, c.POINTER(c.c_byte)).contents.value
         case _:
@@ -51,6 +53,8 @@ def read_pointer_address(address_read, offsets, option):
             return c.cast(buffer, c.POINTER(c.c_double)).contents.value
         case 4:
             return c.cast(buffer, c.POINTER(c.c_short)).contents.value
+        case 5:
+            return buffer.value.decode('utf-8')
         case 7:
             return c.cast(buffer, c.POINTER(c.c_byte)).contents.value
         case _:
@@ -96,15 +100,12 @@ def read_my_wpt():
 
 def read_target_info():
     if Addresses.client_name in "Altaron | Medivia | WADclient | Giveria":
-        target_x = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_x = read_memory_address(target_x, Addresses.target_x_offset, 1)
-        target_y = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_y = read_memory_address(target_y, Addresses.target_y_offset, 1)
-        target_z = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_z = read_memory_address(target_z, Addresses.target_z_offset, 7)
-        target_name = "*"
-        target_hp = read_memory_address(read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address, Addresses.target_hp_offset, 7)
-        target_hp = 100
+        attack_address = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
+        target_x = read_memory_address(attack_address, Addresses.target_x_offset, 1)
+        target_y = read_memory_address(attack_address, Addresses.target_y_offset, 1)
+        target_z = read_memory_address(attack_address, Addresses.target_z_offset, 7)
+        target_name = read_memory_address(attack_address, Addresses.target_name_offset, 5)
+        target_hp = read_memory_address(attack_address, Addresses.target_hp_offset, 4)
         return target_x, target_y, target_z, target_name, target_hp
 
 

@@ -215,7 +215,7 @@ class HealingTab(QWidget):
         self.minHPAttack_lineEdit.setPlaceholderText("50")
 
         layout2.addWidget(self.targetName_lineEdit)
-        self.targetName_lineEdit.setPlaceholderText("Orc, Minotaur, etc., * - All monsters")
+        self.targetName_lineEdit.setPlaceholderText("Orc, Minotaur, etc., * - All Monsters")
         layout2.addWidget(QLabel("Min HP%:", self))
         layout2.addWidget(self.minHPAttack_lineEdit)
 

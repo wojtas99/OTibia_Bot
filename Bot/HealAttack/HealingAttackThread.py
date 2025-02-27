@@ -3,7 +3,7 @@ from PyQt5.QtCore import QThread, Qt
 from Addresses import coordinates_x, coordinates_y
 from Functions.KeyboardFunctions import press_hotkey
 from Functions.MemoryFunctions import *
-from Functions.MouseFunctions import use_on_me
+from Functions.MouseFunctions import use_on_me, left_click, right_click
 
 
 def read_heal_data(heal_data):
@@ -31,7 +31,8 @@ class HealThread(QThread):
                     heal_multiplayer = random.uniform(0.9, 1.0)
                     healed = False
                 for index in range(self.healing_list.count()):
-                    heal_type, heal_option, heal_below, heal_above, heal_min_mp = read_heal_data(self.healing_list.item(index).data(Qt.UserRole))
+                    heal_type, heal_option, heal_below, heal_above, heal_min_mp = read_heal_data(
+                        self.healing_list.item(index).data(Qt.UserRole))
                     heal_below = heal_below * heal_multiplayer
                     heal_above = heal_above * heal_multiplayer
                     current_hp, current_max_hp, current_mp, current_max_mp = read_my_stats()
@@ -64,16 +65,12 @@ class HealThread(QThread):
 
 def attack_monster(attack_data) -> bool:
     monsters = 10
-    x, y, z = read_my_wpt()
     target_x, target_y, target_z, target_name, target_hp = read_target_info()
     current_hp, current_max_hp, current_mp, current_max_mp = read_my_stats()
     hp_percentage = (current_hp * 100) / current_max_hp
-    if (attack_data['Action'] > 2
-            and (int(attack_data['HpFrom']) >= target_hp > int(attack_data['HpTo']))
+    if (int(attack_data['HpFrom']) >= target_hp > int(attack_data['HpTo'])
             and current_mp >= int(attack_data['MinMp'])
             and (attack_data['Name'] == '*' or target_name in attack_data['Name'])
-            and (attack_data['Distance'] >= abs(x - target_x)
-            and attack_data['Distance'] >= abs(y - target_y))
             and attack_data['MinHp'] <= hp_percentage
             and attack_data['Count'] <= monsters):
         return True
@@ -94,8 +91,18 @@ class AttackThread(QThread):
                     attack_data = self.attack_list.item(attack_index).data(Qt.UserRole)
                     if read_targeting_status() != 0:
                         if attack_monster(attack_data):
-                            press_hotkey(int(attack_data['Action'] - 2))
-                            QThread.msleep(random.randint(150, 250))
+                            if int(attack_data['Key']) < 11:
+                                press_hotkey(int(attack_data['Key']) + 1)
+                                QThread.msleep(random.randint(150, 250))
+                            else:
+                                right_click(coordinates_x[int(attack_data['Key']) - 6],
+                                            coordinates_y[int(attack_data['Key']) - 6])
+                                x, y, z = read_my_wpt()
+                                target_x, target_y, target_z, target_name, target_hp = read_target_info()
+                                x = target_x - x
+                                y = target_y - y
+                                left_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
+                                QThread.msleep(random.randint(100, 200))
                 QThread.msleep(random.randint(100, 200))
             except Exception as e:
                 print(e)
