@@ -22,6 +22,7 @@ class WalkerTab(QWidget):
         # Thread Variables
         self.record_thread = None
         self.walker_thread = None
+
         # Load Icon
         self.setWindowIcon(
             QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(
@@ -38,105 +39,78 @@ class WalkerTab(QWidget):
         self.status_label.setAlignment(Qt.AlignCenter)
 
         # Widgets
-        self.waypoint_list_widget = QListWidget(self)
-        self.waypoint_profile_list_widget = QListWidget(self)
-        self.waypoint_profile_line_edit = QLineEdit(self)
-        self.action_waypoint_text_edit = QTextEdit(self)
-        self.record_cave_bot_checkbox = QCheckBox("Auto Recording", self)
-        self.start_cave_bot_checkbox = QCheckBox("Start Walker", self)
-        self.waypoint_option_combobox = QComboBox(self)
+        self.waypointList_listWidget = QListWidget(self)
+        #self.waypoint_listWidget.setFixedWidth(10)
+        self.profile_listWidget = QListWidget(self)
+        self.profile_lineEdit = QLineEdit(self)
+        self.action_textEdit = QTextEdit(self)
+        self.record_checkBox = QCheckBox("Auto Recording", self)
+        self.start_checkBox = QCheckBox("Start Walker", self)
+        self.option_comboBox = QComboBox(self)
+        directions = [
+            "Center", "North", "South", "East", "West",
+            "North-East", "North-West", "South-East", "South-West", "Lure"
+        ]
+        self.option_comboBox.addItems(directions)
 
         # Main Layout
         self.layout = QGridLayout()
         self.setLayout(self.layout)
 
         # Initialize UI
-        self.save_load_waypoints()
-        self.waypoint_list()
-        self.add_waypoints()
+        self.profileList()
+        self.waypointList()
         self.start_walker()
 
         # Finally add the status label (we'll place it at the bottom row)
         self.layout.addWidget(self.status_label, 3, 0, 1, 2)
 
-    def save_load_waypoints(self) -> None:
+    def profileList(self) -> None:
         groupbox = QGroupBox("Save && Load")
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
         # Buttons
-        save_waypoint_profile_button = QPushButton("Save")
-        save_waypoint_profile_button.clicked.connect(self.save_waypoint_profile)
+        save_button = QPushButton("Save")
+        save_button.clicked.connect(self.save_profile)
 
-        load_waypoint_profile_button = QPushButton("Load")
-        load_waypoint_profile_button.clicked.connect(self.load_waypoint_profile)
+        load_button = QPushButton("Load")
+        load_button.clicked.connect(self.load_profile)
 
-        # Populate list with existing profiles
-        # (assuming "Waypoints" folder already exists)
         for file in os.listdir("Save/Waypoints"):
             if file.endswith(".json"):
-                self.waypoint_profile_list_widget.addItem(file.split(".")[0])
+                self.profile_listWidget.addItem(file.split(".")[0])
 
         # Layouts
         layout1 = QHBoxLayout()
         layout2 = QHBoxLayout()
 
         layout1.addWidget(QLabel("Name:", self))
-        layout1.addWidget(self.waypoint_profile_line_edit)
-        layout2.addWidget(save_waypoint_profile_button)
-        layout2.addWidget(load_waypoint_profile_button)
+        layout1.addWidget(self.profile_lineEdit)
+        layout2.addWidget(save_button)
+        layout2.addWidget(load_button)
 
-        groupbox_layout.addWidget(self.waypoint_profile_list_widget)
+        groupbox_layout.addWidget(self.profile_listWidget)
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
         self.layout.addWidget(groupbox, 2, 0)
 
-    def waypoint_list(self) -> None:
+    def waypointList(self) -> None:
         groupbox = QGroupBox("Waypoints")
-        groupbox_layout = QVBoxLayout(self)
+        groupbox_layout = QHBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
         # Buttons
-        clear_waypoint_list_button = QPushButton("Clear List", self)
-        clear_waypoint_list_button.clicked.connect(self.clear_waypoint_list)
-
-        # Double-click to delete
-        self.waypoint_list_widget.itemDoubleClicked.connect(
-            lambda item: delete_item(self.waypoint_list_widget, item)
-        )
-
-        layout1 = QHBoxLayout()
-        layout1.addWidget(clear_waypoint_list_button)
-
-        groupbox_layout.addWidget(self.waypoint_list_widget)
-        groupbox_layout.addLayout(layout1)
-        self.layout.addWidget(groupbox, 0, 0)
-
-    def add_waypoints(self) -> None:
-        groupbox = QGroupBox("Add Waypoints")
-        groupbox_layout = QVBoxLayout(self)
-        groupbox.setLayout(groupbox_layout)
-
-        directions = [
-            "Center", "North", "South", "East", "West",
-            "North-East", "North-West", "South-East", "South-West", "Lure"
-        ]
-        self.waypoint_option_combobox.addItems(directions)
-
         stand_waypoint_button = QPushButton("Stand", self)
-        stand_waypoint_button.setFixedWidth(40)
         rope_waypoint_button = QPushButton("Rope", self)
-        rope_waypoint_button.setFixedWidth(40)
         shovel_waypoint_button = QPushButton("Shovel", self)
-        shovel_waypoint_button.setFixedWidth(40)
         ladder_waypoint_button = QPushButton("Ladder", self)
-        ladder_waypoint_button.setFixedWidth(40)
         action_waypoint_button = QPushButton("Action", self)
-        action_waypoint_button.setFixedWidth(40)
         label_waypoint_button = QPushButton("Label", self)
-        label_waypoint_button.setFixedWidth(40)
+        clear_waypoint_list_button = QPushButton("Clear List", self)
 
         # Connect to add_waypoint with different indexes
+        clear_waypoint_list_button.clicked.connect(self.clear_waypointList)
         stand_waypoint_button.clicked.connect(lambda: self.add_waypoint(0))
         rope_waypoint_button.clicked.connect(lambda: self.add_waypoint(1))
         shovel_waypoint_button.clicked.connect(lambda: self.add_waypoint(2))
@@ -144,125 +118,117 @@ class WalkerTab(QWidget):
         action_waypoint_button.clicked.connect(lambda: self.add_waypoint(4))
         label_waypoint_button.clicked.connect(lambda: self.add_waypoint(5))
 
-        self.action_waypoint_text_edit.setFixedHeight(50)
+        # Double-click to delete
+        self.waypointList_listWidget.itemDoubleClicked.connect(
+            lambda item: delete_item(self.waypointList_listWidget, item)
+        )
 
-        layout1 = QHBoxLayout()
-        layout2 = QHBoxLayout()
-        layout3 = QHBoxLayout()
-        layout4 = QHBoxLayout()
+        # Layouts
+        groupbox2_layout = QVBoxLayout(self)
+        layout1 = QVBoxLayout(self)
+        layout2 = QHBoxLayout(self)
+        layout3 = QHBoxLayout(self)
+        layout4 = QHBoxLayout(self)
 
-        layout1.addWidget(self.waypoint_option_combobox)
-        layout2.addWidget(stand_waypoint_button)
-        layout2.addWidget(action_waypoint_button)
-        layout2.addWidget(label_waypoint_button)
-        layout3.addWidget(rope_waypoint_button)
-        layout3.addWidget(shovel_waypoint_button)
-        layout3.addWidget(ladder_waypoint_button)
-        layout4.addWidget(self.action_waypoint_text_edit)
+        layout1.addWidget(self.waypointList_listWidget)
+        layout1.addWidget(clear_waypoint_list_button)
 
+        layout2.addWidget(self.option_comboBox)
+
+        layout3.addWidget(stand_waypoint_button)
+        layout3.addWidget(action_waypoint_button)
+        layout3.addWidget(label_waypoint_button)
+
+        layout4.addWidget(rope_waypoint_button)
+        layout4.addWidget(shovel_waypoint_button)
+        layout4.addWidget(ladder_waypoint_button)
+
+        groupbox2_layout.addLayout(layout2)
+        groupbox2_layout.addLayout(layout3)
+        groupbox2_layout.addLayout(layout4)
+        groupbox2_layout.addWidget(self.action_textEdit)
         groupbox_layout.addLayout(layout1)
-        groupbox_layout.addLayout(layout2)
-        groupbox_layout.addLayout(layout3)
-        groupbox_layout.addLayout(layout4)
-        self.layout.addWidget(groupbox, 0, 1, 2, 1)
+        groupbox_layout.addLayout(groupbox2_layout)
+        self.layout.addWidget(groupbox, 0, 0, 1, 2)
 
     def start_walker(self) -> None:
         groupbox = QGroupBox("Start")
         groupbox_layout = QVBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
 
-        self.start_cave_bot_checkbox.stateChanged.connect(self.start_walker_thread)
-        self.record_cave_bot_checkbox.stateChanged.connect(self.start_record_thread)
+        self.start_checkBox.stateChanged.connect(self.start_walker_thread)
+        self.record_checkBox.stateChanged.connect(self.start_record_thread)
 
         layout1 = QHBoxLayout()
         layout2 = QHBoxLayout()
-        layout1.addWidget(self.start_cave_bot_checkbox)
-        layout2.addWidget(self.record_cave_bot_checkbox)
+        layout1.addWidget(self.start_checkBox)
+        layout2.addWidget(self.record_checkBox)
 
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
         self.layout.addWidget(groupbox, 2, 1)
 
-    def save_waypoint_profile(self) -> None:
-        """
-        Zapis profilu waypointów przy użyciu funkcji manage_profile.
-        """
-        # Czyszczenie poprzednich komunikatów/obwiedzin
-        self.status_label.setText("")
-        self.status_label.setStyleSheet("color: red; font-weight: bold;")
-        self.waypoint_profile_line_edit.setStyleSheet("")
-
-        profile_name = self.waypoint_profile_line_edit.text().strip()
+    def save_profile(self) -> None:
+        profile_name = self.profile_lineEdit.text().strip()
         if not profile_name:
-            self.waypoint_profile_line_edit.setStyleSheet("border: 2px solid red;")
-            self.status_label.setText("Podaj nazwę profilu przed zapisaniem.")
             return
-
-        # Przygotowanie danych do zapisu: lista waypointów, gdzie każdy wpis to słownik z nazwą i danymi
-        waypoint_list = []
-        for i in range(self.waypoint_list_widget.count()):
-            item = self.waypoint_list_widget.item(i)
-            waypoint_list.append({
-                "name": item.text(),
-                "data": item.data(Qt.UserRole)
-            })
-
-        if manage_profile("save", "Save/Waypoints", profile_name, waypoint_list):
+        waypoint_list = [
+            self.waypointList_listWidget.item(i).data(Qt.UserRole)
+            for i in range(self.waypointList_listWidget.count())
+        ]
+        data_to_save = {
+            "waypoints": waypoint_list,
+        }
+        if manage_profile("save", "Save/Waypoints", profile_name, data_to_save):
             self.status_label.setStyleSheet("color: green; font-weight: bold;")
-            self.status_label.setText("Profil zapisany pomyślnie!")
-            self.waypoint_profile_line_edit.clear()
+            self.status_label.setText(f"Profile '{profile_name}' has been saved!")
 
-            # Dodaj profil do listy, jeśli jeszcze nie istnieje
             existing_names = [
-                self.waypoint_profile_list_widget.item(i).text()
-                for i in range(self.waypoint_profile_list_widget.count())
+                self.profile_listWidget.item(i).text()
+                for i in range(self.profile_listWidget.count())
             ]
             if profile_name not in existing_names:
-                self.waypoint_profile_list_widget.addItem(profile_name)
+                self.profile_listWidget.addItem(profile_name)
+
+    def load_profile(self) -> None:
+        profile_name = self.profile_listWidget.currentItem()
+        if not profile_name:
+            self.profile_listWidget.setStyleSheet("border: 2px solid red;")
+            self.status_label.setText("Please select a profile from the list.")
+            return
         else:
-            self.status_label.setText("Błąd przy zapisie profilu.")
-    def load_waypoint_profile(self) -> None:
-        """
-        Loads a selected waypoint profile from JSON, if any item is selected in the list.
-        Otherwise, highlight the list and show an error message.
-        """
-        # Clear previous styles/messages
-        self.status_label.setText("")
-        self.status_label.setStyleSheet("color: red; font-weight: bold;")
-        self.waypoint_profile_list_widget.setStyleSheet("")
-
-        current_item = self.waypoint_profile_list_widget.currentItem()
-        if not current_item:
-            # Highlight the list widget if nothing is selected
-            self.waypoint_profile_list_widget.setStyleSheet("border: 2px solid red;")
-            self.status_label.setText("Please select a profile from the list to load.")
-            return
-
-        waypoint_profile_name = current_item.text()
-        filename = f"Save/Waypoints/{waypoint_profile_name}.json"
-        if not os.path.exists(filename):
-            self.waypoint_profile_list_widget.setStyleSheet("border: 2px solid red;")
-            self.status_label.setText(f"No file found for profile: {waypoint_profile_name}")
-            return
-
+            self.profile_listWidget.setStyleSheet("")
+        profile_name = profile_name.text()
+        filename = f"Save/Waypoints/{profile_name}.json"
         with open(filename, "r") as f:
-            waypoint_list = json.load(f)
-            self.waypoint_list_widget.clear()
-            for entry in waypoint_list:
-                waypoint = QListWidgetItem(entry["name"])
-                waypoint.setData(Qt.UserRole, entry["data"])
-                self.waypoint_list_widget.addItem(waypoint)
+            loaded_data = json.load(f)
 
-        # Show success
+        self.waypointList_listWidget.clear()
+        for walk_data in loaded_data.get("waypoints", []):
+            index = int(walk_data['Action'])
+            walk_name = "Something"
+            if index == 0:  # Stand
+                walk_name = f"Stand: {walk_data['X']} {walk_data['Y']} {walk_data['Z']}"
+            elif index == 1:  # Rope
+                walk_name = f"Rope: {walk_data['X']} {walk_data['Y']} {walk_data['Z']}"
+            elif index == 2:  # Shovel
+                walk_name = f"Shovel: {walk_data['X']} {walk_data['Y']} {walk_data['Z']}"
+            elif index == 3:  # Ladder
+                walk_name = f"Ladder: {walk_data['X']} {walk_data['Y']} {walk_data['Z']}"
+            elif index == 4:  # Action
+                walk_name = f"Action: {walk_data['X']} {walk_data['Y']} {walk_data['Z']}"
+            elif index == 5:  # Label
+                label_name = self.action_textEdit.toPlainText().strip()
+                walk_name = f"{label_name}: {walk_data['X']} {walk_data['Y']} {walk_data['Z']}"
+            walk_item = QListWidgetItem(walk_name)
+            walk_item.setData(Qt.UserRole, walk_data)
+            self.waypointList_listWidget.addItem(walk_item)
+
+        self.profile_lineEdit.clear()
         self.status_label.setStyleSheet("color: green; font-weight: bold;")
-        self.status_label.setText(f"Profile '{waypoint_profile_name}' loaded successfully.")
+        self.status_label.setText(f"Profile '{profile_name}' loaded successfully!")
 
     def add_waypoint(self, index):
-        """
-        Adds a single waypoint to the list, using the current (X, Y, Z).
-        If it's an Action or Label waypoint, we also check that the text
-        field is not empty before adding.
-        """
         x, y, z = read_my_wpt()
 
         waypoint_data = {
@@ -275,65 +241,65 @@ class WalkerTab(QWidget):
         # Clear any previous error messages
         self.status_label.setText("")
         self.status_label.setStyleSheet("color: red; font-weight: bold;")
-        self.action_waypoint_text_edit.setStyleSheet("")
+        self.action_textEdit.setStyleSheet("")
 
         if index == 0:  # Stand
-            waypoint_data["Direction"] = self.waypoint_option_combobox.currentIndex()
+            waypoint_data["Direction"] = self.option_comboBox.currentIndex()
             waypoint = QListWidgetItem(f'Stand: {x} {y} {z}')
 
         elif index == 1:  # Rope
-            waypoint_data["Direction"] = self.waypoint_option_combobox.currentIndex()
+            waypoint_data["Direction"] = self.option_comboBox.currentIndex()
             waypoint = QListWidgetItem(f'Rope: {x} {y} {z}')
 
         elif index == 2:  # Shovel
-            waypoint_data["Direction"] = self.waypoint_option_combobox.currentIndex()
+            waypoint_data["Direction"] = self.option_comboBox.currentIndex()
             waypoint = QListWidgetItem(f'Shovel: {x} {y} {z}')
 
         elif index == 3:  # Ladder
-            waypoint_data["Direction"] = self.waypoint_option_combobox.currentIndex()
+            waypoint_data["Direction"] = self.option_comboBox.currentIndex()
             waypoint = QListWidgetItem(f'Ladder: {x} {y} {z}')
 
         elif index == 4:  # Action
-            action_text = self.action_waypoint_text_edit.toPlainText().strip()
+            action_text = self.action_textEdit.toPlainText().strip()
             if not action_text:
                 # If empty, highlight and show error
-                self.action_waypoint_text_edit.setStyleSheet("border: 2px solid red;")
+                self.action_textEdit.setStyleSheet("border: 2px solid red;")
                 self.status_label.setText("Please enter an Action text.")
                 return
 
             waypoint_data["Direction"] = action_text
             waypoint = QListWidgetItem(f'Action: {x} {y} {z}')
-            self.action_waypoint_text_edit.clear()
+            self.action_textEdit.clear()
 
         elif index == 5:  # Label
-            label_name = self.action_waypoint_text_edit.toPlainText().strip()
+            label_name = self.action_textEdit.toPlainText().strip()
             if not label_name:
                 # If empty, highlight and show error
-                self.action_waypoint_text_edit.setStyleSheet("border: 2px solid red;")
+                self.action_textEdit.setStyleSheet("border: 2px solid red;")
                 self.status_label.setText("Please enter a Label text.")
                 return
 
             waypoint_data["Direction"] = label_name
             waypoint = QListWidgetItem(f'{label_name}: {x} {y} {z}')
-            self.action_waypoint_text_edit.clear()
+            self.action_textEdit.clear()
 
         # If we got here, we successfully created a waypoint
         waypoint.setData(Qt.UserRole, waypoint_data)
-        self.waypoint_list_widget.addItem(waypoint)
+        self.waypointList_listWidget.addItem(waypoint)
 
         self.status_label.setStyleSheet("color: green; font-weight: bold;")
         self.status_label.setText("Waypoint added successfully!")
 
     def delete_waypoint(self) -> None:
-        self.waypoint_list_widget.takeItem(self.waypoint_list_widget.currentRow())
+        self.waypointList_listWidget.takeItem(self.waypointList_listWidget.currentRow())
 
-    def clear_waypoint_list(self) -> None:
-        self.waypoint_list_widget.clear()
+    def clear_waypointList(self) -> None:
+        self.waypointList_listWidget.clear()
         self.status_label.setText("")  # Clear status if you want
 
     def start_record_thread(self, state):
         if state == Qt.Checked:
-            self.record_thread = RecordThread(self.waypoint_option_combobox)
+            self.record_thread = RecordThread(self.option_comboBox)
             self.record_thread.wpt_update.connect(self.update_waypointList)
             self.record_thread.start()
         else:
@@ -345,8 +311,8 @@ class WalkerTab(QWidget):
         if state == Qt.Checked:
             if not self.walker_thread:
                 waypoints = [
-                    self.waypoint_list_widget.item(i).data(Qt.UserRole)
-                    for i in range(self.waypoint_list_widget.count())
+                    self.waypointList_listWidget.item(i).data(Qt.UserRole)
+                    for i in range(self.waypointList_listWidget.count())
                 ]
                 self.walker_thread = WalkerThread(waypoints)
                 self.walker_thread.index_update.connect(self.update_waypointList)
@@ -361,6 +327,6 @@ class WalkerTab(QWidget):
         Update the current waypoint in the UI.
         """
         if option == 0:
-            self.waypoint_list_widget.setCurrentRow(int(waypoint))
+            self.waypointList_listWidget.setCurrentRow(int(waypoint))
         elif option == 1:
-            self.waypoint_list_widget.addItem(waypoint)
+            self.waypointList_listWidget.addItem(waypoint)

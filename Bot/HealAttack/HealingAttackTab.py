@@ -42,7 +42,6 @@ class HealingTab(QWidget):
         self.attackType_comboBox = QComboBox(self)
         self.attackKey_comboBox = QComboBox(self)
 
-
         # Line Edits
         # Heal
         self.hpBelow_lineEdit = QLineEdit(self)
@@ -85,7 +84,7 @@ class HealingTab(QWidget):
         # List Widgets
         self.healList_listWidget = QListWidget(self)
         self.attackList_listWidget = QListWidget(self)
-        self.savedAttackHealList_listWidget = QListWidget(self)
+        self.profile_listWidget = QListWidget(self)
 
         # Double-click to delete item
         self.healList_listWidget.itemDoubleClicked.connect(
@@ -109,13 +108,12 @@ class HealingTab(QWidget):
 
         for file in os.listdir("Save/HealingAttack"):
             if file.endswith(".json"):
-                self.savedAttackHealList_listWidget.addItem(file.split('.')[0])
+                self.profile_listWidget.addItem(file.split('.')[0])
 
     def healList(self) -> None:
         groupbox = QGroupBox("Healing")
         groupbox_layout = QHBoxLayout(self)
         groupbox.setLayout(groupbox_layout)
-
 
         # Button
         addHeal_button = QPushButton("Add", self)
@@ -124,52 +122,50 @@ class HealingTab(QWidget):
         # ComboBoxes
         self.healType_comboBox.addItems(["HP%", "MP%"])
         self.healKey_comboBox.addItems(
-             [f"F{i}" for i in range(1, 13)] + ["UH", "Potion"]
+            [f"F{i}" for i in range(1, 13)] + ["UH", "Potion"]
         )
 
         # CheckBox function
         self.startHeal_checkBox.stateChanged.connect(self.startHeal_thread)
 
-        # Index changed
-        self.healType_comboBox.currentIndexChanged.connect(self.index_changed)
-
         # Layouts
-        groupbox_layout2 = QVBoxLayout(self)
+        groupbox2_layout = QVBoxLayout(self)
+        layout1 = QHBoxLayout(self)
+        layout2 = QHBoxLayout(self)
+        layout3 = QHBoxLayout(self)
+        layout4 = QHBoxLayout(self)
+        layout5 = QHBoxLayout(self)
 
-        layout1 = QHBoxLayout()
+        # Add Widgets
         layout1.addWidget(QLabel("When:", self))
         layout1.addWidget(self.healType_comboBox)
-
-        layout2 = QHBoxLayout(self)
         layout2.addWidget(QLabel("Value:  ", self))
+
         layout2.addWidget(self.hpBelow_lineEdit)
         layout2.addWidget(QLabel("-", self))
         layout2.addWidget(self.hpAbove_lineEdit)
 
-        layout3 = QHBoxLayout(self)
         layout3.addWidget(QLabel("Press:"))
         layout3.addWidget(self.healKey_comboBox)
 
-        layout4 = QHBoxLayout(self)
         layout4.addWidget(QLabel("Min MP:"))
         layout4.addWidget(self.minMPHeal_lineEdit)
 
-        layout5 = QHBoxLayout(self)
         layout5.addWidget(addHeal_button)
         layout5.addWidget(self.startHeal_checkBox)
-
-        groupbox_layout2.addLayout(layout1)
-        groupbox_layout2.addLayout(layout2)
-        groupbox_layout2.addLayout(layout3)
-        groupbox_layout2.addLayout(layout4)
-        groupbox_layout2.addLayout(layout5)
 
         self.hpBelow_lineEdit.setPlaceholderText("85")
         self.hpAbove_lineEdit.setPlaceholderText("60")
         self.minMPHeal_lineEdit.setPlaceholderText("90")
 
+        groupbox2_layout.addLayout(layout1)
+        groupbox2_layout.addLayout(layout2)
+        groupbox2_layout.addLayout(layout3)
+        groupbox2_layout.addLayout(layout4)
+        groupbox2_layout.addLayout(layout5)
+
         groupbox_layout.addWidget(self.healList_listWidget)
-        groupbox_layout.addLayout(groupbox_layout2)
+        groupbox_layout.addLayout(groupbox2_layout)
         self.layout.addWidget(groupbox, 0, 0, 1, 2)
 
     def attackList(self) -> None:
@@ -263,10 +259,9 @@ class HealingTab(QWidget):
         groupbox2_layout.addLayout(layout2)
 
         # Final
-        groupbox_layout.addWidget(self.savedAttackHealList_listWidget)
+        groupbox_layout.addWidget(self.profile_listWidget)
         groupbox_layout.addLayout(groupbox2_layout)
         self.layout.addWidget(groupbox, 2, 0)
-
 
     def save_profile(self):
         profile_name = self.profile_lineEdit.text().strip()
@@ -286,46 +281,37 @@ class HealingTab(QWidget):
         }
 
         if manage_profile("save", "Save/HealingAttack", profile_name, data_to_save):
-            self.status_label.setText(f"Profil '{profile_name}' zapisany!")
-        else:
-            self.status_label.setText("Błąd przy zapisie profilu.")
+            self.status_label.setStyleSheet("color: green; font-weight: bold;")
+            self.status_label.setText(f"Profile '{profile_name}' has been saved!")
+            existing_names = [
+                self.profile_listWidget.item(i).text()
+                for i in range(self.profile_listWidget.count())
+            ]
+            if profile_name not in existing_names:
+                self.profile_listWidget.addItem(profile_name)
 
     def load_profile(self):
-        """
-        Load healing and attacking spells from a JSON file.
-        Clears current lists and repopulates them.
-        """
-        self.status_label.setStyleSheet("color: red; font-weight: bold;")
-        self.status_label.setText("")  # clear
-
-        profile_name = self.savedAttackHealList_listWidget.currentItem()
+        profile_name = self.profile_listWidget.currentItem()
         if not profile_name:
-            # Highlight list if nothing selected
-            self.savedAttackHealList_listWidget.setStyleSheet("border: 2px solid red;")
+            self.profile_listWidget.setStyleSheet("border: 2px solid red;")
             self.status_label.setText("Please select a profile from the list.")
             return
         else:
-            self.savedAttackHealList_listWidget.setStyleSheet("")
+            self.profile_listWidget.setStyleSheet("")
         profile_name = profile_name.text()
         filename = f"Save/HealingAttack/{profile_name}.json"
-        if not os.path.exists(filename):
-            self.status_label.setText(f"No file found for '{profile_name}'.")
-            return
 
         with open(filename, "r") as f:
             loaded_data = json.load(f)
 
-        # Clear current lists
         self.healList_listWidget.clear()
         self.attackList_listWidget.clear()
 
-        # Repopulate healing spells
         for heal_data in loaded_data.get("healing", []):
-            # Rebuild the string name for display
             heal_name = (
-                f"{heal_data['Type']} From {heal_data['Below']} To {heal_data['Above']}"
-                f"Min MP {heal_data['MinMp']} Press " +
-                f"{heal_data['Option']} "
+                    f"{heal_data['Type']}  {heal_data['Below']}-{heal_data['Above']}"
+                    f"  :  Press " +
+                    f"{heal_data['Key']} "
             )
             heal_item = QListWidgetItem(heal_name)
             heal_item.setData(Qt.UserRole, heal_data)
@@ -333,20 +319,10 @@ class HealingTab(QWidget):
 
         # Repopulate attacking spells
         for attack_data in loaded_data.get("attacking", []):
-            # We convert the 'Action' to readable text for display. But we only stored the index.
-            # We'll reconstruct similarly as we did in 'add_attack'...
-            # For example, we used:
-            #   f"{monsters_name} {hp_from_val} > {self.actionList_comboBox.currentText()} > {hp_to_val} ...
-            # We'll create a small map or list:
-            all_actions = ["HMM", "GFB", "SD"] + [f"F{i}" for i in range(1, 13)]
-            # Index in 'attack_data["Action"]' => all_actions[that_index]
-
-            action_str = all_actions[attack_data["Action"]]
-
+            print()
             attack_name = (
-                f"{attack_data['Name']} {attack_data['HpFrom']} > "
-                f"{action_str} > {attack_data['HpTo']}  MinMP={attack_data['MinMp']}"
-                f" Distance < {attack_data['Distance']}"
+                f"{attack_data['Count']}+ {attack_data['Name']} : ({attack_data['HpFrom']}%-{attack_data['HpTo']}%)"
+                f"  :  Press {attack_data['Key']}"
             )
             attack_item = QListWidgetItem(attack_name)
             attack_item.setData(Qt.UserRole, attack_data)
@@ -355,13 +331,6 @@ class HealingTab(QWidget):
         self.profile_lineEdit.clear()
         self.status_label.setStyleSheet("color: green; font-weight: bold;")
         self.status_label.setText(f"Profile '{profile_name}' loaded successfully!")
-
-
-    def index_changed(self, index):
-        if index == 1:  # MP%
-            self.minMPHeal_lineEdit.setDisabled(True)
-        else:  # HP%
-            self.minMPHeal_lineEdit.setDisabled(False)
 
     def add_heal(self) -> None:
         self.status_label.setText("")
@@ -397,13 +366,13 @@ class HealingTab(QWidget):
 
         heal_name = (
                 f"{self.healType_comboBox.currentText()}  {hp_below_val}-{hp_above_val}"
-                f"  :  Press " +
+                f"  :  Press "
                 f"{self.healKey_comboBox.currentText()} "
         )
 
         heal_data = {
             "Type": self.healType_comboBox.currentText(),
-            "Option": self.healKey_comboBox.currentText(),
+            "Key": self.healKey_comboBox.currentText(),
             "Below": hp_below_val,
             "Above": hp_above_val,
             "MinMp": min_mp_val
@@ -469,22 +438,20 @@ class HealingTab(QWidget):
         min_hp_val = int(self.minHPAttack_lineEdit.text())
         count_val = int(self.targetCount_lineEdit.text())
 
-
         attack_name = (
-            f"{monsters_name} {hp_from_val}>"
-            f"{self.attackKey_comboBox.currentText()}>"
-            f"{hp_to_val}  MinMP={min_mp_val} MinHP%={min_hp_val}"
-            f" Count={count_val}+"
+            f"{count_val}+ {monsters_name} : ({hp_from_val}%-{hp_to_val}%)"
+            f"  :  Press {self.attackKey_comboBox.currentText()}"
         )
 
         attack_data = {
             "Name": monsters_name,
-            "Action": self.attackKey_comboBox.currentIndex(),
+            "Key": self.attackKey_comboBox.currentIndex(),
             "HpFrom": hp_from_val,
             "HpTo": hp_to_val,
             "MinMp": min_mp_val,
             "MinHp": min_hp_val,
-            "Count": count_val
+            "Count": count_val,
+            "Type": self.attackType_comboBox.currentIndex()
         }
 
         attack_item = QListWidgetItem(attack_name)
@@ -518,6 +485,3 @@ class HealingTab(QWidget):
             if self.attack_thread:
                 self.attack_thread.stop()
                 self.attack_thread = None
-
-
-

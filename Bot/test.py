@@ -74,10 +74,14 @@ def read_memory_address(address_read, offsets, option):
     proc_id = proc_id[1]
     process_handle = c.windll.kernel32.OpenProcess(0x1F0FFF, False, proc_id)
     address = c.c_void_p(address_read + offsets)
-    buffer = c.create_string_buffer(256)
-    buffer_size = 4
     if option == 2:
         buffer_size = 8
+    elif option == 5:
+        buffer_size = 256
+    else:
+        buffer_size = 4
+
+    buffer = c.create_string_buffer(buffer_size)
     result = c.windll.kernel32.ReadProcessMemory(process_handle, address, buffer, buffer_size, c.byref(c.c_size_t()))
     if not result:
         return
@@ -90,6 +94,8 @@ def read_memory_address(address_read, offsets, option):
             return c.cast(buffer, c.POINTER(c.c_double)).contents.value
         case 4:
             return c.cast(buffer, c.POINTER(c.c_short)).contents.value
+        case 5:
+            return buffer.value.decode('utf-8')
         case 7:
             return c.cast(buffer, c.POINTER(c.c_byte)).contents.value
         case _:
@@ -97,8 +103,7 @@ def read_memory_address(address_read, offsets, option):
 
 i = 0
 while True:
-    wartosci = read_memory_address(0x2C6B9D41A40, 0xC8, 2)
-
+    wartosci = read_memory_address(0x354B5DC1B80,0xC8, 2)
     wartosci = wartosci + 0x08*i
     i += 1
     wartosci = read_memory_address(wartosci, 0, 2)
@@ -114,6 +119,8 @@ while True:
     print("Y = ", y)
     z = read_memory_address(wartosci, 0x40, 4)
     print("Z = ", z)
+    name = read_memory_address(wartosci, 0xA8, 5)
+    print("Name = ", name)
     print()
     print(i)
 

@@ -1,3 +1,5 @@
+import sys
+
 import Addresses
 import ctypes as c
 
@@ -5,10 +7,9 @@ import ctypes as c
 # Reads value from memory
 def read_memory_address(address_read, offsets, option):
     address = c.c_void_p(Addresses.base_address + address_read + offsets)
-    buffer = c.create_string_buffer(256)
-    buffer_size = 4
-    if option == 2:
-        buffer_size = 8
+
+    buffer_size = 8
+    buffer = c.create_string_buffer(buffer_size)
     result = c.windll.kernel32.ReadProcessMemory(Addresses.process_handle, address, buffer, buffer_size, c.byref(c.c_size_t()))
     if not result:
         return
@@ -29,35 +30,30 @@ def read_memory_address(address_read, offsets, option):
 
 def read_pointer_address(address_read, offsets, option):
     address = c.c_void_p(Addresses.base_address + address_read)
-    buffer_size = 4
-    if option == 2:
-        buffer_size = 8
-    buffer = c.create_string_buffer(256)
+
+    buffer_size = 8
+    buffer = c.create_string_buffer(buffer_size)
     for offset in offsets:
-        result = c.windll.kernel32.ReadProcessMemory(Addresses.process_handle, address, buffer, buffer_size, c.byref(c.c_size_t()))
+        result = c.windll.kernel32.ReadProcessMemory(Addresses.process_handle, address, buffer, buffer_size,
+                                                     c.byref(c.c_size_t()))
         if not result:
             return
-        if option == 2:
-            pointer_value = c.cast(buffer, c.POINTER(c.c_void_p)).contents.value
-        else:
-            pointer_value = c.cast(buffer, c.POINTER(c.c_int)).contents.value
-        address = c.c_void_p(pointer_value + offset)
-
+        address = c.c_void_p(c.cast(buffer, c.POINTER(c.c_ulonglong)).contents.value + offset)
     result = c.windll.kernel32.ReadProcessMemory(Addresses.process_handle, address, buffer, buffer_size, c.byref(c.c_size_t()))
-
     if not result:
         return
     match option:
-        case 1:  # INT
+        case 1:
             return c.cast(buffer, c.POINTER(c.c_int)).contents.value
-        case 2:  # LONG
+        case 2:
             return c.cast(buffer, c.POINTER(c.c_ulonglong)).contents.value
-        case 3:  # FLOAT (was DOUBLE)
+        case 3:
             return c.cast(buffer, c.POINTER(c.c_double)).contents.value
-        case 4:  # SHORT
+        case 4:
             return c.cast(buffer, c.POINTER(c.c_short)).contents.value
+        case 7:
+            return c.cast(buffer, c.POINTER(c.c_byte)).contents.value
         case _:
-            # Fallback: return raw bytes
             return bytes(buffer)
 
 
@@ -108,7 +104,6 @@ def read_target_info():
         target_z = read_memory_address(target_z, Addresses.target_z_offset, 7)
         target_name = "*"
         target_hp = read_memory_address(read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address, Addresses.target_hp_offset, 7)
-        target_x, target_y, target_z = read_my_wpt()
         target_hp = 100
         return target_x, target_y, target_z, target_name, target_hp
 

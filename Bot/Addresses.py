@@ -3,6 +3,8 @@ import threading
 import win32gui
 import win32process
 
+from Functions.MemoryFunctions import read_pointer_address, read_memory_address
+
 # Keystrokes codes
 lParam = [
     0X00480001, 0x00500001, 0X004D0001,  # 8, 2, 6
@@ -88,7 +90,7 @@ def load_medivia() -> None:
     my_x_address = 0XBEF560
     my_y_address = 0XBEF564
     my_z_address = 0XBEF568
-    my_stats_address = 0X00BEE4E0
+    my_stats_address = 0x00BEE4E0
     my_hp_offset = [0X558]
     my_hp_max_offset = [0X560]
     my_mp_offset = [0x590]
@@ -115,8 +117,6 @@ def load_medivia() -> None:
     process_handle = c.windll.kernel32.OpenProcess(0x1F0FFF, False, proc_id)
     modules = win32process.EnumProcessModules(process_handle)
     base_address = modules[0]
-
-    c.windll.kernel32.CloseHandle(process_handle)
 
 
 # We are Dragons Game

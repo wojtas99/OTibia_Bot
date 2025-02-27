@@ -8,7 +8,7 @@ from Functions.MouseFunctions import use_on_me
 
 def read_heal_data(heal_data):
     heal_type = heal_data['Type']
-    heal_option = heal_data['Option']
+    heal_option = heal_data['Key']
     heal_below = heal_data['Below']
     heal_above = heal_data['Above']
     heal_min_mp = heal_data['MinMp']
@@ -56,7 +56,7 @@ class HealThread(QThread):
                     QThread.msleep(random.randint(10, 50))
                 QThread.msleep(random.randint(10, 50))
             except Exception as e:
-                print(e)
+                print("Exception: ", e)
 
     def stop(self):
         self.running = False

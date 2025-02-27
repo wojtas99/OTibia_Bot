@@ -19,7 +19,7 @@ def main():
     app.setStyleSheet(Addresses.dark_theme)
     #login_window = LoginTab()
     #login_window.show()
-    login_window = MainWindowTab()
+    login_window = SelectTibiaTab()
     login_window.show()
 
     app.exec()

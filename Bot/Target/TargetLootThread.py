@@ -100,7 +100,6 @@ class TargetThread(QThread):
                                 right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
                                 QThread.msleep(random.randint(500, 600))
                         '''
-                        x, y, z = read_my_wpt()
                         '''
                         if z != target_z:
                             walk(1, 0, 0, 0, 0, 0, 0)

@@ -21,7 +21,7 @@ class MainWindowTab(QWidget):
         QApplication.instance().aboutToQuit.connect(lambda: win32gui.SetWindowText(Addresses.game, Addresses.game_name))
 
         # Load Icon
-        #win32gui.SetWindowText(Addresses.game, Addresses.game_name + " - EasyBot")
+        win32gui.SetWindowText(Addresses.game, Addresses.game_name + " - EasyBot")
         self.setWindowIcon(QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(base64.b64decode(icon_image)) else QIcon())
         # Set Title and Size
         self.setFixedSize(400, 100)
@@ -42,10 +42,10 @@ class MainWindowTab(QWidget):
         # Buttons
         self.targetLootTab_button = QPushButton('Targeting', self)
         self.walkerTab_button = QPushButton('Walker', self)
-        self.healingTab_button = QPushButton('Spells && Healing', self)
+        self.healingTab_button = QPushButton('Healing && Attack', self)
         self.settingsTab_button = QPushButton('Settings', self)
         self.smartHotkeysTab_button = QPushButton('Smart Hotkeys', self)
-        self.trainingTab_button = QPushButton('Skill && Tools', self)
+        self.trainingTab_button = QPushButton('Training', self)
 
         # Buttons Functions
         self.targetLootTab_button.clicked.connect(self.targetLoot)
