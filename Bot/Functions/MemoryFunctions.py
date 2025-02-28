@@ -105,7 +105,7 @@ def read_target_info():
         target_y = read_memory_address(attack_address, Addresses.target_y_offset, 1)
         target_z = read_memory_address(attack_address, Addresses.target_z_offset, 7)
         target_name = read_memory_address(attack_address, Addresses.target_name_offset, 5)
-        target_hp = read_memory_address(attack_address, Addresses.target_hp_offset, 4)
+        target_hp = read_memory_address(attack_address, Addresses.target_hp_offset, 7)
         return target_x, target_y, target_z, target_name, target_hp
 
 

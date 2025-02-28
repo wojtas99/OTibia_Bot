@@ -52,6 +52,53 @@ def walk(wpt_direction, my_x, my_y, my_z, map_x, map_y, map_z) -> None:
             return
 
 
+def stay_diagonal(my_x, my_y, monster_x, monster_y) -> None:
+    x = monster_x - my_x
+    y = monster_y - my_y
+    if abs(x) == 1 and abs(y) == 1:
+        return
+    if x == 1 and y == 0:
+        if random.randint(0, 1) == 0:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[0], lParam[0])  # Up key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[0], lParam[0])  # Up key up
+            return
+        else:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[1], lParam[1])  # Down key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[1], lParam[1])  # Down key up
+            return
+    if x == -1 and y == 0:
+        if random.randint(0, 1) == 0:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[0], lParam[0])  # Up key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[0], lParam[0])  # Up key up
+            return
+        else:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[1], lParam[1])  # Down key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[1], lParam[1])  # Down key up
+            return
+    if x == 0 and y == 1:
+        if random.randint(0, 1) == 0:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[2], lParam[2])  # Right key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[2], lParam[2])  # Right key up
+            return
+        else:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[3], lParam[3])  # Left key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[3], lParam[3])  # Left key up
+            return
+    if x == 0 and y == -1:
+        if random.randint(0, 1) == 0:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[2], lParam[2])  # Right key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[2], lParam[2])  # Right key up
+            return
+        else:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[3], lParam[3])  # Left key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[3], lParam[3])  # Left key up
+            return
+
+
+def chaseDiagonal_monster(my_x, my_y, monster_x, monster_y) -> None:
+    pass
+
+
 def chase_monster(my_x, my_y, monster_x, monster_y) -> None:
     x = monster_x - my_x
     y = monster_y - my_y

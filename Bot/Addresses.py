@@ -95,8 +95,8 @@ def load_medivia() -> None:
     my_hp_max_offset = [0X560]
     my_mp_offset = [0x590]
     my_mp_max_offset = [0x598]
-    backpack_address = 0x00C71990
-    backpack_offset = [0xE8, 0XED0, 0X20]
+    backpack_address = 0x00C76718
+    backpack_offset = [0x338, 0X48, 0X8]
 
     # Target Addresses
     attack_address = 0XBEE4E8

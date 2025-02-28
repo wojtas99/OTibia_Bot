@@ -6,7 +6,7 @@ from Addresses import coordinates_x, coordinates_y, screen_width, screen_height,
 from Functions.GeneralFunctions import load_items_images
 from Functions.MemoryFunctions import *
 from Functions.GeneralFunctions import WindowCapture, merge_close_points
-from Functions.KeyboardFunctions import press_hotkey, chase_monster
+from Functions.KeyboardFunctions import press_hotkey, chase_monster, stay_diagonal, chaseDiagonal_monster
 from Functions.MouseFunctions import right_click, left_click, manage_collect
 import cv2 as cv
 
@@ -39,10 +39,11 @@ class TargetThread(QThread):
                         walker_Lock.release()
                 if target_id != 0:
                     target_x, target_y, target_z, target_name, target_hp = read_target_info()
-                    if target_hp <= 0:
-                        continue
-                    if any(target['Name'] == target_name for target in self.targets):
-                        target_index = next(i for i, target in enumerate(self.targets) if target['Name'] == target_name)
+                    if any(target['Name'] == target_name or target['Name'] == '*' for target in self.targets):
+                        if any(target['Name'] == target_name for target in self.targets):
+                            target_index = next(i for i, target in enumerate(self.targets) if target['Name'] == target_name)
+                        else:
+                            target_index = 0
                         target_data = self.targets[target_index]
                         while read_targeting_status() != 0:
                             if timer / 1000 > 15:
@@ -53,19 +54,19 @@ class TargetThread(QThread):
                             x, y, z = read_my_wpt()
                             dist_x = abs(x - target_x)
                             dist_y = abs(y - target_y)
-                            if (target_data['Dist'] <= dist_x and target_data['Dist'] <= dist_y) or target_data['Dist'] == 0:
+                            if (target_data['Dist'] >= dist_x and target_data['Dist'] >= dist_y) or target_data['Dist'] == 0:
                                 open_corpse = True
                                 if not walker_Lock.locked():
                                     walker_Lock.acquire()
                                 if target_data['Stance'] == 1:
                                     chase_monster(x, y, target_x, target_y)
-                                if target_data['Stance'] == 2:
-                                    # Diagonal
-                                    pass
-                                if target_data['Stance'] == 3:
-                                    # Chase-Diagonal
-                                    pass
+                                elif target_data['Stance'] == 2:
+                                    stay_diagonal(x, y, target_x, target_y)
+                                elif target_data['Stance'] == 3:
+                                    chaseDiagonal_monster(x, y, target_x, target_y)
                             else:
+                                press_hotkey(10)
+                                QThread.msleep(random.randint(100, 150))
                                 if walker_Lock.locked() and lootLoop > 1:
                                     walker_Lock.release()
                             sleep_value = random.randint(90, 150)
@@ -78,8 +79,11 @@ class TargetThread(QThread):
                             x, y, z = read_my_wpt()
                             x = target_x - x
                             y = target_y - y
-                            right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
-                            QThread.msleep(random.randint(500, 600))
+                            backpack = read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1)
+                            for _ in range(3):
+                                if backpack == read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1):
+                                    right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
+                                    QThread.msleep(random.randint(500, 600))
                             lootLoop = 0
             except Exception as e:
                 print(f"Error: {e}")
