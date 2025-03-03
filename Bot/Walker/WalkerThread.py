@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QListWidgetItem
 from Addresses import walker_Lock, coordinates_x, coordinates_y
 from Functions.MemoryFunctions import *
 from Functions.KeyboardFunctions import walk
-from Functions.MouseFunctions import left_click, right_click
+from Functions.MouseFunctions import left_click, mouse_function
 
 
 class WalkerThread(QThread):
@@ -52,9 +52,9 @@ class WalkerThread(QThread):
                         sleep_value = random.randint(500, 600)
                         QThread.msleep(sleep_value)
                         timer += sleep_value
-                        right_click(coordinates_x[10], coordinates_y[10])
+                        mouse_function(coordinates_x[10], coordinates_y[10], option=1)
                         QThread.msleep(random.randint(100, 200))
-                        left_click(coordinates_x[0], coordinates_y[0])
+                        mouse_function(coordinates_x[0], coordinates_y[0], option=2)
                         x, y, z = read_my_wpt()
                         map_x = wpt_data['X']
                         map_y = wpt_data['Y']
@@ -65,22 +65,21 @@ class WalkerThread(QThread):
                         sleep_value = random.randint(500, 600)
                         QThread.msleep(sleep_value)
                         timer += sleep_value
-                        right_click(coordinates_x[9], coordinates_y[9])
+                        mouse_function(coordinates_x[9], coordinates_y[9], option=1)
                         QThread.msleep(random.randint(100, 200))
                         x, y, z = read_my_wpt()
                         map_x = wpt_data['X']
                         map_y = wpt_data['Y']
-                        left_click(
-                            coordinates_x[0] + (map_x - x) * 75,
-                            coordinates_y[0] + (map_y - y) * 75
-                        )
+                        mouse_function(coordinates_x[0] + (map_x - x) * 75,
+                            coordinates_y[0] + (map_y - y) * 75,
+                                       option=2)
                         current_wpt = (current_wpt + 1) % len(self.waypoints)
                     elif wpt_action == 3:
                         # Ladder
                         sleep_value = random.randint(500, 600)
                         QThread.msleep(sleep_value)
                         timer += sleep_value
-                        right_click(coordinates_x[0], coordinates_y[0])  # e.g. click on Ladder
+                        mouse_function(coordinates_x[0], coordinates_y[0], option=1)
                         current_wpt = (current_wpt + 1) % len(self.waypoints)
                 if timer > 5000:
                     current_wpt = self.lost_wpt(current_wpt)

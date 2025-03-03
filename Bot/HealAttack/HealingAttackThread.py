@@ -3,7 +3,7 @@ from PyQt5.QtCore import QThread, Qt
 from Addresses import coordinates_x, coordinates_y
 from Functions.KeyboardFunctions import press_hotkey
 from Functions.MemoryFunctions import *
-from Functions.MouseFunctions import use_on_me, left_click, right_click
+from Functions.MouseFunctions import use_on_me, mouse_function
 
 
 def read_heal_data(heal_data):
@@ -95,13 +95,14 @@ class AttackThread(QThread):
                                 press_hotkey(int(attack_data['Key']) + 1)
                                 QThread.msleep(random.randint(150, 250))
                             else:
-                                right_click(coordinates_x[int(attack_data['Key']) - 6],
-                                            coordinates_y[int(attack_data['Key']) - 6])
+                                mouse_function(coordinates_x[int(attack_data['Key']) - 6],
+                                            coordinates_y[int(attack_data['Key']) - 6],
+                                               option=1)
                                 x, y, z = read_my_wpt()
                                 target_x, target_y, target_z, target_name, target_hp = read_target_info()
                                 x = target_x - x
                                 y = target_y - y
-                                left_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
+                                mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=2)
                                 QThread.msleep(random.randint(100, 200))
                 QThread.msleep(random.randint(100, 200))
             except Exception as e:

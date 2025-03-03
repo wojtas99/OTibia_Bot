@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
 from Functions.GeneralFunctions import delete_item
-from Functions.MouseFunctions import right_click, left_click
+from Functions.MouseFunctions import mouse_function
 from Functions.MemoryFunctions import *
 
 class SmartHotkeysTab(QWidget):
@@ -167,7 +167,7 @@ class SmartHotkeysTab(QWidget):
                 # Check if that key was just pressed
                 if win32api.GetAsyncKeyState(vk_code) & 1:
                     # Right-click the stored coordinates
-                    right_click(hotkey_data['X'], hotkey_data['Y'])
+                    mouse_function(hotkey_data['X'], hotkey_data['Y'], option=1)
 
                     if hotkey_data['Option'] == 'On Target':
                         target_id = read_memory_address(Addresses.attack_address, 0, 2)
@@ -177,8 +177,8 @@ class SmartHotkeysTab(QWidget):
                             x, y, z = read_my_wpt()
                             dx = (target_x - x) * 75
                             dy = (target_y - y) * 75
-                            left_click(coordinates_x[0] + dx, coordinates_y[0] + dy)
+                            mouse_function(coordinates_x[0] + dx, coordinates_y[0] + dy, option=2)
                     elif hotkey_data['Option'] == 'On Yourself':
                         # After right-click, left-click your own character
-                        left_click(coordinates_x[0], coordinates_y[0])
+                        mouse_function(coordinates_x[0], coordinates_y[0], option=2)
             time.sleep(0.05)

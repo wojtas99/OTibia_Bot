@@ -7,7 +7,7 @@ from Functions.GeneralFunctions import load_items_images
 from Functions.MemoryFunctions import *
 from Functions.GeneralFunctions import WindowCapture, merge_close_points
 from Functions.KeyboardFunctions import press_hotkey, chase_monster, stay_diagonal, chaseDiagonal_monster
-from Functions.MouseFunctions import right_click, left_click, manage_collect
+from Functions.MouseFunctions import manage_collect, mouse_function
 import cv2 as cv
 
 lootLoop = 2
@@ -82,7 +82,7 @@ class TargetThread(QThread):
                             backpack = read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1)
                             for _ in range(3):
                                 if backpack == read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1):
-                                    right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
+                                    mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=1)
                                     QThread.msleep(random.randint(500, 600))
                             lootLoop = 0
                     else:
