@@ -85,6 +85,9 @@ class TargetThread(QThread):
                                     right_click(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75)
                                     QThread.msleep(random.randint(500, 600))
                             lootLoop = 0
+                    else:
+                        press_hotkey(10)
+                        QThread.msleep(random.randint(100, 150))
             except Exception as e:
                 print(f"Error: {e}")
 

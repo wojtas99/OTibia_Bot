@@ -123,9 +123,6 @@ def load_medivia() -> None:
     modules = win32process.EnumProcessModules(process_handle)
     base_address = modules[0]
 
-    coordinates_x[0] = read_pointer_address(my_x_screen_address, my_x_screen_offset, 1)
-    coordinates_y[0] = int(read_pointer_address(my_y_screen_address, my_y_screen_offset, 1)/1.88)
-
 
 # We are Dragons Game
 def load_wad() -> None:
