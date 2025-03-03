@@ -96,7 +96,20 @@ def stay_diagonal(my_x, my_y, monster_x, monster_y) -> None:
 
 
 def chaseDiagonal_monster(my_x, my_y, monster_x, monster_y) -> None:
-    pass
+    x_diff = monster_x - my_x
+    y_diff = monster_y - my_y
+
+    # Already diagonal (adjacent): do nothing.
+    if abs(x_diff) == 1 and abs(y_diff) == 1:
+        return
+
+    # If in the same row or column, adjust to a diagonal by using stay_diagonal.
+    if x_diff == 0 or y_diff == 0:
+        stay_diagonal(my_x, my_y, monster_x, monster_y)
+    else:
+        # Otherwise, proceed to chase the monster.
+        chase_monster(my_x, my_y, monster_x, monster_y)
+
 
 
 def chase_monster(my_x, my_y, monster_x, monster_y) -> None:

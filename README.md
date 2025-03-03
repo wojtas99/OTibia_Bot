@@ -1,1 +1,1 @@
-pyinstaller --onefile --noconsole main.py --name="EasyBot" --icon=Icon.jpg
+pyinstaller --onefile --noconsole StartBot.py --name="EasyBot"
