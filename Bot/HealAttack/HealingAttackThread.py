@@ -103,7 +103,7 @@ class AttackThread(QThread):
                                 x = target_x - x
                                 y = target_y - y
                                 mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=2)
-                                QThread.msleep(random.randint(100, 200))
+                                QThread.msleep(random.randint(800, 1000))
                 QThread.msleep(random.randint(100, 200))
             except Exception as e:
                 print(e)

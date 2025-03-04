@@ -1,0 +1,8 @@
+.idea/
+__pycache__/
+build/
+dist/
+main.spec
+EasyBot.spec
+config.ini
+Save/

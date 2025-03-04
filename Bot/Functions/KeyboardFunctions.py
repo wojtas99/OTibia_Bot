@@ -99,17 +99,13 @@ def chaseDiagonal_monster(my_x, my_y, monster_x, monster_y) -> None:
     x_diff = monster_x - my_x
     y_diff = monster_y - my_y
 
-    # Already diagonal (adjacent): do nothing.
     if abs(x_diff) == 1 and abs(y_diff) == 1:
         return
 
-    # If in the same row or column, adjust to a diagonal by using stay_diagonal.
-    if x_diff == 0 or y_diff == 0:
+    if (x_diff == 0 and abs(y_diff) == 1) or (y_diff == 0 and abs(x_diff) == 1):
         stay_diagonal(my_x, my_y, monster_x, monster_y)
     else:
-        # Otherwise, proceed to chase the monster.
         chase_monster(my_x, my_y, monster_x, monster_y)
-
 
 
 def chase_monster(my_x, my_y, monster_x, monster_y) -> None:
@@ -117,30 +113,59 @@ def chase_monster(my_x, my_y, monster_x, monster_y) -> None:
     y = monster_y - my_y
     if abs(x) == 1 and abs(y) == 1:
         return
-    if x < -1 and abs(y) <= 2:
-        win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[3], lParam[3])  # Left key down
-        win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[3], lParam[3])  # Left key up
-        return
-        # Move right if the monster is significantly to the right (x > 1)
-    elif x > 1 and abs(y) <= 2:
+
+    if x > 0 and y == 0:
         win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[2], lParam[2])  # Right key down
         win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[2], lParam[2])  # Right key up
         return
-        # Move up if the monster is significantly above (y < -1)
-    elif y < -1 and abs(x) <= 2:
+    if x > 0 > y:
+        if random.randint(0, 1) == 0:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[2], lParam[2])  # Right key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[2], lParam[2])  # Right key up
+            return
+        else:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[0], lParam[0])  # Up key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[0], lParam[0])  # Up key up
+            return
+    if x > 0 and y > 0:
+        if random.randint(0, 1) == 0:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[2], lParam[2])  # Right key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[2], lParam[2])  # Right key up
+            return
+        else:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[1], lParam[1])  # Down key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[1], lParam[1])  # Down key up
+            return
+    if x < 0 and y == 0:
+        win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[3], lParam[3])  # Left key down
+        win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[3], lParam[3])  # Left key up
+        return
+    if x < 0 and y < 0:
+        if random.randint(0, 1) == 0:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[3], lParam[3])  # Left key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[3], lParam[3])  # Left key up
+            return
+        else:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[0], lParam[0])  # Up key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[0], lParam[0])  # Up key up
+            return
+    if x < 0 < y:
+        if random.randint(0, 1) == 0:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[3], lParam[3])  # Left key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[3], lParam[3])  # Left key up
+            return
+        else:
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[1], lParam[1])  # Down key down
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[1], lParam[1])  # Down key up
+            return
+    if x == 0 and y < 0:
         win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[0], lParam[0])  # Up key down
         win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[0], lParam[0])  # Up key up
         return
-        # Move down if the monster is significantly below (y > 1)
-    elif y > 1 and abs(x) <= 2:
+    if x == 0 and y > 0:
         win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[1], lParam[1])  # Down key down
         win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[1], lParam[1])  # Down key up
         return
-    if abs(x) <= 7 and abs(y) <= 5:  # Map click
-        left_click(coordinates_x[0] + x * 70, coordinates_y[0] + y * 70)
-        time.sleep(random.uniform(0.5, 0.7))
-        return
-
 
 def press_key(key) -> None:
     if len(key) == 1:

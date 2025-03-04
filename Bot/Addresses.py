@@ -98,11 +98,6 @@ def load_medivia() -> None:
     backpack_address = 0x00C76718
     backpack_offset = [0x338, 0X48, 0X8]
 
-    my_x_screen_address = 0x00C74820
-    my_x_screen_offset = [0xED8, 0X20, 0X68, 0X30, 0XD8, 0X120, 0X60]
-    my_y_screen_address = 0x00C74820
-    my_y_screen_offset = [0xED8, 0X20, 0X68, 0X30, 0XD8, 0X120, 0X64]
-
     # Target Addresses
     attack_address = 0XBEE4E8
     target_name_offset = 0xA8

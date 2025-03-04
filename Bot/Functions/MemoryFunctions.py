@@ -23,7 +23,11 @@ def read_memory_address(address_read, offsets, option):
         case 4:
             return c.cast(buffer, c.POINTER(c.c_short)).contents.value
         case 5:
-            return buffer.value.decode('utf-8')
+            try:
+                decoded_value = buffer.value.decode('utf-8')
+            except UnicodeDecodeError:
+                decoded_value = "*"
+            return decoded_value
         case 7:
             return c.cast(buffer, c.POINTER(c.c_byte)).contents.value
         case _:
