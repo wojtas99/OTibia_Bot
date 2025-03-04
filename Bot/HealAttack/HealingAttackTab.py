@@ -103,7 +103,6 @@ class HealingTab(QWidget):
         self.healList()
         self.attackList()
         self.profileList()
-        # Finally add the status label at the bottom row
         self.layout.addWidget(self.status_label, 3, 0, 1, 2)
 
         for file in os.listdir("Save/HealingAttack"):
