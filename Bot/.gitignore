@@ -1,3 +1,4 @@
+.gitignore
 .idea/
 __pycache__/
 build/
