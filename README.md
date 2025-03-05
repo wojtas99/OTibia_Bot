@@ -15,7 +15,8 @@ We can use the bot on multiple clients at once, and we don't have to worry about
 The bot works by reading the RAM addresses of a process and based on the current state of the game image.
 
 I leave the bot open source, I consider the project finished, most of it works, and if not you can boldly change it !
-# Table of contents
+
+If you liked it or learned something from this project, please leave a star :star:
 
 - [Needed Libs to Run](#Needed-Python-and-Libs-to-Run)
 - [Features Status](#Features-Status)
