@@ -1,7 +1,5 @@
 import Addresses
 import win32gui
-import base64
-from Addresses import icon_image
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton, QApplication)
 from PyQt5.QtGui import QIcon, QPixmap
 from HealAttack.HealingAttackTab import HealingTab
@@ -22,7 +20,7 @@ class MainWindowTab(QWidget):
 
         # Load Icon
         win32gui.SetWindowText(Addresses.game, Addresses.game_name + " - EasyBot")
-        self.setWindowIcon(QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(base64.b64decode(icon_image)) else QIcon())
+        self.setWindowIcon(QIcon('Images/Icon.jpg'))
         # Set Title and Size
         self.setFixedSize(400, 100)
         self.setWindowTitle("EasyBot")

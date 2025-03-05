@@ -1,5 +1,3 @@
-
-from Addresses import icon_image
 import base64
 import os
 import json
@@ -23,9 +21,7 @@ class TargetLootTab(QWidget):
         self.target_thread = None
 
         # Load Icon
-        self.setWindowIcon(
-            QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(base64.b64decode(icon_image)) else QIcon()
-        )
+        self.setWindowIcon(QIcon('Images/Icon.jpg'))
 
         # Set Title and Size
         self.setWindowTitle("Targeting")

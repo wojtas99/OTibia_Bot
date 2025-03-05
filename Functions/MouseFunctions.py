@@ -15,6 +15,8 @@ def mouse_function(x_source, y_source, x_dest = 0, y_dest = 0, option = 0) ->Non
             win32gui.PostMessage(Addresses.game, win32con.WM_MOUSEMOVE, 0, win32api.MAKELONG(x_source, y_source))
             win32gui.PostMessage(Addresses.game, win32con.WM_LBUTTONDOWN, 1, win32api.MAKELONG(x_source, y_source))
             win32gui.PostMessage(Addresses.game, win32con.WM_LBUTTONUP, 0, win32api.MAKELONG(x_source, y_source))
+
+
 def collect_item(loot_x, loot_y, bp_x, bp_y) -> None:
     win32gui.PostMessage(Addresses.game, win32con.WM_MOUSEMOVE, 0, win32api.MAKELONG(loot_x, loot_y))
     win32gui.PostMessage(Addresses.game, win32con.WM_LBUTTONDOWN, 1, win32api.MAKELONG(loot_x, loot_y))

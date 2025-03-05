@@ -167,6 +167,7 @@ def chase_monster(my_x, my_y, monster_x, monster_y) -> None:
         win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[1], lParam[1])  # Down key up
         return
 
+
 def press_key(key) -> None:
     if len(key) == 1:
         vk_code = win32api.VkKeyScan(key)

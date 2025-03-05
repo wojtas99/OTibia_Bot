@@ -1,20 +1,10 @@
-from Addresses import icon_image, coordinates_x, coordinates_y
-import win32gui
-import base64
-import time
-from threading import Thread
-import win32api
-import win32con
-
 from PyQt5.QtWidgets import (
-    QWidget, QGridLayout, QListWidget, QComboBox, QPushButton, QListWidgetItem,
+    QWidget, QGridLayout, QListWidget, QComboBox, QPushButton,
     QLabel, QCheckBox
 )
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from Functions.GeneralFunctions import delete_item
-from Functions.MouseFunctions import mouse_function
-from Functions.MemoryFunctions import *
 from SmartHotkeys.SmartHotkeysThread import SmartHotkeysThread, SetSmartHotkeyThread
 
 
@@ -27,10 +17,7 @@ class SmartHotkeysTab(QWidget):
         self.set_smart_hotkey_thread = None
 
         # Load Icon
-        self.setWindowIcon(
-            QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(
-                base64.b64decode(icon_image)) else QIcon()
-        )
+        self.setWindowIcon(QIcon('Images/Icon.jpg'))
 
         # Set Title and Size
         self.setWindowTitle("Smart Hotkeys")

@@ -58,7 +58,11 @@ def read_pointer_address(address_read, offsets, option):
         case 4:
             return c.cast(buffer, c.POINTER(c.c_short)).contents.value
         case 5:
-            return buffer.value.decode('utf-8')
+            try:
+                decoded_value = buffer.value.decode('utf-8')
+            except UnicodeDecodeError:
+                decoded_value = "*"
+            return decoded_value
         case 7:
             return c.cast(buffer, c.POINTER(c.c_byte)).contents.value
         case _:
@@ -73,19 +77,11 @@ def read_targeting_status():
 
 
 def read_my_stats():
-    if Addresses.client_name in "Altaron | Giveria":
-        current_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_offset, 1)
-        current_max_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_max_offset, 1)
-        current_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_offset, 1)
-        current_max_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_max_offset, 1)
-        return current_hp, current_max_hp, current_mp, current_max_mp
-
-    elif Addresses.client_name in "Medivia | WADclient":
-        current_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_offset, 3)
-        current_max_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_max_offset, 3)
-        current_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_offset, 3)
-        current_max_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_max_offset, 3)
-        return current_hp, current_max_hp, current_mp, current_max_mp
+    current_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_offset, 3)
+    current_max_hp = read_pointer_address(Addresses.my_stats_address, Addresses.my_hp_max_offset, 3)
+    current_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_offset, 3)
+    current_max_mp = read_pointer_address(Addresses.my_stats_address, Addresses.my_mp_max_offset, 3)
+    return current_hp, current_max_hp, current_mp, current_max_mp
 
 
 def read_my_wpt():
@@ -103,14 +99,13 @@ def read_my_wpt():
 
 
 def read_target_info():
-    if Addresses.client_name in "Altaron | Medivia | WADclient | Giveria":
-        attack_address = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_x = read_memory_address(attack_address, Addresses.target_x_offset, 1)
-        target_y = read_memory_address(attack_address, Addresses.target_y_offset, 1)
-        target_z = read_memory_address(attack_address, Addresses.target_z_offset, 7)
-        target_name = read_memory_address(attack_address, Addresses.target_name_offset, 5)
-        target_hp = read_memory_address(attack_address, Addresses.target_hp_offset, 7)
-        return target_x, target_y, target_z, target_name, target_hp
+    attack_address = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
+    target_x = read_memory_address(attack_address, Addresses.target_x_offset, 1)
+    target_y = read_memory_address(attack_address, Addresses.target_y_offset, 1)
+    target_z = read_memory_address(attack_address, Addresses.target_z_offset, 7)
+    target_name = read_memory_address(attack_address, Addresses.target_name_offset, 5)
+    target_hp = read_memory_address(attack_address, Addresses.target_hp_offset, 7)
+    return target_x, target_y, target_z, target_name, target_hp
 
 
 

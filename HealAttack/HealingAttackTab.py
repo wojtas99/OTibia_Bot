@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import (QWidget, QCheckBox, QComboBox, QLineEdit, QListWidg
                              QHBoxLayout, QLabel, QPushButton, QListWidgetItem, QFormLayout, QSizePolicy)
 from PyQt5.QtGui import QIcon, QPixmap, QIntValidator
 from PyQt5.QtCore import Qt
-from Addresses import icon_image
 from HealAttack.HealingAttackThread import HealThread, AttackThread
 from Functions.GeneralFunctions import delete_item, manage_profile
 
@@ -17,10 +16,7 @@ class HealingTab(QWidget):
         self.heal_thread = None
 
         # Load Icon
-        self.setWindowIcon(
-            QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(
-                base64.b64decode(icon_image)) else QIcon()
-        )
+        self.setWindowIcon(QIcon('Images/Icon.jpg'))
         # Set Title and Size
         self.setWindowTitle("Healing & Attack")
         self.setFixedSize(450, 550)

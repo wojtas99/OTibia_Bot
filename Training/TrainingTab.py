@@ -1,12 +1,9 @@
-from Addresses import icon_image
-import base64
 from PyQt5.QtCore import Qt
-
 from PyQt5.QtWidgets import (
     QWidget, QCheckBox, QComboBox, QLineEdit, QListWidget, QPushButton,
     QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox, QListWidgetItem, QLabel
 )
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon
 from Training.TrainingThread import TrainingThread, ClickThread
 
 
@@ -19,7 +16,7 @@ class TrainingTab(QWidget):
         self.training_thread = None
 
         # Load Icon
-        self.setWindowIcon(QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(base64.b64decode(icon_image)) else QIcon())
+        self.setWindowIcon(QIcon('Images/Icon.jpg'))
 
         # Set Title and Size
         self.setWindowTitle("Training")

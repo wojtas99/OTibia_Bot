@@ -1,15 +1,12 @@
-import base64
 import json
 import os
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
     QWidget, QListWidget, QLineEdit, QTextEdit, QCheckBox, QComboBox, QVBoxLayout,
     QHBoxLayout, QGroupBox, QPushButton, QListWidgetItem, QLabel, QGridLayout
 )
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon
 
-from Addresses import icon_image
 from Functions.GeneralFunctions import delete_item, manage_profile
 from Functions.MemoryFunctions import *
 from Walker.WalkerThread import WalkerThread, RecordThread
@@ -24,11 +21,7 @@ class WalkerTab(QWidget):
         self.walker_thread = None
 
         # Load Icon
-        self.setWindowIcon(
-            QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(
-                base64.b64decode(icon_image)
-            ) else QIcon()
-        )
+        self.setWindowIcon(QIcon('Images/Icon.jpg'))
         # Set Title and Size
         self.setWindowTitle("Walker")
         self.setFixedSize(350, 400)  # Increased size to fit the status label

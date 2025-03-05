@@ -1,18 +1,12 @@
-import win32gui
-import Addresses
-from Addresses import icon_image, screen_x, screen_y, screen_width, screen_height, coordinates_x, coordinates_y
+from Addresses import screen_x, screen_y, screen_width, screen_height, coordinates_x, coordinates_y
 import base64
 import json
-import time
-from threading import Thread
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout, QGroupBox,
     QGridLayout, QPushButton, QListWidget
 )
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
-import win32api
-from win32con import VK_LBUTTON
 import os
 
 from Functions.GeneralFunctions import manage_profile
@@ -20,17 +14,14 @@ from Settings.SettingsThread import SettingsThread
 
 
 class SettingsTab(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self):
         super().__init__()
 
         # Thread Variables
         self.settings_thread = None
 
         # Load Icon
-        self.setWindowIcon(
-            QIcon(pixmap) if (pixmap := QPixmap()).loadFromData(
-                base64.b64decode(icon_image)) else QIcon()
-        )
+        self.setWindowIcon(QIcon('Images/Icon.jpg'))
 
         # Set Title and Size
         self.setWindowTitle("Settings")
