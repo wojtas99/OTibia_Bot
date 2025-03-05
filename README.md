@@ -33,5 +33,20 @@ I leave the bot open source, I consider the project finished, most of it works, 
 - [Auto Healing](#Auto-Healing-Module) : :heavy_check_mark:
 - [Cave Bot](#Cave-Bot-Module) : :heavy_check_mark:
 - [Target Bot](#Target-Bot-Module) : :heavy_check_mark:
-- [Spell Attacker](#Spell-Attacker-Module) : :heavy_check_mark:
 - [Auto Loot](#Auto-Loot-Module) : :heavy_check_mark:
+- [Spell Attacker](#Spell-Attacker-Module) : :heavy_check_mark:
+- [Auto Training](#Auto-Training-Module) : :heavy_check_mark:
+- [Smart Hotkeys](#Smart-Hotkeys-Module) : :heavy_check_mark:
+- [Randomized Values](#Randomized-Values-Module) : :heavy_check_mark:
+- [Stay Diagonal](#Stay-Diagonal-Module) : :heavy_check_mark:
+- [Chase Target](#Chase-Target-Module) : :heavy_check_mark:
+- [AI ChatBot](#AI-ChatBot-Module) : :grey_question: Soon
+- [7.4 Friendly](#7.4-Friendly-Module) : :heart:
+- [Timed Spells](#Timed-Spells-Module) : :heavy_check_mark:
+- [Save Config](#Save-Config-Module) : :heavy_check_mark:
+- [Load Config](#Load-Config-Module) : :heavy_check_mark:
+- [Sort Loot](#Sort-Loot-Module) : :heavy_check_mark:
+- [Multiple Bots](#Multiple-Bots-Module) : :heavy_check_mark:
+- [Labels](#Labels-Module) : :grey_question: Soon
+- [Actions](#Actionst-Module) : :grey_question: Soon
+
