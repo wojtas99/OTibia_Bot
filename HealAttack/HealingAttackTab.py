@@ -434,7 +434,7 @@ class HealingTab(QWidget):
 
         attack_data = {
             "Name": monsters_name,
-            "Key": self.attackKey_comboBox.currentIndex(),
+            "Key": self.attackKey_comboBox.currentText(),
             "HpFrom": hp_from_val,
             "HpTo": hp_to_val,
             "MinMp": min_mp_val,

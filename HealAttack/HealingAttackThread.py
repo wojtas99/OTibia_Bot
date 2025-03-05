@@ -63,6 +63,18 @@ class HealThread(QThread):
         self.running = False
 
 
+def read_attack_data(attack_data):
+    attack_type = attack_data['Type']
+    attack_name = attack_data['Name']
+    attack_option = attack_data['Key']
+    attack_minHp = attack_data['MinHp']
+    attack_minMp = attack_data['MinMp']
+    attack_hpFrom = attack_data['HpFrom']
+    attack_hpTo = attack_data['HpTo']
+    attack_count = attack_data['Count']
+    return attack_type, attack_name, attack_option, attack_minHp, attack_minMp, attack_hpFrom, attack_hpTo
+
+
 def attack_monster(attack_data) -> bool:
     monsters = 10
     target_x, target_y, target_z, target_name, target_hp = read_target_info()
@@ -91,13 +103,22 @@ class AttackThread(QThread):
                     attack_data = self.attack_list.item(attack_index).data(Qt.UserRole)
                     if read_targeting_status() != 0:
                         if attack_monster(attack_data):
-                            if int(attack_data['Key']) < 11:
-                                press_hotkey(int(attack_data['Key']) + 1)
+                            if attack_data['Key'][0] == 'F':
+                                press_hotkey(int(attack_data['Key'][1:]))
                                 QThread.msleep(random.randint(150, 250))
                             else:
-                                mouse_function(coordinates_x[int(attack_data['Key']) - 6],
-                                            coordinates_y[int(attack_data['Key']) - 6],
-                                               option=1)
+                                if attack_data['Key'] == 'HMM':
+                                    mouse_function(coordinates_x[6],
+                                                coordinates_y[6],
+                                                   option=1)
+                                elif attack_data['Key'] == 'GFB':
+                                    mouse_function(coordinates_x[7],
+                                                coordinates_y[7],
+                                                   option=1)
+                                elif attack_data['Key'] == 'SD':
+                                    mouse_function(coordinates_x[8],
+                                                coordinates_y[8],
+                                                   option=1)
                                 x, y, z = read_my_wpt()
                                 target_x, target_y, target_z, target_name, target_hp = read_target_info()
                                 x = target_x - x
