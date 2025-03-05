@@ -46,6 +46,8 @@ class TargetLootTab(QWidget):
         self.skin_comboBox = QComboBox(self)
         self.skin_comboBox.addItems(["No", "Knife"])
         self.skin_comboBox.addItems([f"F{i}" for i in range(1, 13)])
+        self.attackKey_comboBox = QComboBox(self)
+        self.attackKey_comboBox.addItems(f'F{i}' for i in range(1, 13))
 
         # Line Edits
         self.profile_lineEdit = QLineEdit(self)
@@ -99,6 +101,7 @@ class TargetLootTab(QWidget):
         layout4 = QHBoxLayout(self)
         layout5 = QHBoxLayout(self)
         layout6 = QHBoxLayout(self)
+        layout7 = QHBoxLayout(self)
 
         layout1.addWidget(self.targetList_listWidget)
         layout1.addWidget(clearTargetList_button)
@@ -118,6 +121,9 @@ class TargetLootTab(QWidget):
         layout6.addWidget(QLabel("Dist:", self))
         layout6.addWidget(self.attackDist_comboBox)
 
+        layout7.addWidget(QLabel("Attack Key:", self))
+        layout7.addWidget(self.attackKey_comboBox)
+
         self.targetName_lineEdit.setPlaceholderText("Orc, * - All Monsters")
 
         groupbox2_layout.addLayout(layout2)
@@ -125,6 +131,7 @@ class TargetLootTab(QWidget):
         groupbox2_layout.addLayout(layout3)
         groupbox2_layout.addLayout(layout4)
         groupbox2_layout.addLayout(layout5)
+        groupbox2_layout.addLayout(layout7)
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(groupbox2_layout)
         self.layout.addWidget(groupbox, 0, 0, 1, 2)
@@ -324,12 +331,11 @@ class TargetLootTab(QWidget):
         if self.loot_thread:
             self.loot_thread.update_states(state)
         if state == Qt.Checked:
-            # Remember to pass value not the reference
             targets = [
                 self.targetList_listWidget.item(i).data(Qt.UserRole)
                 for i in range(self.targetList_listWidget.count())
             ]
-            self.target_thread = TargetThread(targets, self.startLoot_checkBox.checkState())
+            self.target_thread = TargetThread(targets, self.startLoot_checkBox.checkState(), self.attackKey_comboBox.currentIndex())
             self.target_thread.start()
         else:
             if self.target_thread:

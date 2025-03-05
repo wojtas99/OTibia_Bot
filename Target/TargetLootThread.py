@@ -15,10 +15,11 @@ lootLoop = 2
 
 class TargetThread(QThread):
 
-    def __init__(self, targets, loot_state):
+    def __init__(self, targets, loot_state, attack_key):
         super().__init__()
         self.running = True
         self.targets = targets
+        self.attack_key = attack_key + 1
         self.loot_state = loot_state
         self.state_lock = QMutex()
 
@@ -31,7 +32,7 @@ class TargetThread(QThread):
                 timer = 0
                 target_id = read_targeting_status()
                 if target_id == 0:
-                    press_hotkey(10)
+                    press_hotkey(self.attack_key)
                     QThread.msleep(random.randint(100, 150))
                     target_id = read_targeting_status()
                 if target_id == 0:
@@ -47,7 +48,7 @@ class TargetThread(QThread):
                         target_data = self.targets[target_index]
                         while read_targeting_status() != 0:
                             if timer / 1000 > 15:
-                                press_hotkey(10)
+                                press_hotkey(self.attack_key)
                                 timer = 0
                                 QThread.msleep(random.randint(100, 150))
                             target_x, target_y, target_z, target_name, target_hp = read_target_info()
@@ -65,7 +66,7 @@ class TargetThread(QThread):
                                 elif target_data['Stance'] == 3:
                                     chaseDiagonal_monster(x, y, target_x, target_y)
                             else:
-                                press_hotkey(10)
+                                press_hotkey(self.attack_key)
                                 QThread.msleep(random.randint(100, 150))
                                 if walker_Lock.locked() and lootLoop > 1:
                                     walker_Lock.release()
@@ -90,7 +91,7 @@ class TargetThread(QThread):
                                 QThread.msleep(random.randint(500, 600))
                             lootLoop = 0
                     else:
-                        press_hotkey(10)
+                        press_hotkey(self.attack_key)
                         QThread.msleep(random.randint(100, 150))
             except Exception as e:
                 print(f"Error: {e}")
