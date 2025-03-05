@@ -28,3 +28,10 @@ I leave the bot open source, I consider the project finished, most of it works, 
 - ```bash
   python -m pip install -r requirements.txt
   ```
+
+# Features Status
+- [Auto Healing](#Auto-Healing-Module) : :heavy_check_mark:
+- [Cave Bot](#Cave-Bot-Module) : :heavy_check_mark:
+- [Target Bot](#Target-Bot-Module) : :heavy_check_mark:
+- [Spell Attacker](#Spell-Attacker-Module) : :heavy_check_mark:
+- [Auto Loot](#Auto-Loot-Module) : :heavy_check_mark:
