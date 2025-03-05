@@ -3,7 +3,7 @@ from PyQt5.QtCore import QThread, Qt
 from Addresses import coordinates_x, coordinates_y
 from Functions.KeyboardFunctions import press_hotkey
 from Functions.MemoryFunctions import *
-from Functions.MouseFunctions import use_on_me, mouse_function
+from Functions.MouseFunctions import mouse_function
 
 
 def read_heal_data(heal_data):
@@ -41,7 +41,7 @@ class HealThread(QThread):
                     if heal_type.startswith("HP"):
                         if heal_option == "UH":
                             if heal_below >= hp_percentage >= heal_above:
-                                use_on_me(coordinates_x[5], coordinates_y[5])
+                                mouse_function(coordinates_x[5], coordinates_y[5], Addresses.coordinates_x[0], Addresses.coordinates_y[0], option=5)
                                 QThread.msleep(random.randint(10, 50))
                                 healed = True
                         else:

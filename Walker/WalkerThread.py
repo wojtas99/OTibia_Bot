@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QListWidgetItem
 from Addresses import walker_Lock, coordinates_x, coordinates_y
 from Functions.MemoryFunctions import *
 from Functions.KeyboardFunctions import walk
-from Functions.MouseFunctions import left_click, mouse_function
+from Functions.MouseFunctions import mouse_function
 
 
 class WalkerThread(QThread):
@@ -58,7 +58,7 @@ class WalkerThread(QThread):
                         x, y, z = read_my_wpt()
                         map_x = wpt_data['X']
                         map_y = wpt_data['Y']
-                        left_click(coordinates_x[0] + (map_x - x) * 75, coordinates_y[0] + (map_y - y) * 75)
+                        mouse_function(coordinates_x[0] + (map_x - x) * 75, coordinates_y[0] + (map_y - y) * 75, option=2)
                         current_wpt = (current_wpt + 1) % len(self.waypoints)
                     elif wpt_action == 2:
                         # Shovel

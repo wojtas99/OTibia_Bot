@@ -56,21 +56,17 @@ class SmartHotkeysThread(QThread):
                 hotkey_number = int(hotkey_data['Hotkey'][1:])
                 vk_code = 111 + hotkey_number
                 if win32api.GetAsyncKeyState(vk_code) & 1:
-                    mouse_function(hotkey_data['X'] + random.randint(0, 10) - 5
-                                   , hotkey_data['Y'] + random.randint(0, 10) - 5
-                                   , option=1)
+                    mouse_function(hotkey_data['X'], hotkey_data['Y'], option=1)
                     if hotkey_data['Option'] == 'On Target':
                         target_id = read_memory_address(Addresses.attack_address, 0, 2)
                         if target_id:
                             target_x, target_y, target_name, target_hp = read_target_info()
                             x, y, z = read_my_wpt()
-                            dx = (target_x - x) * 75 + random.randint(0, 10) - 5
-                            dy = (target_y - y) * 75 + random.randint(0, 10) - 5
+                            dx = (target_x - x) * 75
+                            dy = (target_y - y) * 75
                             mouse_function(coordinates_x[0] + dx, coordinates_y[0] + dy, option=2)
                     elif hotkey_data['Option'] == 'On Yourself':
-                        mouse_function(coordinates_x[0] + random.randint(0, 10) - 5
-                                       , coordinates_y[0] + random.randint(0, 10) - 5
-                                       , option=2)
+                        mouse_function(coordinates_x[0], coordinates_y[0], option=2)
                     elif hotkey_data['Option'] == 'With Crosshair':
                         cur_x, cur_y = win32gui.ScreenToClient(Addresses.game, win32api.GetCursorPos())
                         mouse_function(cur_x, cur_y, option=2)
