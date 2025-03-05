@@ -20,7 +20,7 @@ I leave the bot open source, I consider the project finished, most of it works, 
 - [Needed Libs to Run](#Needed-Python-and-Libs-to-Run)
 - [Features Status](#Features-Status)
 - [How To Use](#How-To-Use)
-
+- [How To Add New OT Client](#How-To-Add-New-OT-Client)
 # Needed Python and Libs to Run
 
 - [![Python 3.10.0](https://img.shields.io/badge/python-3.10.0-blue.svg)](https://www.python.org/downloads/release/python-3100/)
@@ -50,3 +50,8 @@ I leave the bot open source, I consider the project finished, most of it works, 
 - [Labels](#Labels-Module) : :grey_question: Soon
 - [Actions](#Actionst-Module) : :grey_question: Soon
 
+# How To Use
+Video Soon :)
+
+# How To Add New OT Client
+Soon
