@@ -18,6 +18,7 @@ I leave the bot open source, I consider the project finished, most of it works, 
 
 If you liked it or learned something from this project, please leave a star :star:
 
+# Table of contents
 - [Needed Libs to Run](#Needed-Python-and-Libs-to-Run)
 - [Features Status](#Features-Status)
 - [Currently Works On](#Currently-Works-On)
