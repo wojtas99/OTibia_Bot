@@ -8,7 +8,7 @@ My goal was to make this bot work on every OTS, what I was able to achieve.
 
 The bot works externally, and its behavior is not completely predicted. There are randomized times, values, behaviors, etc..
 
-It is possible to operate on a minimized window. We can do different things in between and it doesn't interfere with bocing.
+It is possible to operate on a minimized window. We can do different things in between and it doesn't interfere with bot.
 
 We can use the bot on multiple clients at once, and we don't have to worry about CPU or RAM consumption, as it is small.
 
