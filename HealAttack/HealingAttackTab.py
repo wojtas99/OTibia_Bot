@@ -40,6 +40,7 @@ class HealingTab(QWidget):
 
         # Attack
         self.attackType_comboBox = QComboBox(self)
+        self.attackType_comboBox.hide()
         self.attackKey_comboBox = QComboBox(self)
 
         # Line Edits
@@ -64,6 +65,7 @@ class HealingTab(QWidget):
         self.minHPAttack_lineEdit.setFixedWidth(40)
         self.targetCount_lineEdit = QLineEdit(self)
         self.targetCount_lineEdit.setFixedWidth(40)
+        self.targetCount_lineEdit.hide()
         self.profile_lineEdit = QLineEdit(self)
 
         int_validator_3 = QIntValidator(0, 9999, self)
@@ -194,12 +196,10 @@ class HealingTab(QWidget):
         # Layouts
         layout1 = QHBoxLayout(self)
         layout2 = QHBoxLayout(self)
-        layout3 = QHBoxLayout(self)
-        layout4 = QHBoxLayout(self)
 
         layout1.addWidget(self.attackKey_comboBox)
-        layout1.addWidget(QLabel("Min. Creatures:", self), alignment=Qt.AlignLeft)
-        layout1.addWidget(self.targetCount_lineEdit)
+        #layout1.addWidget(QLabel("Min. Creatures:", self), alignment=Qt.AlignLeft)
+        #layout1.addWidget(self.targetCount_lineEdit)
         self.targetCount_lineEdit.setPlaceholderText("1")
         layout1.addWidget(QLabel("HP:", self), alignment=Qt.AlignLeft)
         layout1.addWidget(self.hpFrom_lineEdit)
@@ -207,6 +207,8 @@ class HealingTab(QWidget):
         layout1.addWidget(self.hpTo_lineEdit, alignment=Qt.AlignLeft)
         layout1.addWidget(QLabel("Min MP:", self))
         layout1.addWidget(self.minMPAttack_lineEdit)
+        layout1.addWidget(QLabel("Min HP%:", self))
+        layout1.addWidget(self.minHPAttack_lineEdit)
 
         self.minMPAttack_lineEdit.setPlaceholderText("300")
         self.hpFrom_lineEdit.setPlaceholderText("100")
@@ -215,18 +217,16 @@ class HealingTab(QWidget):
 
         layout2.addWidget(self.targetName_lineEdit)
         self.targetName_lineEdit.setPlaceholderText("Orc, Minotaur, etc., * - All Monsters")
-        layout2.addWidget(QLabel("Min HP%:", self))
-        layout2.addWidget(self.minHPAttack_lineEdit)
 
-        layout4.addWidget(self.attackType_comboBox)
-        layout4.addWidget(add_attack_button)
-        layout4.addWidget(self.startAttack_checkBox)
+
+        #layout4.addWidget(self.attackType_comboBox)
+        add_attack_button.setFixedWidth(50)
+        layout2.addWidget(add_attack_button)
+        layout2.addWidget(self.startAttack_checkBox)
 
         groupbox_layout.addWidget(self.attackList_listWidget)
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
-        groupbox_layout.addLayout(layout3)
-        groupbox_layout.addLayout(layout4)
         self.layout.addWidget(groupbox, 1, 0, 1, 2)
 
     def profileList(self) -> None:

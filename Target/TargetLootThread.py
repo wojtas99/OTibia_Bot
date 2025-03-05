@@ -80,10 +80,14 @@ class TargetThread(QThread):
                             x = target_x - x
                             y = target_y - y
                             backpack = read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1)
-                            for _ in range(3):
-                                if backpack == read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1):
-                                    mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=1)
-                                    QThread.msleep(random.randint(500, 600))
+                            if backpack:
+                                for _ in range(3):
+                                    if backpack == read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1):
+                                        mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=1)
+                                        QThread.msleep(random.randint(500, 600))
+                            else:
+                                mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=1)
+                                QThread.msleep(random.randint(500, 600))
                             lootLoop = 0
                     else:
                         press_hotkey(10)

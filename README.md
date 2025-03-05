@@ -35,6 +35,7 @@ I leave the bot open source, I consider the project finished, most of it works, 
 - [Target Bot](#Target-Bot-Module) : :heavy_check_mark:
 - [Auto Loot](#Auto-Loot-Module) : :heavy_check_mark:
 - [Spell Attacker](#Spell-Attacker-Module) : :heavy_check_mark:
+- [Lure Monsters](#Lure-Monsters-Module) : :heavy_check_mark:
 - [Auto Training](#Auto-Training-Module) : :heavy_check_mark:
 - [Smart Hotkeys](#Smart-Hotkeys-Module) : :heavy_check_mark:
 - [Randomized Values](#Randomized-Values-Module) : :heavy_check_mark:
