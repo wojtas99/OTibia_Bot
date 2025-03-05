@@ -38,6 +38,7 @@ I leave the bot open source, I consider the project finished, most of it works, 
 - [Lure Monsters](#Lure-Monsters-Module) : :heavy_check_mark:
 - [Auto Training](#Auto-Training-Module) : :heavy_check_mark:
 - [Smart Hotkeys](#Smart-Hotkeys-Module) : :heavy_check_mark:
+- [Skin Monsters](#Skin-Monsters-Module) : :heavy_check_mark:
 - [Record Waypoints](#Record-Waypoints-Module) : :heavy_check_mark:
 - [Randomized Values](#Randomized-Values-Module) : :heavy_check_mark:
 - [Stay Diagonal](#Stay-Diagonal-Module) : :heavy_check_mark:
