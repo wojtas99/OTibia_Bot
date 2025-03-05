@@ -1,4 +1,5 @@
 import ctypes as c
+import os
 import threading
 import win32gui
 import win32process
@@ -96,6 +97,7 @@ def load_medivia() -> None:
 
     # Game 'n' Client names
     client_name = "Medivia"
+    os.makedirs("Images/" + client_name, exist_ok=True)
     game_name = fin_window_name(client_name)
 
     # Loading Addresses

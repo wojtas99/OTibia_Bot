@@ -7,6 +7,7 @@ from General.SelectTibiaTab import SelectTibiaTab
 
 def main():
     # Make directories
+    os.makedirs("Images", exist_ok=True)
     os.makedirs("Save", exist_ok=True)
     os.makedirs("Save/Targeting", exist_ok=True)
     os.makedirs("Save/Settings", exist_ok=True)
