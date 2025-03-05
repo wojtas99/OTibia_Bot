@@ -410,12 +410,6 @@ class HealingTab(QWidget):
                 self.status_label.setText("Please fill in the 'To' field.")
             has_error = True
 
-        if not self.targetCount_lineEdit.text().strip():
-            self.targetCount_lineEdit.setStyleSheet("border: 2px solid red;")
-            if not has_error:
-                self.status_label.setText("Please fill in the 'Min Creatures' field.")
-            has_error = True
-
         if has_error:
             return
 
@@ -431,7 +425,7 @@ class HealingTab(QWidget):
         hp_to_val = int(self.hpTo_lineEdit.text())
         min_mp_val = int(self.minMPAttack_lineEdit.text())
         min_hp_val = int(self.minHPAttack_lineEdit.text())
-        count_val = int(self.targetCount_lineEdit.text())
+        count_val = 0
 
         attack_name = (
             f"{count_val}+ {monsters_name} : ({hp_from_val}%-{hp_to_val}%)"
