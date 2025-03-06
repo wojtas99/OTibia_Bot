@@ -47,7 +47,7 @@ class TargetThread(QThread):
                             target_index = 0
                         target_data = self.targets[target_index]
                         while read_targeting_status() != 0:
-                            if timer / 1000 > 15:
+                            if timer / 1000 > 25:
                                 press_hotkey(self.attack_key)
                                 timer = 0
                                 QThread.msleep(random.randint(100, 150))
@@ -135,6 +135,7 @@ class LootThread(QThread):
                                 screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
                                 screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
                                 screenshot = cv.resize(screenshot, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
+
                             result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
                             locations = list(zip(*(np.where(result >= 0.9))[::-1]))
                             if locations:

@@ -109,6 +109,49 @@ def load_medivia() -> None:
     base_address = modules[0]
 
 
+# TibiaScape Game
+def load_tibiaScape() -> None:
+    global my_x_address, my_y_address, my_z_address, \
+        my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, \
+        backpack_address, backpack_offset, item_link, \
+        attack_address, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
+        client_name, base_address, game, proc_id, process_handle, game_name
+
+    item_link = 'https://www.tibia-wiki.net/wiki/Plik:'
+    # Static Addresses
+    # Character Addresses
+    my_x_address = 0xD22490
+    my_y_address = 0XD22494
+    my_z_address = 0XD22498
+    my_stats_address = 0x00D21D90
+    my_hp_offset = [0X6C0]
+    my_hp_max_offset = [0X6C8]
+    my_mp_offset = [0x6F8]
+    my_mp_max_offset = [0x700]
+    backpack_address = 0x00D251C0
+    backpack_offset = [0x138, 0XE0, 0X30, 0X0, 0XB18]
+
+    # Target Addresses
+    attack_address = 0XD21DA0
+    target_name_offset = 0x48
+    target_x_offset = 0x20
+    target_y_offset = 0x24
+    target_z_offset = 0x28
+    target_hp_offset = 0xE8
+
+    # Game 'n' Client names
+    client_name = "TibiaScape"
+    os.makedirs("Images/" + client_name, exist_ok=True)
+    game_name = fin_window_name(client_name)
+    # Loading Addresses
+    game = win32gui.FindWindow(None, game_name)
+    proc_id = win32process.GetWindowThreadProcessId(game)
+    proc_id = proc_id[1]
+    process_handle = c.windll.kernel32.OpenProcess(0x1F0FFF, False, proc_id)
+    modules = win32process.EnumProcessModules(process_handle)
+    base_address = modules[0]
+
+
 def fin_window_name(name) -> str:
     matching_titles = []
 

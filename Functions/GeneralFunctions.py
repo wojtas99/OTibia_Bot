@@ -1,5 +1,7 @@
 import base64
 import io
+import urllib
+
 import requests
 import win32con
 import win32gui
@@ -47,6 +49,8 @@ def load_items_images(list_widget) -> None:
                 continue
             media_url = full_media_div.find("a").get("href")
             base_link = link[:link.rfind('/')]
+            parsed = urllib.parse.urlparse(base_link + media_url)
+            base_link = f"{parsed.scheme}://{parsed.netloc}"
             response = requests.get(base_link + media_url)
             if response.status_code != 200:
                 continue
@@ -66,7 +70,6 @@ def load_items_images(list_widget) -> None:
                     background.paste(frame_rgba, (0, 0), frame_rgba)
                     background_np = np.array(background)
                     background_np = background_np[:22, :, :]
-
                     background_np = cv.cvtColor(background_np, cv.COLOR_BGR2GRAY)
                     background_np = cv.GaussianBlur(background_np, (7, 7), 0)
                     background_np = cv.resize(background_np, None, fx=zoom_img, fy=zoom_img,

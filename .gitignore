@@ -4,6 +4,7 @@ config.ini
 Save/
 test.py
 test2.py
+test3.py
 
 # Distribution / packaging
 .Python
