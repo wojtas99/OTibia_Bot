@@ -116,6 +116,7 @@ class LootThread(QThread):
 
     def run(self):
         global lootLoop
+        zoom_img = 3
         take_screen = True
         load_items_images(self.loot_list)
         item_image = Addresses.item_list
@@ -134,14 +135,14 @@ class LootThread(QThread):
                                 screenshot = capture_screen.get_screenshot()
                                 screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
                                 screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
-                                screenshot = cv.resize(screenshot, None, fx=3, fy=3, interpolation=cv.INTER_CUBIC)
+                                screenshot = cv.resize(screenshot, None, fx=zoom_img, fy=zoom_img, interpolation=cv.INTER_CUBIC)
 
                             result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
-                            locations = list(zip(*(np.where(result >= 0.9))[::-1]))
+                            locations = list(zip(*(np.where(result >= 0.93))[::-1]))
                             if locations:
                                 locations = merge_close_points(locations, 35)
                                 locations = sorted(locations, key=lambda point: (point[1], point[0]), reverse=True)
-                                locations = [[int(lx / 3), int(ly / 3)] for lx, ly in locations]
+                                locations = [[int(lx / zoom_img), int(ly / zoom_img)] for lx, ly in locations]
                             for lx, ly in locations:
                                 manage_collect(lx, ly, value_list[-1])
                                 QThread.msleep(random.randint(150, 250))
