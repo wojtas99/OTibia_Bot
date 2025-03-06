@@ -68,7 +68,7 @@ Video Soon :)
 Soon
 
 # How To Make Executable
-If you want to make this bot executable version write this command in the console of the project or in the command line.
+If you want to make this bot executable version write this command in the console of the project.
 ```bash
 pyinstaller --onefile --noconsole StartBot.py --name="EasyBot" --icon="Images/Icon.jpg"
   ```
