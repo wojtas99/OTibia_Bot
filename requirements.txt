@@ -5,3 +5,4 @@ pillow
 numpy
 opencv-python
 pyinstaller
+beautifulsoup4
