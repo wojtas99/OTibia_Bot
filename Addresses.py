@@ -137,7 +137,7 @@ def load_tibiaScape() -> None:
     target_x_offset = 0x20
     target_y_offset = 0x24
     target_z_offset = 0x28
-    target_hp_offset = 0xE8
+    target_hp_offset = 0x68
 
     # Game 'n' Client names
     client_name = "TibiaScape"
