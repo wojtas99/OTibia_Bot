@@ -54,7 +54,6 @@ class WalkerThread(QThread):
                         timer += sleep_value
                         mouse_function(coordinates_x[10], coordinates_y[10], option=1)
                         QThread.msleep(random.randint(100, 200))
-                        mouse_function(coordinates_x[0], coordinates_y[0], option=2)
                         x, y, z = read_my_wpt()
                         map_x = wpt_data['X']
                         map_y = wpt_data['Y']

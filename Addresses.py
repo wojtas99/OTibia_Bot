@@ -128,8 +128,8 @@ def load_tibiaScape() -> None:
     my_hp_max_offset = [0X6C8]
     my_mp_offset = [0x6F8]
     my_mp_max_offset = [0x700]
-    backpack_address = 0x00D251C0
-    backpack_offset = [0x138, 0XE0, 0X30, 0X0, 0XB18]
+    backpack_address = 0x00D2AE78
+    backpack_offset = [0X240, 0X30, 0X20, 0XA8, 0XA8, 0XA8, 0X130]
 
     # Target Addresses
     attack_address = 0XD21DA0
