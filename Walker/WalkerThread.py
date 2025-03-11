@@ -146,13 +146,36 @@ class RecordThread(QThread):
             "Y": y,
             "Z": z
         }
-        waypoint = QListWidgetItem(f'Stand: {x} {y} {z}')
+        waypoint = QListWidgetItem(f'Stand: {x} {y} {z} {self.comboBox.currentText()}')
         waypoint.setData(Qt.UserRole, waypoint_data)
         self.wpt_update.emit(1, waypoint)
         old_x, old_y, old_z = x, y, z
         while self.running:
             try:
                 x, y, z = read_my_wpt()
+                if z != old_z:  # Stair, hole, etc.
+                    if y > old_y and x == old_x:  # Move South
+                        waypoint_data = {
+                            "Action": 0,
+                            "Direction": 1,  # South index
+                            "X": x,
+                            "Y": y,
+                            "Z": z
+                        }
+                        waypoint = QListWidgetItem(f'Stand: {x} {y} {z} South')
+                        waypoint.setData(Qt.UserRole, waypoint_data)
+                        self.wpt_update.emit(1, waypoint)
+                    if y < old_y and x == old_x:  # Move North
+                        waypoint_data = {
+                            "Action": 0,
+                            "Direction": 2,  # North index
+                            "X": x,
+                            "Y": y,
+                            "Z": z
+                        }
+                        waypoint = QListWidgetItem(f'Stand: {x} {y} {z} North')
+                        waypoint.setData(Qt.UserRole, waypoint_data)
+                        self.wpt_update.emit(1, waypoint)
                 if (x != old_x or y != old_y) and z == old_z:
                     waypoint_data = {
                         "Action": 0,
@@ -161,7 +184,7 @@ class RecordThread(QThread):
                         "Y": y,
                         "Z": z
                     }
-                    waypoint = QListWidgetItem(f'Stand: {x} {y} {z}')
+                    waypoint = QListWidgetItem(f'Stand: {x} {y} {z} {self.comboBox.currentText()}')
                     waypoint.setData(Qt.UserRole, waypoint_data)
                     self.wpt_update.emit(1, waypoint)
                 old_x, old_y, old_z = x, y, z
