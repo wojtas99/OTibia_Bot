@@ -23,6 +23,7 @@ If you liked it or learned something from this project, please leave a star :sta
 - [Features Status](#Features-Status)
 - [Currently Works On](#Currently-Works-On)
 - [How To Use](#How-To-Use)
+- [Video Tutorial](#Video-Tutorial)
 - [How To Add New OT Client](#How-To-Add-New-OT-Client)
 - [How To Make Executable](#How-To-Make-Executable)
 # Needed Python and Libs to Run
@@ -133,7 +134,7 @@ If you liked it or learned something from this project, please leave a star :sta
 
 ![NoColor](https://img.shields.io/badge/3.%20Add%20waypoint%20in%20the%20appropriate%20direction.%20Example:%20If%20north,%20then%20%22North%22%20and%20add.-grey)
 
-# Video
+# Video Tutorial
 [Video Tutorial](https://drive.google.com/file/d/1ixADZeRcph9sbVhGRTV2diKTGOS95fNQ/view?usp=sharing)
 
 
