@@ -1,3 +1,5 @@
+from PyQt5.QtCore import Qt
+
 import Addresses
 import win32gui
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton, QApplication)
@@ -74,11 +76,13 @@ class MainWindowTab(QWidget):
     def settings(self):
         if self.settingsTab_instance is None:
             self.settingsTab_instance = SettingsTab()
+            self.settingsTab_instance.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.settingsTab_instance.show()
 
     def walker(self):
         if self.walkerTab_instance is None:
             self.walkerTab_instance = WalkerTab()
+            self.walkerTab_instance.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.walkerTab_instance.show()
 
     def targetLoot(self):

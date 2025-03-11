@@ -157,7 +157,7 @@ class RecordThread(QThread):
                     if y > old_y and x == old_x:  # Move South
                         waypoint_data = {
                             "Action": 0,
-                            "Direction": 1,  # South index
+                            "Direction": 2,  # South index
                             "X": x,
                             "Y": y,
                             "Z": z
@@ -168,7 +168,7 @@ class RecordThread(QThread):
                     if y < old_y and x == old_x:  # Move North
                         waypoint_data = {
                             "Action": 0,
-                            "Direction": 2,  # North index
+                            "Direction": 1,  # North index
                             "X": x,
                             "Y": y,
                             "Z": z
