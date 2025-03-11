@@ -135,7 +135,7 @@ If you liked it or learned something from this project, please leave a star :sta
 ![NoColor](https://img.shields.io/badge/3.%20Add%20waypoint%20in%20the%20appropriate%20direction.%20Example:%20If%20north,%20then%20%22North%22%20and%20add.-grey)
 
 # Video Tutorial
-[Qucik Tutorial/Teaser on YouTube](https://drive.google.com/file/d/1ixADZeRcph9sbVhGRTV2diKTGOS95fNQ/view?usp=sharing)
+[Qucik Tutorial/Teaser on YouTube](https://www.youtube.com/watch?v=iZsd0Sz7pzA)
 
 
 # How To Add New OT Client
