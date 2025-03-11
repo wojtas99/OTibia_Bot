@@ -102,8 +102,16 @@ If you liked it or learned something from this project, please leave a star :sta
 ![NoColor](https://img.shields.io/badge/%223%22%20-%20collects%20into%20the%20third%20backpack-grey)  
 ![NoColor](https://img.shields.io/badge/%224%22%20-%20collects%20into%20the%20fourth%20backpack-grey)  
 
+![NoColor](https://img.shields.io/badge/If%20you%20enter%20an%20item%20name%20with%20*%20at%20the%20beginning,%20e.g.%20%22*Pick%22,%20this%20image%20will%20be%20taken%20from%20local%20Images/ClientName/Sword.png%20files-grey)
+
+
 ![NoColor](https://img.shields.io/badge/The%20collection%20process%20is%20performed%20with%20priority.%20Items%20at%20the%20top%20of%20the%20list%20are%20collected%20first-grey)  
-![NoColor](https://img.shields.io/badge/So%20if%20you%20want%20it%20to%20collect%20all%20items%20first%20and%20possibly%20open%20a%20backpack%20that%20may%20be%20in%20a%20monster%20at%20the%20end%20then%20add%20that%20backpack%20at%20the%20end%20of%20the%20list.-grey)  
+![NoColor](https://img.shields.io/badge/So%20if%20you%20want%20it%20to%20collect%20all%20items%20first%20and%20possibly%20open%20a%20backpack%20that%20may%20be%20in%20a%20monster%20at%20the%20end%20then%20add%20that%20backpack%20at%20the%20end%20of%20the%20list.-grey) 
+
+![NoColor](https://img.shields.io/badge/Remember!!%20For%20looting%20to%20work%20you%20must%20have%20Background.png%2032x32%20added%20in%20Images/ClientName-grey)
+
+![image](https://github.com/user-attachments/assets/64ab23ed-095d-4c55-8c44-6320ea1e3798)
+
 
 # Smart Hotkeys
 
