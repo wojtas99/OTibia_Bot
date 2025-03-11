@@ -62,8 +62,79 @@ If you liked it or learned something from this project, please leave a star :sta
 - [TibiaScape](#TibiaScape) : :heavy_check_mark:
   
 # How To Use
-Video Soon :)
 ![image](https://github.com/user-attachments/assets/12f0048b-8bbe-4cd7-ab82-d3c6831974ce)
+
+# Settings Panel
+
+![image](https://github.com/user-attachments/assets/2febacd1-66cc-4e3d-8760-7e87d4d6fc15)
+
+![Blue](https://img.shields.io/badge/Set%20Character-3f48cc)  
+![NoColor](https://img.shields.io/badge/You%20need%20to%20set%20middle%20of%20your%20character.-grey)  
+
+![Red](https://img.shields.io/badge/Set%20Loot-ed1d25)  
+![NoColor](https://img.shields.io/badge/You%20need%20to%20set%20the%20area%20where%20open%20bodies%20will%20appear.-grey)  
+
+![DarkRed](https://img.shields.io/badge/Backpacks-890115)  
+![NoColor](https://img.shields.io/badge/Backpack%20Info-You%20need%20to%20choose%20backpack%20coordinates%20(needed%20for%20collecting).%20If%20you%20choose%20the%20last%20field%20of%20the%20backpack,%20then%20when%20the%20backpack%20is%20filled,%20the%20next%20backpack%20inside%20will%20be%20opened.-grey)  
+
+![Green](https://img.shields.io/badge/Runes-23b14d)  
+![NoColor](https://img.shields.io/badge/You%20Need%20to%20set%20the%20coordinates%20of%20selected%20rune.-grey)  
+
+![Grey](https://img.shields.io/badge/Tools-grey)  
+![NoColor](https://img.shields.io/badge/You%20Need%20to%20set%20the%20coordinates%20of%20selected%20tool.-grey)  
+
+# Targeting and Looting Tab
+
+![image](https://github.com/user-attachments/assets/7c3dbda5-9bf1-4f61-b41b-cb3b80203aa8)
+
+![Red](https://img.shields.io/badge/Targeting-ed1d25)  
+![NoColor](https://img.shields.io/badge/Enter%20the%20name%20of%20the%20target,%20select%20from%20what%20distance%20to%20attack%20it,%20select%20stance%20and%20choose%20whether%20to%20skin%20it.%20Attack%20Key%20is%20the%20button%20for%20which%20it%20is%20attacking%20the%20target%20in%20the%20game.-grey)  
+
+![Blue](https://img.shields.io/badge/Looting-3f48cc)  
+![NoColor](https://img.shields.io/badge/In%20the%20first%20Text%20Box%20you%20enter%20the%20name%20of%20the%20item%20to%20collect,%20in%20the%20second%20you%20enter%20where%20this%20item%20should%20be%20droped.-grey)
+
+![NoColor](https://img.shields.io/badge/%22--2%22%20-%20clicks%20twice%20with%20the%20left%20on%20the%20item-grey)  
+![NoColor](https://img.shields.io/badge/%22--1%22%20-%20clicks%20once%20with%20the%20right%20on%20the%20item-grey)  
+![NoColor](https://img.shields.io/badge/%220%22%20-%20Throws%20under%20yourself-grey)  
+![NoColor](https://img.shields.io/badge/%221%22%20-%20collects%20into%20the%20first%20backpack-grey)  
+![NoColor](https://img.shields.io/badge/%222%22%20-%20collects%20into%20the%20second%20backpack-grey)  
+![NoColor](https://img.shields.io/badge/%223%22%20-%20collects%20into%20the%20third%20backpack-grey)  
+![NoColor](https://img.shields.io/badge/%224%22%20-%20collects%20into%20the%20fourth%20backpack-grey)  
+
+![NoColor](https://img.shields.io/badge/The%20collection%20process%20is%20performed%20with%20priority.%20Items%20at%20the%20top%20of%20the%20list%20are%20collected%20first-grey)  
+![NoColor](https://img.shields.io/badge/So%20if%20you%20want%20it%20to%20collect%20all%20items%20first%20and%20possibly%20open%20a%20backpack%20that%20may%20be%20in%20a%20monster%20at%20the%20end%20then%20add%20that%20backpack%20at%20the%20end%20of%20the%20list.-grey)  
+
+# Smart Hotkeys
+
+![image](https://github.com/user-attachments/assets/c5da24f9-7a0f-49e2-bee4-cefa789da302)
+
+![Blue](https://img.shields.io/badge/Smart%20Hotkeys-3f48cc)  
+![NoColor](https://img.shields.io/badge/If%20your%20server%20is%207.4%20or%20do%20not%20have%20hotkeys.%20Smart%20Hotkeys%20is%20cool%20tool%20to%20use%20hotkeys%20even%20if%20they%20are%20not%20in%20the%20game.-grey)
+
+![NoColor](https://img.shields.io/badge/Just%20set%20the%20coordinates%20of%20rune%20that%20you%20want%20to%20use%20and%20select%20the%20hotkey%20you%20want%20it%20to%20work%20on.-grey)
+
+
+# Walker
+
+![image](https://github.com/user-attachments/assets/cb706149-21f6-40f3-8647-8ec77082ff6f)
+
+![NoColor](https://img.shields.io/badge/Label%20and%20Action%20buttons%20do%20not%20work%20-grey)
+
+![image](https://github.com/user-attachments/assets/200645e1-8901-4879-ae0c-e090b57dc476)
+
+![Blue](https://img.shields.io/badge/Directions-3f48cc)  
+![NoColor](https://img.shields.io/badge/Auto%20Recording%20tends%20to%20work,%20but%20to%20be%20safe%20when%20you%20use%20stairs%20I%20recommend%20turning%20it%20off%20and%20adding%20stairs%20manually.%20How%20to%20do%20that%3F-grey)
+
+![NoColor](https://img.shields.io/badge/How%20to%20add%20stairs:-3f48cc)
+
+![NoColor](https://img.shields.io/badge/1.%20Stand%20before%20the%20stairs%20and%20add%20waypoint%20in%20direction%20"Center"-grey)  
+
+![NoColor](https://img.shields.io/badge/2.%20Climb%20up%20or%20down%20the%20stairs-grey)  
+
+![NoColor](https://img.shields.io/badge/3.%20Add%20waypoint%20in%20the%20appropriate%20direction.%20Example:%20If%20north,%20then%20%22North%22%20and%20add.-grey)
+
+
+
 
 
 # How To Add New OT Client
