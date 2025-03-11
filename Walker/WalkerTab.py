@@ -236,7 +236,7 @@ class WalkerTab(QWidget):
 
         if index == 0:  # Stand
             waypoint_data["Direction"] = self.option_comboBox.currentIndex()
-            waypoint = QListWidgetItem(f'Stand: {x} {y} {z}')
+            waypoint = QListWidgetItem(f'Stand: {x} {y} {z} {self.option_comboBox.currentText()}')
 
         elif index == 1:  # Rope
             waypoint_data["Direction"] = self.option_comboBox.currentIndex()
