@@ -4,6 +4,8 @@ import threading
 import win32gui
 import win32process
 
+from Functions.MemoryFunctions import enable_debug_privilege_pywin32
+
 # Keystrokes codes
 lParam = [
     0X00480001, 0x00500001, 0X004D0001,  # 8, 2, 6
@@ -280,12 +282,57 @@ def load_treasura() -> None:
     base_address = modules[0]
 
 
+def load_tibiantis() -> None:
+    global my_x_address, my_y_address, my_z_address, my_x_address_offset, my_y_address_offset, my_z_address_offset, \
+        my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, \
+        backpack_address, backpack_offset, item_link, \
+        attack_address, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
+        client_name, base_address, game, proc_id, process_handle, game_name
+
+    item_link = 'https://www.tibia-wiki.net/wiki/Plik:'
+    # Static Addresses
+    # Character Addresses
+    my_x_address = 0x0004C84C
+    my_x_address_offset = [0x24]
+    my_y_address = 0x0004C84C
+    my_y_address_offset = [0x28]
+    my_z_address = 0x0004C84C
+    my_z_address_offset = [0x2C]
+    my_stats_address = 0x00050A68
+    my_hp_offset = [0x0]
+    my_hp_max_offset = [0x4A8]
+    my_mp_offset = [0X4D8]
+    my_mp_max_offset = [0X4E0]
+    backpack_address = 0x00D2AE78
+    backpack_offset = [0X240, 0X30, 0X20, 0XA8, 0XA8, 0XA8, 0X130]
+
+    # Target Addresses
+    attack_address = 0x1C681C
+    target_name_offset = 0x4
+    target_x_offset = 0x24
+    target_y_offset = 0x28
+    target_z_offset = 0x2C
+    target_hp_offset = 0x84
+    enable_debug_privilege_pywin32()
+    # Game 'n' Client names
+    client_name = "Tibiantis"
+    os.makedirs("Images/" + client_name, exist_ok=True)
+    game_name = fin_window_name(client_name)
+    # Loading Addresses
+    game = win32gui.FindWindow(None, game_name)
+    proc_id = win32process.GetWindowThreadProcessId(game)
+    proc_id = proc_id[1]
+    process_handle = c.windll.kernel32.OpenProcess(0x1F0FFF, False, proc_id)
+    modules = win32process.EnumProcessModules(process_handle)
+    base_address = modules[0]
+
+
 def fin_window_name(name) -> str:
     matching_titles = []
 
     def enum_window_callback(hwnd, _):
         window_text = win32gui.GetWindowText(hwnd)
-        if name in window_text and "EasyBot" not in window_text:
+        if name in window_text and "k" not in window_text:
             matching_titles.append(window_text)
 
     win32gui.EnumWindows(enum_window_callback, None)
