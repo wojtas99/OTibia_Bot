@@ -62,6 +62,7 @@ If you liked it or learned something from this project, please leave a star :sta
 - [Medivia](#Medivia) : :heavy_check_mark:
 - [TibiaScape](#TibiaScape) : :heavy_check_mark:
 - [Miracle](#Miracle) : :heavy_check_mark:
+- [Treasura](#Treasura) : :heavy_check_mark:
   
 # How To Use
 ![image](https://github.com/user-attachments/assets/12f0048b-8bbe-4cd7-ab82-d3c6831974ce)
