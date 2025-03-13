@@ -1,12 +1,11 @@
 import random
 import threading
 import Addresses
-from Addresses import coordinates_x, coordinates_y
 import win32api, win32con, win32gui
 mouse_lock = threading.Lock()
 
 
-def mouse_function(x_source, y_source, x_dest = 0, y_dest = 0, option = 0) ->None:
+def mouse_function(x_source, y_source, x_dest=0, y_dest=0, option=0) ->None:
     if option != 3:
         x_source += random.randint(0, 10) - 5
         y_source += random.randint(0, 10) - 5
