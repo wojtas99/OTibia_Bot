@@ -68,13 +68,17 @@ If you liked it or learned something from this project, please leave a star :sta
 
 # Settings Panel
 
-![image](https://github.com/user-attachments/assets/2febacd1-66cc-4e3d-8760-7e87d4d6fc15)
+![image](https://github.com/user-attachments/assets/94e4e247-15ea-4738-9c6a-b5f5e6b82fec)
+
 
 ![Blue](https://img.shields.io/badge/Set%20Character-3f48cc)  
 ![NoColor](https://img.shields.io/badge/You%20need%20to%20set%20middle%20of%20your%20character.-grey)  
 
 ![Red](https://img.shields.io/badge/Set%20Loot-ed1d25)  
 ![NoColor](https://img.shields.io/badge/You%20need%20to%20set%20the%20area%20where%20open%20bodies%20will%20appear.-grey)  
+
+![Purple](https://img.shields.io/badge/Set%20Battle-a348a5)  
+![NoColor](https://img.shields.io/badge/If%20your%20OT%20do%20not%20have%20attack%20on%20key%20set%20first%20monster%20on%20battle%20list.-grey)  
 
 ![DarkRed](https://img.shields.io/badge/Backpacks-890115)  
 ![NoColor](https://img.shields.io/badge/Backpack%20Info-You%20need%20to%20choose%20backpack%20coordinates%20(needed%20for%20collecting).%20If%20you%20choose%20the%20last%20field%20of%20the%20backpack,%20then%20when%20the%20backpack%20is%20filled,%20the%20next%20backpack%20inside%20will%20be%20opened.-grey)  
