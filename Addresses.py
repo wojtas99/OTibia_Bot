@@ -55,6 +55,8 @@ client_name = None
 # Coordinates
 screen_x = [0] * 1
 screen_y = [0] * 1
+battle_x = [0] * 1
+battle_y = [0] * 1
 screen_width = [0] * 1
 screen_height = [0] * 1
 coordinates_x = [0] * 11
@@ -176,13 +178,55 @@ def load_miracle() -> None:
     # Target Addresses
     attack_address = 0xA2FB34
     target_name_offset = 0x30
-    target_x_offset = 0x1C
+    target_x_offset = 0xC
     target_y_offset = 0x10
     target_z_offset = 0x14
     target_hp_offset = 0x48
 
     # Game 'n' Client names
     client_name = "Miracle 7.4"
+    os.makedirs("Images/" + client_name, exist_ok=True)
+    game_name = fin_window_name(client_name)
+    # Loading Addresses
+    game = win32gui.FindWindow(None, game_name)
+    proc_id = win32process.GetWindowThreadProcessId(game)
+    proc_id = proc_id[1]
+    process_handle = c.windll.kernel32.OpenProcess(0x1F0FFF, False, proc_id)
+    modules = win32process.EnumProcessModules(process_handle)
+    base_address = modules[0]
+
+
+def load_treasura() -> None:
+    global my_x_address, my_y_address, my_z_address, \
+        my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, \
+        backpack_address, backpack_offset, item_link, \
+        attack_address, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
+        client_name, base_address, game, proc_id, process_handle, game_name
+
+    item_link = 'https://www.tibia-wiki.net/wiki/Plik:'
+    # Static Addresses
+    # Character Addresses
+    my_x_address = 0xB8547C
+    my_y_address = 0xB85480
+    my_z_address = 0xB85484
+    my_stats_address = 0x00B85170
+    my_hp_offset = [0x470]
+    my_hp_max_offset = [0x478]
+    my_mp_offset = [0X4A8]
+    my_mp_max_offset = [0X4B0]
+    backpack_address = 0x00D2AE78
+    backpack_offset = [0X240, 0X30, 0X20, 0XA8, 0XA8, 0XA8, 0X130]
+
+    # Target Addresses
+    attack_address = 0xB85174
+    target_name_offset = 0x30
+    target_x_offset = 0xC
+    target_y_offset = 0x10
+    target_z_offset = 0x14
+    target_hp_offset = 0x48
+
+    # Game 'n' Client names
+    client_name = "Treasura"
     os.makedirs("Images/" + client_name, exist_ok=True)
     game_name = fin_window_name(client_name)
     # Loading Addresses

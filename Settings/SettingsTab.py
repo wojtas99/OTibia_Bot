@@ -65,20 +65,16 @@ class SettingsTab(QWidget):
         # Buttons
         set_character_pos_button = QPushButton("Set Character", self)
         set_loot_screen_button = QPushButton("Set Loot", self)
+        set_battle_screen_button = QPushButton("Set Battle", self)
 
         # Button functions
         set_character_pos_button.clicked.connect(lambda: self.startSet_thread(0))
         set_loot_screen_button.clicked.connect(lambda: self.startSet_thread(-1))
+        set_battle_screen_button.clicked.connect(lambda: self.startSet_thread(-2))
 
-        # Layouts
-        layout1 = QHBoxLayout(self)
-        layout2 = QHBoxLayout(self)
-
-        layout1.addWidget(set_character_pos_button)
-        layout2.addWidget(set_loot_screen_button)
-
-        groupbox_layout.addLayout(layout1)
-        groupbox_layout.addLayout(layout2)
+        groupbox_layout.addWidget(set_character_pos_button)
+        groupbox_layout.addWidget(set_loot_screen_button)
+        groupbox_layout.addWidget(set_battle_screen_button)
 
         self.layout.addWidget(groupbox, 0, 0)
 

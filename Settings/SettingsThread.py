@@ -4,7 +4,7 @@ from PyQt5.QtCore import QThread
 from win32con import VK_LBUTTON
 
 import Addresses
-from Addresses import coordinates_x, coordinates_y, screen_x, screen_y, screen_width, screen_height
+from Addresses import coordinates_x, coordinates_y, screen_x, screen_y, screen_width, screen_height, battle_x, battle_y
 
 
 class SettingsThread(QThread):
@@ -30,13 +30,23 @@ class SettingsThread(QThread):
                     self.status_label.setText(f"Coordinates set at X={coordinates_x[self.index]}, Y={coordinates_y[self.index]}")
                     self.running = False
                     return
-            else:
+            elif self.index == -1:
                 self.status_label.setText(
                     f"Top-left X={cur_x}  Y={cur_y}"
                 )
                 if win32api.GetAsyncKeyState(VK_LBUTTON) & 0x8000:
                     screen_x[0], screen_y[0] = cur_x, cur_y
                     break
+            elif self.index == -2:
+                self.status_label.setText(
+                    f"Current: X={cur_x}  Y={cur_y}"
+                )
+                if win32api.GetAsyncKeyState(VK_LBUTTON) & 0x8000:
+                    battle_x[0], battle_y[0] = cur_x, cur_y
+                    self.status_label.setStyleSheet("color: green; font-weight: bold;")
+                    self.status_label.setText(f"Coordinates set at X={battle_x[0]}, Y={battle_y[0]}")
+                    self.running = False
+                    return
         QThread.msleep(200)
         self.status_label.setStyleSheet("color: red; font-weight: bold;")
         while self.running:

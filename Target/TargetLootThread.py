@@ -2,6 +2,8 @@ import random
 
 import numpy as np
 from PyQt5.QtCore import QThread, QMutex, QMutexLocker
+
+import Addresses
 from Addresses import coordinates_x, coordinates_y, screen_width, screen_height, screen_x, screen_y, walker_Lock
 from Functions.GeneralFunctions import load_items_images
 from Functions.MemoryFunctions import *
@@ -32,7 +34,11 @@ class TargetThread(QThread):
                 timer = 0
                 target_id = read_targeting_status()
                 if target_id == 0:
-                    press_hotkey(self.attack_key)
+                    if Addresses.battle_x[0] != 0:
+                        mouse_function(Addresses.battle_x[0], Addresses.battle_y[0], option=2)
+                        QThread.msleep(random.randint(1000, 1500))
+                    else:
+                        press_hotkey(self.attack_key)
                     QThread.msleep(random.randint(100, 150))
                     target_id = read_targeting_status()
                 if target_id == 0:
@@ -48,7 +54,10 @@ class TargetThread(QThread):
                         target_data = self.targets[target_index]
                         while read_targeting_status() != 0:
                             if timer / 1000 > 25:
-                                press_hotkey(self.attack_key)
+                                if Addresses.battle_x[0] != 0:
+                                    mouse_function(Addresses.battle_x[0], Addresses.battle_y[0], option=2)
+                                else:
+                                    press_hotkey(self.attack_key)
                                 timer = 0
                                 QThread.msleep(random.randint(100, 150))
                             target_x, target_y, target_z, target_name, target_hp = read_target_info()
@@ -66,7 +75,10 @@ class TargetThread(QThread):
                                 elif target_data['Stance'] == 3:
                                     chaseDiagonal_monster(x, y, target_x, target_y)
                             else:
-                                press_hotkey(self.attack_key)
+                                if Addresses.battle_x[0] != 0:
+                                    mouse_function(Addresses.battle_x[0], Addresses.battle_y[0], option=2)
+                                else:
+                                    press_hotkey(self.attack_key)
                                 QThread.msleep(random.randint(100, 150))
                                 if walker_Lock.locked() and lootLoop > 1:
                                     walker_Lock.release()
@@ -91,7 +103,10 @@ class TargetThread(QThread):
                                 QThread.msleep(random.randint(500, 600))
                             lootLoop = 0
                     else:
-                        press_hotkey(self.attack_key)
+                        if Addresses.battle_x[0] != 0:
+                            mouse_function(Addresses.battle_x[0], Addresses.battle_y[0], option=2)
+                        else:
+                            press_hotkey(self.attack_key)
                         QThread.msleep(random.randint(100, 150))
             except Exception as e:
                 print(f"Error: {e}")
