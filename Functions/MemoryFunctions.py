@@ -91,7 +91,6 @@ def read_my_wpt():
         y = read_memory_address(Addresses.my_y_address, 0, 1)
         z = read_memory_address(Addresses.my_z_address, 0, 7)
         return x, y, z
-
     else:
         x = read_pointer_address(Addresses.my_x_address, Addresses.my_x_address_offset, 1)
         y = read_pointer_address(Addresses.my_y_address, Addresses.my_y_address_offset, 1)
@@ -100,24 +99,13 @@ def read_my_wpt():
 
 
 def read_target_info():
-    if Addresses.client_name == 'Tibiantis':
-        attack_address = read_memory_address(Addresses.attack_address, 0, 1)
-        attack_address = find_address(Addresses.attack_address+Addresses.base_address, attack_address, 1)- Addresses.base_address
-        target_x = read_memory_address(attack_address, Addresses.target_x_offset, 1)
-        target_y = read_memory_address(attack_address, Addresses.target_y_offset, 1)
-        target_z = read_memory_address(attack_address, Addresses.target_z_offset, 7)
-        target_name = read_memory_address(attack_address, Addresses.target_name_offset, 5)
-        target_hp = read_memory_address(attack_address, Addresses.target_hp_offset, 7)
-        return target_x, target_y, target_z, target_name, target_hp
-    else:
-        attack_address = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
-        target_x = read_memory_address(attack_address, Addresses.target_x_offset, 1)
-        target_y = read_memory_address(attack_address, Addresses.target_y_offset, 1)
-        target_z = read_memory_address(attack_address, Addresses.target_z_offset, 7)
-        target_name = read_memory_address(attack_address, Addresses.target_name_offset, 5)
-        target_hp = read_memory_address(attack_address, Addresses.target_hp_offset, 7)
-        return target_x, target_y, target_z, target_name, target_hp
-    return None
+    attack_address = read_memory_address(Addresses.attack_address, 0, 2) - Addresses.base_address
+    target_x = read_memory_address(attack_address, Addresses.target_x_offset, 1)
+    target_y = read_memory_address(attack_address, Addresses.target_y_offset, 1)
+    target_z = read_memory_address(attack_address, Addresses.target_z_offset, 7)
+    target_name = read_memory_address(attack_address, Addresses.target_name_offset, 5)
+    target_hp = read_memory_address(attack_address, Addresses.target_hp_offset, 7)
+    return target_x, target_y, target_z, target_name, target_hp
 
 
 def enable_debug_privilege_pywin32():

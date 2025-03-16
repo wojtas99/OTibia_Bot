@@ -80,9 +80,9 @@ def load_medivia() -> None:
     item_link = 'https://wiki.mediviastats.info/File:'
     # Static Addresses
     # Character Addresses
-    my_x_address = 0XBEF560
-    my_y_address = 0XBEF564
-    my_z_address = 0XBEF568
+    my_x_address = 0XBEE560
+    my_y_address = 0XBEE564
+    my_z_address = 0XBEE568
     my_stats_address = 0x00BEE4E0
     my_hp_offset = [0X558]
     my_hp_max_offset = [0X560]
@@ -92,7 +92,7 @@ def load_medivia() -> None:
     backpack_offset = [0x338, 0X48, 0X8]
 
     # Target Addresses
-    attack_address = 0XBEE4E8
+    attack_address = 0xBED4E8
     target_name_offset = 0xA8
     target_x_offset = 0x38
     target_y_offset = 0x3C

@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QListWidgetItem
 
 from Addresses import coordinates_x, coordinates_y
 import Addresses
-from Functions.MemoryFunctions import read_memory_address, read_target_info, read_my_wpt
+from Functions.MemoryFunctions import read_memory_address, read_target_info, read_my_wpt, read_targeting_status
 from Functions.MouseFunctions import mouse_function
 
 
@@ -58,9 +58,9 @@ class SmartHotkeysThread(QThread):
                 if win32api.GetAsyncKeyState(vk_code) & 1:
                     mouse_function(hotkey_data['X'], hotkey_data['Y'], option=1)
                     if hotkey_data['Option'] == 'On Target':
-                        target_id = read_memory_address(Addresses.attack_address, 0, 2)
+                        target_id = read_targeting_status()
                         if target_id:
-                            target_x, target_y, target_name, target_hp = read_target_info()
+                            target_x, target_y, target_z, target_name, target_hp = read_target_info()
                             x, y, z = read_my_wpt()
                             dx = (target_x - x) * 75
                             dy = (target_y - y) * 75
