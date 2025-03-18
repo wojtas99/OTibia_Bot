@@ -33,7 +33,10 @@ class TargetThread(QThread):
                 open_corpse = False
                 timer = 0
                 target_id = read_targeting_status()
-                if target_id == 0:
+                monster_count = 1
+                if Addresses.target_count is not None:
+                    monster_count = int(read_pointer_address(Addresses.target_count, Addresses.target_count_offset, 2)/25 - 1)
+                if target_id == 0 and monster_count >= 1:
                     if Addresses.battle_x[0] != 0:
                         mouse_function(Addresses.battle_x[0], Addresses.battle_y[0], option=2)
                         QThread.msleep(random.randint(1000, 1500))
@@ -92,15 +95,17 @@ class TargetThread(QThread):
                             x, y, z = read_my_wpt()
                             x = target_x - x
                             y = target_y - y
+                            '''
                             backpack = read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1)
                             if backpack:
                                 for _ in range(3):
                                     if backpack == read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1):
                                         mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=1)
-                                        QThread.msleep(random.randint(500, 600))
+                                        QThread.msleep(random.randint(1000, 1500))
                             else:
-                                mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=1)
-                                QThread.msleep(random.randint(500, 600))
+                                '''
+                            mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=1)
+                            QThread.msleep(random.randint(1000, 1500))
                             lootLoop = 0
                     else:
                         if Addresses.battle_x[0] != 0:

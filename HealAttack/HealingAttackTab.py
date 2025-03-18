@@ -36,7 +36,6 @@ class HealingTab(QWidget):
 
         # Attack
         self.attackType_comboBox = QComboBox(self)
-        self.attackType_comboBox.hide()
         self.attackKey_comboBox = QComboBox(self)
 
         # Line Edits
@@ -50,34 +49,34 @@ class HealingTab(QWidget):
         # Attack
         self.targetName_lineEdit = QLineEdit(self)
         self.hpFrom_lineEdit = QLineEdit(self)
-        self.hpFrom_lineEdit.setFixedWidth(40)
+        self.hpFrom_lineEdit.setFixedWidth(30)
         self.hpFrom_lineEdit.setMaxLength(3)
         self.hpTo_lineEdit = QLineEdit(self)
-        self.hpTo_lineEdit.setFixedWidth(40)
+        self.hpTo_lineEdit.setFixedWidth(30)
         self.hpTo_lineEdit.setMaxLength(2)
         self.minMPAttack_lineEdit = QLineEdit(self)
-        self.minMPAttack_lineEdit.setFixedWidth(40)
+        self.minMPAttack_lineEdit.setFixedWidth(30)
         self.minHPAttack_lineEdit = QLineEdit(self)
-        self.minHPAttack_lineEdit.setFixedWidth(40)
+        self.minHPAttack_lineEdit.setFixedWidth(30)
         self.targetCount_lineEdit = QLineEdit(self)
-        self.targetCount_lineEdit.setFixedWidth(40)
-        self.targetCount_lineEdit.hide()
+        self.targetCount_lineEdit.setFixedWidth(20)
         self.profile_lineEdit = QLineEdit(self)
 
+        int_validator_4 = QIntValidator(1, 9, self)
         int_validator_3 = QIntValidator(0, 9999, self)
         int_validator_2 = QIntValidator(1, 100, self)
         int_validator_1 = QIntValidator(0, 99, self)
 
         self.hpTo_lineEdit.setValidator(int_validator_1)
         self.minHPAttack_lineEdit.setValidator(int_validator_1)
-
-        self.targetCount_lineEdit.setValidator(int_validator_2)
         self.hpBelow_lineEdit.setValidator(int_validator_2)
         self.hpAbove_lineEdit.setValidator(int_validator_2)
         self.hpFrom_lineEdit.setValidator(int_validator_2)
 
         self.minMPHeal_lineEdit.setValidator(int_validator_3)
         self.minMPAttack_lineEdit.setValidator(int_validator_3)
+
+        self.targetCount_lineEdit.setValidator(int_validator_4)
 
         # List Widgets
         self.healList_listWidget = QListWidget(self)
@@ -192,37 +191,40 @@ class HealingTab(QWidget):
         # Layouts
         layout1 = QHBoxLayout(self)
         layout2 = QHBoxLayout(self)
+        layout3 = QHBoxLayout(self)
 
+        layout1.addWidget(QLabel("Key:", self), alignment=Qt.AlignLeft)
         layout1.addWidget(self.attackKey_comboBox)
-        #layout1.addWidget(QLabel("Min. Creatures:", self), alignment=Qt.AlignLeft)
-        #layout1.addWidget(self.targetCount_lineEdit)
-        self.targetCount_lineEdit.setPlaceholderText("1")
-        layout1.addWidget(QLabel("HP:", self), alignment=Qt.AlignLeft)
-        layout1.addWidget(self.hpFrom_lineEdit)
-        layout1.addWidget(QLabel(" -", self), alignment=Qt.AlignLeft)
-        layout1.addWidget(self.hpTo_lineEdit, alignment=Qt.AlignLeft)
-        layout1.addWidget(QLabel("Min MP:", self))
-        layout1.addWidget(self.minMPAttack_lineEdit)
-        layout1.addWidget(QLabel("Min HP%:", self))
-        layout1.addWidget(self.minHPAttack_lineEdit)
+        layout1.addWidget(QLabel("Attack Type:", self), alignment=Qt.AlignLeft)
+        layout1.addWidget(self.attackType_comboBox)
+        layout2.addWidget(QLabel("Min. Creatures:", self), alignment=Qt.AlignLeft)
+        layout2.addWidget(self.targetCount_lineEdit)
+        layout2.addWidget(QLabel("HP%:", self), alignment=Qt.AlignLeft)
+        layout2.addWidget(self.hpFrom_lineEdit)
+        layout2.addWidget(QLabel(" -", self), alignment=Qt.AlignLeft)
+        layout2.addWidget(self.hpTo_lineEdit, alignment=Qt.AlignLeft)
+        layout2.addWidget(QLabel("Min. MP:", self))
+        layout2.addWidget(self.minMPAttack_lineEdit)
+        layout2.addWidget(QLabel("Min. HP%:", self))
+        layout2.addWidget(self.minHPAttack_lineEdit)
 
+        self.targetCount_lineEdit.setPlaceholderText("1")
         self.minMPAttack_lineEdit.setPlaceholderText("300")
         self.hpFrom_lineEdit.setPlaceholderText("100")
         self.hpTo_lineEdit.setPlaceholderText("0")
         self.minHPAttack_lineEdit.setPlaceholderText("50")
 
-        layout2.addWidget(self.targetName_lineEdit)
+        layout3.addWidget(self.targetName_lineEdit)
         self.targetName_lineEdit.setPlaceholderText("Orc, Minotaur, etc., * - All Monsters")
 
-
-        #layout4.addWidget(self.attackType_comboBox)
         add_attack_button.setFixedWidth(50)
-        layout2.addWidget(add_attack_button)
-        layout2.addWidget(self.startAttack_checkBox)
+        layout3.addWidget(add_attack_button)
+        layout3.addWidget(self.startAttack_checkBox)
 
         groupbox_layout.addWidget(self.attackList_listWidget)
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
+        groupbox_layout.addLayout(layout3)
         self.layout.addWidget(groupbox, 1, 0, 1, 2)
 
     def profileList(self) -> None:
@@ -312,9 +314,7 @@ class HealingTab(QWidget):
             heal_item.setData(Qt.UserRole, heal_data)
             self.healList_listWidget.addItem(heal_item)
 
-        # Repopulate attacking spells
         for attack_data in loaded_data.get("attacking", []):
-            print()
             attack_name = (
                 f"{attack_data['Count']}+ {attack_data['Name']} : ({attack_data['HpFrom']}%-{attack_data['HpTo']}%)"
                 f"  :  Press {attack_data['Key']}"
@@ -425,7 +425,7 @@ class HealingTab(QWidget):
         hp_to_val = int(self.hpTo_lineEdit.text())
         min_mp_val = int(self.minMPAttack_lineEdit.text())
         min_hp_val = int(self.minHPAttack_lineEdit.text())
-        count_val = 0
+        count_val = int(self.targetCount_lineEdit.text())
 
         attack_name = (
             f"{count_val}+ {monsters_name} : ({hp_from_val}%-{hp_to_val}%)"

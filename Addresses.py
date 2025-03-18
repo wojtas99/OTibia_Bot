@@ -4,7 +4,7 @@ import threading
 import win32gui
 import win32process
 
-from Functions.MemoryFunctions import enable_debug_privilege_pywin32
+from Functions.MemoryFunctions import enable_debug_privilege_pywin32, targets_around_me
 
 # Keystrokes codes
 lParam = [
@@ -36,6 +36,10 @@ my_mp_offset = None
 my_mp_max_offset = None
 backpack_address = None
 backpack_offset = None
+target_count = None
+target_count_offset = None
+target_list = None
+target_list_offset = None
 
 # Target Addresses
 attack_address = None
@@ -75,7 +79,8 @@ def load_medivia() -> None:
         my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, \
         backpack_address, backpack_offset, item_link, \
         attack_address, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
-        client_name, base_address, game, proc_id, process_handle, game_name
+        client_name, base_address, game, proc_id, process_handle, game_name, \
+        target_count, target_count_offset, target_list, target_list_offset
 
     item_link = 'https://wiki.mediviastats.info/File:'
     # Static Addresses
@@ -83,13 +88,13 @@ def load_medivia() -> None:
     my_x_address = 0XBEE560
     my_y_address = 0XBEE564
     my_z_address = 0XBEE568
-    my_stats_address = 0x00BEE4E0
+    my_stats_address = 0x00BED4E0
     my_hp_offset = [0X558]
     my_hp_max_offset = [0X560]
     my_mp_offset = [0x590]
     my_mp_max_offset = [0x598]
-    backpack_address = 0x00C76718
-    backpack_offset = [0x338, 0X48, 0X8]
+    backpack_address = 0x00BED640
+    backpack_offset = [0xDF8, 0X40, 0X68, 0X10, 0X20]
 
     # Target Addresses
     attack_address = 0xBED4E8
@@ -98,6 +103,12 @@ def load_medivia() -> None:
     target_y_offset = 0x3C
     target_z_offset = 0x40
     target_hp_offset = 0xE8
+
+    target_list = 0x00BEDA98
+    target_list_offset = [0x0, 0xC8]
+
+    target_count = 0x00C737C8
+    target_count_offset = [0x90, 0x68, 0x10, 0x6E0, 0X28, 0X0, 0X764]
 
     # Game 'n' Client names
     client_name = "Medivia"
@@ -119,7 +130,8 @@ def load_tibiaScape() -> None:
         my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, \
         backpack_address, backpack_offset, item_link, \
         attack_address, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
-        client_name, base_address, game, proc_id, process_handle, game_name
+        client_name, base_address, game, proc_id, process_handle, game_name, \
+        target_count, target_count_offset, target_list, target_list_offset
 
     item_link = 'https://www.tibia-wiki.net/wiki/Plik:'
     # Static Addresses
@@ -161,7 +173,8 @@ def load_miracle() -> None:
         my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, \
         backpack_address, backpack_offset, item_link, \
         attack_address, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
-        client_name, base_address, game, proc_id, process_handle, game_name
+        client_name, base_address, game, proc_id, process_handle, game_name, \
+        target_count, target_count_offset, target_list, target_list_offset
 
     item_link = 'https://www.tibia-wiki.net/wiki/Plik:'
     # Static Addresses
@@ -203,7 +216,8 @@ def load_dura() -> None:
         my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, \
         backpack_address, backpack_offset, item_link, \
         attack_address, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
-        client_name, base_address, game, proc_id, process_handle, game_name
+        client_name, base_address, game, proc_id, process_handle, game_name, \
+        target_count, target_count_offset, target_list, target_list_offset
 
     item_link = 'https://www.tibia-wiki.net/wiki/Plik:'
     # Static Addresses
@@ -245,7 +259,8 @@ def load_treasura() -> None:
         my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, \
         backpack_address, backpack_offset, item_link, \
         attack_address, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
-        client_name, base_address, game, proc_id, process_handle, game_name
+        client_name, base_address, game, proc_id, process_handle, game_name, \
+        target_count, target_count_offset, target_list, target_list_offset
 
     item_link = 'https://www.tibia-wiki.net/wiki/Plik:'
     # Static Addresses
@@ -281,12 +296,61 @@ def load_treasura() -> None:
     modules = win32process.EnumProcessModules(process_handle)
     base_address = modules[0]
 
+
+# Giveria Game
+def load_giveria() -> None:
+    global my_x_address, my_y_address, my_z_address, my_x_address_offset, my_y_address_offset, my_z_address_offset, \
+        my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, \
+        backpack_address, backpack_offset, item_link, \
+        attack_address, attack_address_offset, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
+        client_name, base_address, game, proc_id, process_handle, game_name, \
+        target_count, target_count_offset, target_list, target_list_offset
+
+    item_link = 'https://www.tibia-wiki.net/wiki/Plik:'
+    # Static Addresses
+    # Character Addresses
+    my_x_address = 0x00DF6B94
+    my_x_address_offset = [0x250, 0x24]
+    my_y_address = 0x00DF6B94
+    my_y_address_offset = [0x250, 0x28]
+    my_z_address = 0x00DF6B94
+    my_z_address_offset = [0x250, 0x2C]
+    my_stats_address = 0x00DF6B94
+    my_hp_offset = [0x3C, 0X4, 0X24, 0X0, 0XB8, 0X4, 0X3C]
+    my_hp_max_offset = [0x3C, 0X4, 0X24, 0X0, 0XB8, 0X4, 0X40]
+    my_mp_offset = [0x3C, 0X4, 0X24, 0X0, 0XB8, 0X4, 0X44]
+    my_mp_max_offset = [0x3C, 0X4, 0X24, 0X0, 0XB8, 0X4, 0X48]
+    backpack_address = 0x00D2AE78
+    backpack_offset = [0X240, 0X30, 0X20, 0XA8, 0XA8, 0XA8, 0X130]
+
+    # Target Addresses
+    attack_address = 0x00DF6B94
+    attack_address_offset = [0x130, 0x1C]
+    target_name_offset = 0x30
+    target_x_offset = 0xC
+    target_y_offset = 0x10
+    target_z_offset = 0x14
+    target_hp_offset = 0x48
+
+    # Game 'n' Client names
+    client_name = "Tibia"
+    os.makedirs("Images/" + client_name, exist_ok=True)
+    game_name = fin_window_name(client_name)
+    # Loading Addresses
+    game = win32gui.FindWindow(None, game_name)
+    proc_id = win32process.GetWindowThreadProcessId(game)
+    proc_id = proc_id[1]
+    process_handle = c.windll.kernel32.OpenProcess(0x1F0FFF, False, proc_id)
+    modules = win32process.EnumProcessModules(process_handle)
+    base_address = modules[0]
+
+
 def fin_window_name(name) -> str:
     matching_titles = []
 
     def enum_window_callback(hwnd, _):
         window_text = win32gui.GetWindowText(hwnd)
-        if name in window_text and "k" not in window_text:
+        if name in window_text and "EasyBot" not in window_text:
             matching_titles.append(window_text)
 
     win32gui.EnumWindows(enum_window_callback, None)
