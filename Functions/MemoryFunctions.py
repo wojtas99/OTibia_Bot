@@ -123,8 +123,8 @@ def targets_around_me(attack_type, names) -> int:
     x, y, z = read_my_wpt()
     targets_around = 0
     if Addresses.target_list:
-        list_pointer = read_pointer_address(Addresses.target_list, Addresses.target_list_offset, 2)
-        for i in range(0, int(read_pointer_address(Addresses.target_count, Addresses.target_count_offset, 1)/25)):
+        for i in range(0, int(read_pointer_address(Addresses.target_count, Addresses.target_count_offset, 2)/25)):
+            list_pointer = read_pointer_address(Addresses.target_list, Addresses.target_list_offset, 2)
             target_address = read_memory_address(list_pointer - Addresses.base_address, 0x8*i, 2)
             target_x = read_memory_address(target_address - Addresses.base_address, Addresses.target_x_offset, 1)
             target_y = read_memory_address(target_address - Addresses.base_address, Addresses.target_y_offset, 1)
