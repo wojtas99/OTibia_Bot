@@ -76,7 +76,8 @@ def read_attack_data(attack_data):
 
 
 def attack_monster(attack_data) -> bool:
-    monsters = targets_around_me(attack_data['Type'] + 1, attack_data['Name'])
+    #monsters = targets_around_me(attack_data['Type'] + 1, attack_data['Name'])
+    monsters = 20
     target_x, target_y, target_z, target_name, target_hp = read_target_info()
     current_hp, current_max_hp, current_mp, current_max_mp = read_my_stats()
     hp_percentage = (current_hp * 100) / current_max_hp

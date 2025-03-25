@@ -107,8 +107,8 @@ def load_medivia() -> None:
     target_list = 0x00BEDA98
     target_list_offset = [0x0, 0xC8]
 
-    target_count = 0x00C737C8
-    target_count_offset = [0x90, 0x68, 0x10, 0x6E0, 0X28, 0X0, 0X764]
+    target_count = None
+    target_count_offset = None
 
     # Game 'n' Client names
     client_name = "Medivia"
