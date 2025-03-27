@@ -6,7 +6,7 @@ import requests
 import win32con
 import win32gui
 import win32ui
-from PIL import Image, ImageSequence
+from PIL import Image, ImageSequence, ImageFile
 import numpy as np
 import cv2 as cv
 from PyQt5.QtCore import Qt
@@ -56,6 +56,7 @@ def load_items_images(list_widget) -> None:
                 continue
 
             Addresses.item_list[item_name] = []
+            ImageFile.LOAD_TRUNCATED_IMAGES = True
             item_image = Image.open(io.BytesIO(response.content))
             if item_image.format == 'GIF':
                 for frame in ImageSequence.Iterator(item_image):
