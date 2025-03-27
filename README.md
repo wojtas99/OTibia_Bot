@@ -61,9 +61,9 @@ If you liked it or learned something from this project, please leave a star :sta
 # Currently Works On
 - [Medivia](#Medivia) : :heavy_check_mark:
 - [TibiaScape](#TibiaScape) : :heavy_check_mark:
-- [Miracle](#Miracle) : :heavy_check_mark:
-- [Treasura](#Treasura) : :heavy_check_mark:
-- [Dura](#Dura) : :heavy_check_mark:
+- [Miracle_DX](#Miracle) : :heavy_check_mark:
+- [Treasura_DX](#Treasura) : :heavy_check_mark:
+- [Dura_DX](#Dura) : :heavy_check_mark:
 - [Giveria](#Giveria) : :heavy_check_mark:
   
 # How To Use
