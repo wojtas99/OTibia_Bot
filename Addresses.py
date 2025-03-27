@@ -6,6 +6,7 @@ import win32process
 
 from Functions.MemoryFunctions import enable_debug_privilege_pywin32, targets_around_me
 
+enable_debug_privilege_pywin32()
 # Keystrokes codes
 lParam = [
     0X00480001, 0x00500001, 0X004D0001,  # 8, 2, 6
@@ -179,19 +180,19 @@ def load_miracle() -> None:
     item_link = 'https://www.tibia-wiki.net/wiki/Plik:'
     # Static Addresses
     # Character Addresses
-    my_x_address = 0xA2FF1C
-    my_y_address = 0xA2FF20
-    my_z_address = 0xA2FF24
-    my_stats_address = 0x00A2FB30
-    my_hp_offset = [0x4A0]
-    my_hp_max_offset = [0x4A8]
-    my_mp_offset = [0X4D8]
-    my_mp_max_offset = [0X4E0]
-    backpack_address = 0x00D2AE78
-    backpack_offset = [0X240, 0X30, 0X20, 0XA8, 0XA8, 0XA8, 0X130]
+    my_x_address = 0xA316EC
+    my_y_address = 0xA316F0
+    my_z_address = 0xA316F4
+    my_stats_address = 0x00A31310
+    my_hp_offset = [0x4A8]
+    my_hp_max_offset = [0x4B0]
+    my_mp_offset = [0X4E0]
+    my_mp_max_offset = [0X4E8]
+    backpack_address = None
+    backpack_offset = None
 
     # Target Addresses
-    attack_address = 0xA2FB34
+    attack_address = 0xA31314
     target_name_offset = 0x30
     target_x_offset = 0xC
     target_y_offset = 0x10
