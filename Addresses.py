@@ -351,7 +351,7 @@ def fin_window_name(name) -> str:
 
     def enum_window_callback(hwnd, _):
         window_text = win32gui.GetWindowText(hwnd)
-        if name in window_text and "x" not in window_text:
+        if name in window_text and "EasyBot" not in window_text:
             matching_titles.append(window_text)
 
     win32gui.EnumWindows(enum_window_callback, None)
