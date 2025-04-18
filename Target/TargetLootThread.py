@@ -12,7 +12,7 @@ from Functions.KeyboardFunctions import press_hotkey, chase_monster, stay_diagon
 from Functions.MouseFunctions import manage_collect, mouse_function
 import cv2 as cv
 
-lootLoop = 2
+lootLoop = 4
 
 
 class TargetThread(QThread):
@@ -145,7 +145,7 @@ class LootThread(QThread):
 
         while self.running:
             try:
-                while (lootLoop < 2 or not self.target_state) and self.running:
+                while (lootLoop < 4 or not self.target_state) and self.running:
                     if lootLoop == 0:
                         take_screen = True
                     for file_name, value_list in item_image.items():

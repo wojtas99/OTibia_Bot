@@ -100,12 +100,12 @@ def read_my_wpt():
     if Addresses.my_x_address_offset is None:
         x = read_memory_address(Addresses.my_x_address, 0, 1)
         y = read_memory_address(Addresses.my_y_address, 0, 1)
-        z = read_memory_address(Addresses.my_z_address, 0, 7)
+        z = read_memory_address(Addresses.my_z_address, 0, 1)
         return x, y, z
     else:
         x = read_pointer_address(Addresses.my_x_address, Addresses.my_x_address_offset, 1)
         y = read_pointer_address(Addresses.my_y_address, Addresses.my_y_address_offset, 1)
-        z = read_pointer_address(Addresses.my_z_address, Addresses.my_z_address_offset, 4)
+        z = read_pointer_address(Addresses.my_z_address, Addresses.my_z_address_offset, 1)
         return x, y, z
 
 
