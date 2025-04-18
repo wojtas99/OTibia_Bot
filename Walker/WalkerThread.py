@@ -1,7 +1,11 @@
 import random
+
+import pyautogui
+import win32gui
 from PyQt5.QtCore import QThread, pyqtSignal, Qt
 from PyQt5.QtWidgets import QListWidgetItem
 
+import Addresses
 from Addresses import walker_Lock, coordinates_x, coordinates_y
 from Functions.MemoryFunctions import *
 from Functions.KeyboardFunctions import walk
@@ -80,6 +84,11 @@ class WalkerThread(QThread):
                         timer += sleep_value
                         mouse_function(coordinates_x[0], coordinates_y[0], option=1)
                         current_wpt = (current_wpt + 1) % len(self.waypoints)
+                    elif wpt_action == 4:
+                        # Action
+                        command = wpt_data['Direction'].split(' ')
+                        handle_action(command)
+
                 if timer > 5000:
                     current_wpt = self.lost_wpt(current_wpt)
                     timer = 0
@@ -127,6 +136,36 @@ class WalkerThread(QThread):
             if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 and (wpt_direction == 0 or wpt_direction == 9):
                 current_wpt = wpt
         return current_wpt
+
+
+def handle_action(command) -> None:
+    for i in range(0, len(command)):
+        if command[i] == 'say':
+            if command[i+1][-1] != '\'':
+                text = command[i + 1].replace('\'', '')
+                for j in range(i+2, len(command)):
+                    text += ' ' + command[j]
+                    if text[-1] == '\'':
+                        break
+                text = text.replace('\'', '')
+                for char in text:
+                    win32api.PostMessage(Addresses.game, win32con.WM_CHAR, ord(char), 0)
+                scan_code = win32api.MapVirtualKey(win32con.VK_RETURN, 0)
+                lParam_keydown = 1 | (scan_code << 16)
+                lParam_keyup = 1 | (scan_code << 16) | (1 << 30) | (1 << 31)
+                win32api.PostMessage(Addresses.game, win32con.WM_KEYDOWN, win32con.VK_RETURN, lParam_keydown)
+                win32api.PostMessage(Addresses.game, win32con.WM_KEYUP, win32con.VK_RETURN, lParam_keyup)
+            else:
+                text = command[i + 1].replace('\'', '')
+                for char in text:
+                    win32api.PostMessage(Addresses.game, win32con.WM_CHAR, ord(char), 0)
+                scan_code = win32api.MapVirtualKey(win32con.VK_RETURN, 0)
+                lParam_keydown = 1 | (scan_code << 16)
+                lParam_keyup = 1 | (scan_code << 16) | (1 << 30) | (1 << 31)
+                win32api.PostMessage(Addresses.game, win32con.WM_KEYDOWN, win32con.VK_RETURN, lParam_keydown)
+                win32api.PostMessage(Addresses.game, win32con.WM_KEYUP, win32con.VK_RETURN, lParam_keyup)
+        if command[i] == 'wait':
+            QThread.msleep(int(command[i+1]))
 
 
 class RecordThread(QThread):

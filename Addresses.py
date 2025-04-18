@@ -34,6 +34,7 @@ my_hp_offset = None
 my_hp_max_offset = None
 my_mp_offset = None
 my_mp_max_offset = None
+my_cap_offset = None
 backpack_address = None
 backpack_offset = None
 target_count = None
@@ -49,6 +50,9 @@ target_y_offset = None
 target_z_offset = None
 target_hp_offset = None
 target_name_offset = None
+
+# Other Addresses
+enter_address = None
 
 # Game Variables
 game_name = None
@@ -76,7 +80,7 @@ item_list = {}
 # Medivia Game
 def load_medivia() -> None:
     global my_x_address, my_y_address, my_z_address, \
-        my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, \
+        my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, my_cap_offset, \
         backpack_address, backpack_offset, item_link, \
         attack_address, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
         client_name, base_address, game, proc_id, process_handle, game_name, \
@@ -91,6 +95,7 @@ def load_medivia() -> None:
     my_stats_address = 0x00BED4E0
     my_hp_offset = [0X558]
     my_hp_max_offset = [0X560]
+    my_cap_offset = [0x568]
     my_mp_offset = [0x590]
     my_mp_max_offset = [0x598]
     backpack_address = 0x00BED640
@@ -336,6 +341,51 @@ def load_giveria() -> None:
     client_name = "Tibia"
     os.makedirs("Images/" + client_name, exist_ok=True)
     game_name = fin_window_name(client_name)
+    # Loading Addresses
+    game = win32gui.FindWindow(None, game_name)
+    proc_id = win32process.GetWindowThreadProcessId(game)
+    proc_id = proc_id[1]
+    process_handle = c.windll.kernel32.OpenProcess(0x1F0FFF, False, proc_id)
+    modules = win32process.EnumProcessModules(process_handle)
+    base_address = modules[0]
+
+
+# Medivia Game
+def load_tibiara() -> None:
+    global my_x_address, my_y_address, my_z_address, \
+        my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, my_cap_offset, \
+        backpack_address, backpack_offset, item_link, \
+        attack_address, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
+        client_name, base_address, game, proc_id, process_handle, game_name, \
+        target_count, target_count_offset, target_list, target_list_offset
+
+    item_link = 'https://wiki.mediviastats.info/File:'
+    # Static Addresses
+    # Character Addresses
+    my_x_address = 0xC4CBAC
+    my_y_address = 0xC4CBB0
+    my_z_address = 0xC4CBB4
+    my_stats_address = 0x00C4AFB4
+    my_hp_offset = [0x4C8]
+    my_hp_max_offset = [0x4D0]
+    my_mp_offset = [0x4E8]
+    my_mp_max_offset = [0x4EC]
+    backpack_address = None
+    backpack_offset = None
+
+    # Target Addresses
+    attack_address = 0xC4AFB8
+    target_name_offset = 0x3C
+    target_x_offset = 0x0C
+    target_y_offset = 0x10
+    target_z_offset = 0x14
+    target_hp_offset = 0x54
+
+    # Game 'n' Client names
+    client_name = "Tibiara"
+    os.makedirs("Images/" + client_name, exist_ok=True)
+    game_name = fin_window_name(client_name)
+
     # Loading Addresses
     game = win32gui.FindWindow(None, game_name)
     proc_id = win32process.GetWindowThreadProcessId(game)

@@ -24,6 +24,7 @@ class SelectTibiaTab(QWidget):
         self.treasura_button = QPushButton('Treasura', self)
         self.dura_button = QPushButton('Dura', self)
         self.giveria_button = QPushButton('Giveria', self)
+        self.tibiara_button = QPushButton('Tibiara', self)
         # Buttons Functions
         self.medivia_button.clicked.connect(self.load_medivia_button)
         self.tibiaScape_button.clicked.connect(self.load_tibiaScape_button)
@@ -31,6 +32,7 @@ class SelectTibiaTab(QWidget):
         self.treasura_button.clicked.connect(self.load_treasura_button)
         self.dura_button.clicked.connect(self.load_dura_button)
         self.giveria_button.clicked.connect(self.load_giveria_button)
+        self.tibiara_button.clicked.connect(self.load_tibiara_button)
 
         # Add widgets to layout
         self.layout.addWidget(self.medivia_button)
@@ -39,6 +41,7 @@ class SelectTibiaTab(QWidget):
         self.layout.addWidget(self.treasura_button)
         self.layout.addWidget(self.dura_button)
         self.layout.addWidget(self.giveria_button)
+        self.layout.addWidget(self.tibiara_button)
 
     def load_medivia_button(self) -> None:
         Addresses.load_medivia()
@@ -72,6 +75,12 @@ class SelectTibiaTab(QWidget):
 
     def load_giveria_button(self) -> None:
         Addresses.load_giveria()
+        self.close()
+        self.main_window = MainWindowTab()
+        self.main_window.show()
+
+    def load_tibiara_button(self) -> None:
+        Addresses.load_tibiara()
         self.close()
         self.main_window = MainWindowTab()
         self.main_window.show()

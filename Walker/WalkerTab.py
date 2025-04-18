@@ -20,6 +20,9 @@ class WalkerTab(QWidget):
         self.record_thread = None
         self.walker_thread = None
 
+        # Other Variables
+        self.labels_dictionary = {}
+
         # Load Icon
         self.setWindowIcon(QIcon('Images/Icon.jpg'))
         # Set Title and Size
@@ -210,8 +213,7 @@ class WalkerTab(QWidget):
             elif index == 4:  # Action
                 walk_name = f"Action: {walk_data['X']} {walk_data['Y']} {walk_data['Z']}"
             elif index == 5:  # Label
-                label_name = self.action_textEdit.toPlainText().strip()
-                walk_name = f"{label_name}: {walk_data['X']} {walk_data['Y']} {walk_data['Z']}"
+                walk_name = f"{walk_data['Direction']}"
             walk_item = QListWidgetItem(walk_name)
             walk_item.setData(Qt.UserRole, walk_data)
             self.waypointList_listWidget.addItem(walk_item)
@@ -253,7 +255,6 @@ class WalkerTab(QWidget):
         elif index == 4:  # Action
             action_text = self.action_textEdit.toPlainText().strip()
             if not action_text:
-                # If empty, highlight and show error
                 self.action_textEdit.setStyleSheet("border: 2px solid red;")
                 self.status_label.setText("Please enter an Action text.")
                 return
@@ -265,19 +266,20 @@ class WalkerTab(QWidget):
         elif index == 5:  # Label
             label_name = self.action_textEdit.toPlainText().strip()
             if not label_name:
-                # If empty, highlight and show error
                 self.action_textEdit.setStyleSheet("border: 2px solid red;")
                 self.status_label.setText("Please enter a Label text.")
                 return
-
             waypoint_data["Direction"] = label_name
-            waypoint = QListWidgetItem(f'{label_name}: {x} {y} {z}')
+            waypoint = QListWidgetItem(f'{label_name}')
+            self.labels_dictionary[label_name] = self.waypointList_listWidget.currentRow() + 1
             self.action_textEdit.clear()
 
-        # If we got here, we successfully created a waypoint
         waypoint.setData(Qt.UserRole, waypoint_data)
         self.waypointList_listWidget.addItem(waypoint)
-
+        if self.waypointList_listWidget.currentRow() == -1:
+            self.waypointList_listWidget.setCurrentRow(0)
+        else:
+            self.waypointList_listWidget.setCurrentRow(self.waypointList_listWidget.currentRow() + 1)
         self.status_label.setStyleSheet("color: green; font-weight: bold;")
         self.status_label.setText("Waypoint added successfully!")
 
@@ -311,9 +313,6 @@ class WalkerTab(QWidget):
                 self.walker_thread = None
 
     def update_waypointList(self, option, waypoint):
-        """
-        Update the current waypoint in the UI.
-        """
         if option == 0:
             self.waypointList_listWidget.setCurrentRow(int(waypoint))
         elif option == 1:
