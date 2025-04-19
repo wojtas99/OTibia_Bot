@@ -1,11 +1,10 @@
 from Addresses import screen_x, screen_y, screen_width, screen_height, coordinates_x, coordinates_y
-import base64
 import json
 from PyQt5.QtWidgets import (
     QWidget, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout, QGroupBox,
     QGridLayout, QPushButton, QListWidget
 )
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 import os
 

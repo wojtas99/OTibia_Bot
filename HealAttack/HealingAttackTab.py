@@ -1,4 +1,4 @@
-import base64, json, os
+import json, os
 from PyQt5.QtWidgets import (QWidget, QCheckBox, QComboBox, QLineEdit, QListWidget, QGridLayout, QGroupBox, QVBoxLayout,
                              QHBoxLayout, QLabel, QPushButton, QListWidgetItem, QFormLayout, QSizePolicy)
 from PyQt5.QtGui import QIcon, QPixmap, QIntValidator

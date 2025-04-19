@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QListWidgetItem
 
 from Addresses import coordinates_x, coordinates_y
 import Addresses
-from Functions.MemoryFunctions import read_memory_address, read_target_info, read_my_wpt, read_targeting_status
+from Functions.MemoryFunctions import read_target_info, read_my_wpt, read_targeting_status
 from Functions.MouseFunctions import mouse_function
 
 

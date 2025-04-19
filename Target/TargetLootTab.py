@@ -1,4 +1,3 @@
-import base64
 import os
 import json
 from Functions.GeneralFunctions import delete_item, manage_profile
@@ -6,7 +5,7 @@ from PyQt5.QtWidgets import (
     QWidget, QCheckBox, QComboBox, QLineEdit, QListWidget, QGridLayout,
     QGroupBox, QVBoxLayout, QPushButton, QLabel, QHBoxLayout, QListWidgetItem
 )
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 
 from Target.TargetLootThread import TargetThread, LootThread

@@ -3,7 +3,6 @@ import random
 import numpy as np
 from PyQt5.QtCore import QThread, QMutex, QMutexLocker
 
-import Addresses
 from Addresses import coordinates_x, coordinates_y, screen_width, screen_height, screen_x, screen_y, walker_Lock
 from Functions.GeneralFunctions import load_items_images
 from Functions.MemoryFunctions import *
@@ -89,21 +88,12 @@ class TargetThread(QThread):
                             QThread.msleep(sleep_value)
                             timer += sleep_value
                         if target_data['Skin'] != 0 and open_corpse:
-                            x, y, z = read_my_wpt()
                             # Do Skining
+                            x, y, z = read_my_wpt()
                         if self.loot_state and open_corpse:
                             x, y, z = read_my_wpt()
                             x = target_x - x
                             y = target_y - y
-                            '''
-                            backpack = read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1)
-                            if backpack:
-                                for _ in range(3):
-                                    if backpack == read_pointer_address(Addresses.backpack_address, Addresses.backpack_offset, 1):
-                                        mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=1)
-                                        QThread.msleep(random.randint(1000, 1500))
-                            else:
-                                '''
                             mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=1)
                             QThread.msleep(random.randint(1000, 1500))
                             lootLoop = 0

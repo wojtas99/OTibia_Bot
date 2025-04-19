@@ -1,11 +1,6 @@
 import random
-
-import pyautogui
-import win32gui
 from PyQt5.QtCore import QThread, pyqtSignal, Qt
 from PyQt5.QtWidgets import QListWidgetItem
-
-import Addresses
 from Addresses import walker_Lock, coordinates_x, coordinates_y
 from Functions.MemoryFunctions import *
 from Functions.KeyboardFunctions import walk
