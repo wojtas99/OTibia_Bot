@@ -396,6 +396,54 @@ def load_tibiara() -> None:
     base_address = modules[0]
 
 
+def load_igla() -> None:
+    global my_x_address, my_y_address, my_z_address, my_x_address_offset, my_y_address_offset, my_z_address_offset, \
+        my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, my_cap_offset, \
+        backpack_address, backpack_offset, item_link, attack_address_offset, \
+        attack_address, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
+        client_name, base_address, game, proc_id, process_handle, game_name, \
+        target_count, target_count_offset, target_list, target_list_offset
+
+    item_link = 'https://wiki.mediviastats.info/File:'
+    # Static Addresses
+    # Character Addresses
+    my_x_address = 0x019852A8
+    my_x_address_offset = [0x290, 0x100, 0x98]
+    my_y_address = 0x019852A8
+    my_y_address_offset = [0x290, 0x100, 0x9C]
+    my_z_address = 0x019852A8
+    my_z_address_offset = [0x290, 0x100, 0xA0]
+    my_stats_address = 0x019852A8
+    my_hp_offset = [0x78, 0x8, 0x60, 0x8, 0x180, 0x28, 0x78]
+    my_hp_max_offset = [0x78, 0x8, 0x60, 0x8, 0x180, 0x28, 0x7C]
+    my_mp_offset = [0x78, 0x8, 0x60, 0x8, 0x180, 0x28, 0X80]
+    my_mp_max_offset = [0x78, 0x8, 0x60, 0x8, 0x180, 0x28, 0X84]
+    backpack_address = None
+    backpack_offset = None
+
+    # Target Addresses
+    attack_address = 0x019852A8
+    attack_address_offset = [0x2C0, 0x28]
+    target_name_offset = 0x3C
+    target_x_offset = 0x0C
+    target_y_offset = 0x10
+    target_z_offset = 0x14
+    target_hp_offset = 0x54
+
+    # Game 'n' Client names
+    client_name = "Tibia - "
+    os.makedirs("Images/" + client_name, exist_ok=True)
+    game_name = fin_window_name(client_name)
+
+    # Loading Addresses
+    game = win32gui.FindWindow(None, game_name)
+    proc_id = win32process.GetWindowThreadProcessId(game)
+    proc_id = proc_id[1]
+    process_handle = c.windll.kernel32.OpenProcess(0x1F0FFF, False, proc_id)
+    modules = win32process.EnumProcessModules(process_handle)
+    base_address = modules[0]
+
+
 def fin_window_name(name) -> str:
     matching_titles = []
 

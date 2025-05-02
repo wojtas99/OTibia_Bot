@@ -80,6 +80,8 @@ def attack_monster(attack_data) -> bool:
     monsters = 20
     target_x, target_y, target_z, target_name, target_hp = read_target_info()
     current_hp, current_max_hp, current_mp, current_max_mp = read_my_stats()
+    if target_hp < 0 or target_hp > 100:
+        target_hp = 100
     hp_percentage = (current_hp * 100) / current_max_hp
     if (int(attack_data['HpFrom']) >= target_hp > int(attack_data['HpTo'])
             and current_mp >= int(attack_data['MinMp'])
@@ -105,6 +107,7 @@ class AttackThread(QThread):
                     if read_targeting_status() != 0:
                         if attack_monster(attack_data):
                             if attack_data['Key'][0] == 'F':
+                                print("Pressesd")
                                 press_hotkey(int(attack_data['Key'][1:]))
                                 QThread.msleep(random.randint(150, 250))
                             else:

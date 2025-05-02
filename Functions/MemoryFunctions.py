@@ -47,7 +47,7 @@ def read_pointer_address(address_read, offsets, option):
             if not result:
                 return
             if option == 1:
-                address = c.c_void_p(c.cast(buffer, c.POINTER(c.c_int)).contents.value + offset)
+                address = c.c_void_p(c.cast(buffer, c.POINTER(c.c_ulonglong)).contents.value + offset)
             else:
                 address = c.c_void_p(c.cast(buffer, c.POINTER(c.c_ulonglong)).contents.value + offset)
         result = c.windll.kernel32.ReadProcessMemory(Addresses.process_handle, address, buffer, buffer_size, c.byref(c.c_size_t()))
@@ -80,7 +80,8 @@ def read_targeting_status():
     if Addresses.attack_address_offset is None:
         return read_memory_address(Addresses.attack_address, 0, 2)
     else:
-        return read_pointer_address(Addresses.attack_address, Addresses.attack_address_offset, 1)
+        attack = read_pointer_address(Addresses.attack_address, Addresses.attack_address_offset, 2)
+        return attack
 
 
 def read_my_stats():
