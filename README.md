@@ -66,6 +66,7 @@ If you liked it or learned something from this project, please leave a star :sta
 - [Dura_DX](#Dura) : :heavy_check_mark:
 - [Giveria](#Giveria) : :heavy_check_mark:
 - [Tibiara DX](#Tibiara) : :heavy_check_mark:
+- [Igla OTS](#IglaOTS) : :heavy_check_mark:
   
 # How To Use
 ![image](https://github.com/user-attachments/assets/12f0048b-8bbe-4cd7-ab82-d3c6831974ce)
