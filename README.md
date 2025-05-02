@@ -156,7 +156,7 @@ If you liked it or learned something from this project, please leave a star :sta
 
 
 # How To Add New OT Client
-Soon
+[How To Add New OT Client](https://www.youtube.com/watch?v=dZbNfMYsa20&t=48s)
 
 # How To Make Executable
 If you want to make this bot executable version write this command in the console of the project.
