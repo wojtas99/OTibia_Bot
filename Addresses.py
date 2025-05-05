@@ -70,8 +70,8 @@ battle_x = [0] * 1
 battle_y = [0] * 1
 screen_width = [0] * 1
 screen_height = [0] * 1
-coordinates_x = [0] * 11
-coordinates_y = [0] * 11
+coordinates_x = [0] * 12
+coordinates_y = [0] * 12
 
 # Other Variables
 item_link = ""
@@ -432,6 +432,60 @@ def load_igla() -> None:
 
     # Game 'n' Client names
     client_name = "Tibia - "
+    os.makedirs("Images/" + client_name, exist_ok=True)
+    game_name = fin_window_name(client_name)
+
+    # Loading Addresses
+    game = win32gui.FindWindow(None, game_name)
+    proc_id = win32process.GetWindowThreadProcessId(game)
+    proc_id = proc_id[1]
+    process_handle = c.windll.kernel32.OpenProcess(0x1F0FFF, False, proc_id)
+    modules = win32process.EnumProcessModules(process_handle)
+    base_address = modules[0]
+
+
+
+
+# Medivia Game
+def load_error() -> None:
+    global my_x_address, my_y_address, my_z_address, \
+        my_stats_address, my_hp_offset, my_hp_max_offset, my_mp_offset, my_mp_max_offset, my_cap_offset, \
+        backpack_address, backpack_offset, item_link, \
+        attack_address, target_name_offset, target_x_offset, target_y_offset, target_z_offset, target_hp_offset, \
+        client_name, base_address, game, proc_id, process_handle, game_name, \
+        target_count, target_count_offset, target_list, target_list_offset
+
+    item_link = 'https://wiki.mediviastats.info/File:'
+    # Static Addresses
+    # Character Addresses
+    my_x_address = 0XB5BF3C
+    my_y_address = 0XB5BF40
+    my_z_address = 0XB5BF44
+    my_stats_address = 0x00B5BC60
+    my_hp_offset = [0X470]
+    my_hp_max_offset = [0X478]
+    my_cap_offset = [0x4A8]
+    my_mp_offset = [0x4A8]
+    my_mp_max_offset = [0x4B0]
+    backpack_address = 0x00BED640
+    backpack_offset = [0xDF8, 0X40, 0X68, 0X10, 0X20]
+
+    # Target Addresses
+    attack_address = 0xB5BC64
+    target_name_offset = 0x30
+    target_x_offset = 0xC
+    target_y_offset = 0x10
+    target_z_offset = 0x14
+    target_hp_offset = 0xE8
+
+    target_list = 0x00BEDA98
+    target_list_offset = [0x0, 0xC8]
+
+    target_count = None
+    target_count_offset = None
+
+    # Game 'n' Client names
+    client_name = "ERROR"
     os.makedirs("Images/" + client_name, exist_ok=True)
     game_name = fin_window_name(client_name)
 

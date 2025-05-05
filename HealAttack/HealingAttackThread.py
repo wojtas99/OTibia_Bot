@@ -51,9 +51,14 @@ class HealThread(QThread):
                                 healed = True
                     elif heal_type.startswith("MP"):
                         if heal_below >= mp_percentage >= heal_above:
-                            press_hotkey(int(heal_option[1:]))
-                            QThread.msleep(random.randint(10, 50))
-                            healed = True
+                            if heal_option == "Potion":
+                                mouse_function(coordinates_x[11], coordinates_y[11], Addresses.coordinates_x[0], Addresses.coordinates_y[0], option=5)
+                                QThread.msleep(random.randint(10, 50))
+                                healed = True
+                            else:
+                                press_hotkey(int(heal_option[1:]))
+                                QThread.msleep(random.randint(10, 50))
+                                healed = True
                     QThread.msleep(random.randint(10, 50))
                 QThread.msleep(random.randint(10, 50))
             except Exception as e:
@@ -114,10 +119,6 @@ class AttackThread(QThread):
                                 if attack_data['Key'] == 'HMM':
                                     mouse_function(coordinates_x[6],
                                                 coordinates_y[6],
-                                                   option=1)
-                                elif attack_data['Key'] == 'GFB':
-                                    mouse_function(coordinates_x[7],
-                                                coordinates_y[7],
                                                    option=1)
                                 elif attack_data['Key'] == 'SD':
                                     mouse_function(coordinates_x[8],

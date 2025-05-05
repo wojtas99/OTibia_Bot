@@ -182,7 +182,7 @@ class HealingTab(QWidget):
         )
 
         self.attackKey_comboBox.addItems(
-            [f"F{i}" for i in range(1, 13)] + ["HMM", "GFB", "SD"]
+            [f"F{i}" for i in range(1, 13)] + ["HMM", "SD"]
         )
 
         # CheckBox function

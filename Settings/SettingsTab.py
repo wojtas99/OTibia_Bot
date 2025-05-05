@@ -92,8 +92,8 @@ class SettingsTab(QWidget):
         item_bp3_button = QPushButton("4 Backpack", self)
         hmm_bp_button = QPushButton("HMM", self)
         uh_bp_button = QPushButton("UH", self)
+        mp_bp_button = QPushButton("MP", self)
         sd_bp_button = QPushButton("SD", self)
-        gfb_bp_button = QPushButton("GFB", self)
         rope_button = QPushButton("Rope", self)
         shovel_button = QPushButton("Shovel", self)
 
@@ -103,8 +103,8 @@ class SettingsTab(QWidget):
         item_bp2_button.clicked.connect(lambda: self.startSet_thread(3))
         item_bp3_button.clicked.connect(lambda: self.startSet_thread(4))
         uh_bp_button.clicked.connect(lambda: self.startSet_thread(5))
+        mp_bp_button.clicked.connect(lambda: self.startSet_thread(11))
         hmm_bp_button.clicked.connect(lambda: self.startSet_thread(6))
-        gfb_bp_button.clicked.connect(lambda: self.startSet_thread(7))
         sd_bp_button.clicked.connect(lambda: self.startSet_thread(8))
         shovel_button.clicked.connect(lambda: self.startSet_thread(9))
         rope_button.clicked.connect(lambda: self.startSet_thread(10))
@@ -123,10 +123,10 @@ class SettingsTab(QWidget):
         layout2.addWidget(item_bp3_button)
 
         layout3.addWidget(uh_bp_button)
-        layout3.addWidget(hmm_bp_button)
+        layout3.addWidget(mp_bp_button)
 
+        layout4.addWidget(hmm_bp_button)
         layout4.addWidget(sd_bp_button)
-        layout4.addWidget(gfb_bp_button)
 
         layout5.addWidget(rope_button)
         layout5.addWidget(shovel_button)
