@@ -93,7 +93,7 @@ def load_medivia() -> None:
     my_x_address = 0XBEE560
     my_y_address = 0XBEE564
     my_z_address = 0XBEE568
-    my_stats_address = 0x00BED4E0
+    my_stats_address = 0x00BEB4E0
     my_hp_offset = [0X558]
     my_hp_max_offset = [0X560]
     my_cap_offset = [0x568]
@@ -315,7 +315,7 @@ def load_giveria() -> None:
     item_link = 'https://www.tibia-wiki.net/wiki/Plik:'
     # Static Addresses
     # Character Addresses
-    my_x_address = 0x00DF6B94
+    my_x_address = 0x01A27960
     my_x_address_offset = [0x250, 0x24]
     my_y_address = 0x00DF6B94
     my_y_address_offset = [0x250, 0x28]
