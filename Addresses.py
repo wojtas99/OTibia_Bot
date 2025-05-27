@@ -315,23 +315,23 @@ def load_giveria() -> None:
     item_link = 'https://www.tibia-wiki.net/wiki/Plik:'
     # Static Addresses
     # Character Addresses
-    my_x_address = 0x01A27960
-    my_x_address_offset = [0x250, 0x24]
+    my_x_address = 0x00DF6B94
+    my_x_address_offset = [0x288, 0x4C]
     my_y_address = 0x00DF6B94
-    my_y_address_offset = [0x250, 0x28]
+    my_y_address_offset = [0x288, 0x50]
     my_z_address = 0x00DF6B94
-    my_z_address_offset = [0x250, 0x2C]
-    my_stats_address = 0x00DF6B94
-    my_hp_offset = [0x3C, 0X4, 0X24, 0X0, 0XB8, 0X4, 0X3C]
-    my_hp_max_offset = [0x3C, 0X4, 0X24, 0X0, 0XB8, 0X4, 0X40]
-    my_mp_offset = [0x3C, 0X4, 0X24, 0X0, 0XB8, 0X4, 0X44]
-    my_mp_max_offset = [0x3C, 0X4, 0X24, 0X0, 0XB8, 0X4, 0X48]
+    my_z_address_offset = [0x288, 0x54]
+    my_stats_address = 0X00E2CA6C
+    my_hp_offset = [0xc, 0x10, 0X24, 0X0, 0XBC, 0X4, 0X3C]
+    my_hp_max_offset = [0xc, 0x10, 0X24, 0X0, 0XBC, 0X4, 0X40]
+    my_mp_offset = [0xc, 0x10, 0X24, 0X0, 0XBC, 0X4, 0X44]
+    my_mp_max_offset = [0xc, 0x10, 0X24, 0X0, 0XBC, 0X4, 0X48]
     backpack_address = 0x00D2AE78
     backpack_offset = [0X240, 0X30, 0X20, 0XA8, 0XA8, 0XA8, 0X130]
 
     # Target Addresses
     attack_address = 0x00DF6B94
-    attack_address_offset = [0x130, 0x1C]
+    attack_address_offset = [0x98, 0x8, 0x18]
     target_name_offset = 0x30
     target_x_offset = 0xC
     target_y_offset = 0x10
@@ -339,9 +339,10 @@ def load_giveria() -> None:
     target_hp_offset = 0x48
 
     # Game 'n' Client names
-    client_name = "Tibia"
+    client_name = "Tibia - "
     os.makedirs("Images/" + client_name, exist_ok=True)
     game_name = fin_window_name(client_name)
+    print(game_name)
     # Loading Addresses
     game = win32gui.FindWindow(None, game_name)
     proc_id = win32process.GetWindowThreadProcessId(game)
