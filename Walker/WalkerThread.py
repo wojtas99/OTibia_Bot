@@ -210,6 +210,31 @@ class RecordThread(QThread):
                         waypoint = QListWidgetItem(f'Stand: {x} {y} {z} North')
                         waypoint.setData(Qt.UserRole, waypoint_data)
                         self.wpt_update.emit(1, waypoint)
+                    if y == old_y and x > old_x:  # Move East
+                        waypoint_data = {
+                            "Action": 0,
+                            "Direction": 3,  # East index
+                            "X": x,
+                            "Y": y,
+                            "Z": z
+                        }
+                        waypoint = QListWidgetItem(f'Stand: {x} {y} {z} East')
+                        waypoint.setData(Qt.UserRole, waypoint_data)
+                        self.wpt_update.emit(1, waypoint)
+
+
+                    if y == old_y and x < old_x:  # Move West
+                        waypoint_data = {
+                            "Action": 0,
+                            "Direction": 4,  # West index
+                            "X": x,
+                            "Y": y,
+                            "Z": z
+                        }
+                        waypoint = QListWidgetItem(f'Stand: {x} {y} {z} West')
+                        waypoint.setData(Qt.UserRole, waypoint_data)
+                        self.wpt_update.emit(1, waypoint)
+
                 if (x != old_x or y != old_y) and z == old_z:
                     waypoint_data = {
                         "Action": 0,

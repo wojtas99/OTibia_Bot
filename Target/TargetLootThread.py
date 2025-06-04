@@ -95,7 +95,7 @@ class TargetThread(QThread):
                             x = target_x - x
                             y = target_y - y
                             mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=1)
-                            QThread.msleep(random.randint(1000, 1500))
+                            QThread.msleep(random.randint(300, 500))
                             lootLoop = 0
                     else:
                         if Addresses.battle_x[0] != 0:
@@ -127,7 +127,6 @@ class LootThread(QThread):
     def run(self):
         global lootLoop
         zoom_img = 3
-        take_screen = True
         load_items_images(self.loot_list)
         item_image = Addresses.item_list
         capture_screen = WindowCapture(screen_width[0] - screen_x[0], screen_height[0] - screen_y[0],
@@ -135,18 +134,17 @@ class LootThread(QThread):
 
         while self.running:
             try:
-                while (lootLoop < 4 or not self.target_state) and self.running:
-                    if lootLoop == 0:
-                        take_screen = True
+                while (lootLoop < 2 or not self.target_state) and self.running:
+                    my_loot = lootLoop
                     for file_name, value_list in item_image.items():
                         for val in value_list[:-1]:
-                            if take_screen or not self.target_state:
-                                take_screen = False
-                                screenshot = capture_screen.get_screenshot()
-                                screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
-                                screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
-                                screenshot = cv.resize(screenshot, None, fx=zoom_img, fy=zoom_img, interpolation=cv.INTER_CUBIC)
-
+                            if self.target_state:
+                                if my_loot != lootLoop:
+                                    break
+                            screenshot = capture_screen.get_screenshot()
+                            screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY)
+                            screenshot = cv.GaussianBlur(screenshot, (7, 7), 0)
+                            screenshot = cv.resize(screenshot, None, fx=zoom_img, fy=zoom_img, interpolation=cv.INTER_CUBIC)
                             result = cv.matchTemplate(screenshot, val, cv.TM_CCOEFF_NORMED)
                             locations = list(zip(*(np.where(result >= 0.93))[::-1]))
                             if locations:
@@ -155,16 +153,11 @@ class LootThread(QThread):
                                 locations = [[int(lx / zoom_img), int(ly / zoom_img)] for lx, ly in locations]
                             for lx, ly in locations:
                                 manage_collect(lx, ly, value_list[-1])
-                                QThread.msleep(random.randint(150, 250))
-                                take_screen = True
-                            QThread.msleep(5)
-                        QThread.msleep(5)
-                    QThread.msleep(5)
+                                QThread.msleep(random.randint(1000, 1150))
+                                continue
                     lootLoop += 1
-                QThread.msleep(5)
             except Exception as e:
                 print(e)
-            QThread.msleep(5)
 
     def update_states(self, state):
         """Thread-safe method to update loot and skin states."""

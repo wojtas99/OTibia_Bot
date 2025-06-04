@@ -71,6 +71,7 @@ class MainWindowTab(QWidget):
     def training(self):
         if self.trainingTab_instance is None:
             self.trainingTab_instance = TrainingTab()
+            self.trainingTab_instance.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.trainingTab_instance.show()
 
     def settings(self):

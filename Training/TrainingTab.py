@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (
     QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox, QListWidgetItem, QLabel
 )
 from PyQt5.QtGui import QIcon
-from Training.TrainingThread import TrainingThread, ClickThread
+from Training.TrainingThread import TrainingThread, ClickThread, SetThread, FishingThread
 
 
 class TrainingTab(QWidget):
@@ -14,17 +14,25 @@ class TrainingTab(QWidget):
         # Thread Variables
         self.click_thread = None
         self.training_thread = None
+        self.set_thread = None
+        self.fishing_thread = None
 
         # Load Icon
         self.setWindowIcon(QIcon('Images/Icon.jpg'))
 
         # Set Title and Size
         self.setWindowTitle("Training")
-        self.setFixedSize(300, 200)
+        self.setFixedSize(300, 400)
+
+        # --- Status label at the bottom (for messages, instructions, and showing coordinates)
+        self.status_label = QLabel("", self)
+        self.status_label.setAlignment(Qt.AlignCenter)
+        self.status_label.setStyleSheet("color: red; font-weight: bold;")
 
         # Check Boxes
         self.burn_mana_checkbox = QCheckBox("Burn Mana", self)
         self.start_click_checkbox = QCheckBox("Start", self)
+        self.start_fishing_checkbox = QCheckBox("Start", self)
 
         # Combo Boxes
         self.hotkey_list_combobox = QComboBox(self)
@@ -43,10 +51,44 @@ class TrainingTab(QWidget):
         self.layout = QGridLayout()
         self.setLayout(self.layout)
 
+        # Finally, add the status label in row=2 (bottom)
+        self.layout.addWidget(self.status_label, 3, 0, 1, 2)
+
         # Initialize
         self.burn_mana_list()
         self.add_hotkeys()
         self.click_key()
+        self.fishing()
+
+
+    def fishing(self) -> None:
+        groupbox = QGroupBox("Fishing")
+        groupbox_layout = QVBoxLayout(self)
+        groupbox.setLayout(groupbox_layout)
+
+        fishing_button = QPushButton("Fishing Rod", self)
+        water_button = QPushButton("Water", self)
+        bait_button = QPushButton("Bait", self)
+        food_button = QPushButton("Food", self)
+
+        self.start_fishing_checkbox.stateChanged.connect(self.start_fishing_thread)
+
+        fishing_button.clicked.connect(lambda: self.startSet_thread(0))
+        water_button.clicked.connect(lambda: self.startSet_thread(1))
+        bait_button.clicked.connect(lambda: self.startSet_thread(2))
+        food_button.clicked.connect(lambda: self.startSet_thread(3))
+
+        # Layouts
+        layout1 = QHBoxLayout(self)
+
+        layout1.addWidget(fishing_button)
+        layout1.addWidget(water_button)
+        layout1.addWidget(bait_button)
+        layout1.addWidget(food_button)
+        layout1.addWidget(self.start_fishing_checkbox)
+        groupbox_layout.addLayout(layout1)
+        self.layout.addWidget(groupbox, 2, 0, 1, 2)
+
 
     def click_key(self) -> None:
         groupbox = QGroupBox("Click Key")
@@ -122,7 +164,8 @@ class TrainingTab(QWidget):
         hotkey.setData(Qt.UserRole, hotkey_data)
         self.burn_mana_list_widget.addItem(hotkey)
         self.mp_line_edit.clear()
-        
+
+
     def start_click_thread(self, state) -> None:
         if state == Qt.Checked:
             if not self.click_thread:
@@ -145,3 +188,17 @@ class TrainingTab(QWidget):
                 self.training_thread.stop()
                 self.training_thread = None
 
+    def start_fishing_thread(self, state) -> None:
+        if state == Qt.Checked:
+            if not self.fishing_thread:
+                self.fishing_thread = FishingThread(self.status_label)
+                self.fishing_thread.start()
+        else:
+            if self.fishing_thread:
+                self.fishing_thread.stop()
+                self.fishing_thread = None
+
+
+    def startSet_thread(self, index) -> None:
+        self.set_thread = SetThread(index, self.status_label)
+        self.set_thread.start()

@@ -73,6 +73,9 @@ screen_height = [0] * 1
 coordinates_x = [0] * 12
 coordinates_y = [0] * 12
 
+fishing_x = [0] * 4
+fishing_y = [0] * 4
+
 # Other Variables
 item_link = ""
 item_list = {}
@@ -90,9 +93,9 @@ def load_medivia() -> None:
     item_link = 'https://wiki.mediviastats.info/File:'
     # Static Addresses
     # Character Addresses
-    my_x_address = 0XBEE560
-    my_y_address = 0XBEE564
-    my_z_address = 0XBEE568
+    my_x_address = 0xBEC560
+    my_y_address = 0xBEC564
+    my_z_address = 0xBEC568
     my_stats_address = 0x00BEB4E0
     my_hp_offset = [0X558]
     my_hp_max_offset = [0X560]
@@ -103,11 +106,11 @@ def load_medivia() -> None:
     backpack_offset = [0xDF8, 0X40, 0X68, 0X10, 0X20]
 
     # Target Addresses
-    attack_address = 0xBED4E8
+    attack_address = 0xBEB4E8
     target_name_offset = 0xA8
-    target_x_offset = 0x38
-    target_y_offset = 0x3C
-    target_z_offset = 0x40
+    target_x_offset = 0x2FC
+    target_y_offset = 0x300
+    target_z_offset = 0x304
     target_hp_offset = 0xE8
 
     target_list = 0x00BEDA98

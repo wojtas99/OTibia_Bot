@@ -6,7 +6,7 @@ mouse_lock = threading.Lock()
 
 
 def mouse_function(x_source, y_source, x_dest=0, y_dest=0, option=0) ->None:
-    if option != 3:
+    if option != 3 or option != 5:
         x_source += random.randint(0, 10) - 5
         y_source += random.randint(0, 10) - 5
         x_dest += random.randint(0, 10) - 5
@@ -52,3 +52,5 @@ def manage_collect(x, y, action) -> None:
     elif action == -2:
         mouse_function(x + Addresses.screen_x[0], y + Addresses.screen_y[0], option=2)
         mouse_function(x + Addresses.screen_x[0], y + Addresses.screen_y[0], option=2)
+    elif action == -3:
+        mouse_function(x + Addresses.screen_x[0], y + Addresses.screen_y[0], Addresses.coordinates_x[0], Addresses.coordinates_y[0], option=5)

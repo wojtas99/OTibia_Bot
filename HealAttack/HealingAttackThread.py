@@ -53,14 +53,14 @@ class HealThread(QThread):
                         if heal_below >= mp_percentage >= heal_above:
                             if heal_option == "Potion":
                                 mouse_function(coordinates_x[11], coordinates_y[11], Addresses.coordinates_x[0], Addresses.coordinates_y[0], option=5)
-                                QThread.msleep(random.randint(10, 50))
+                                QThread.msleep(random.randint(100, 500))
                                 healed = True
                             else:
                                 press_hotkey(int(heal_option[1:]))
                                 QThread.msleep(random.randint(10, 50))
                                 healed = True
-                    QThread.msleep(random.randint(10, 50))
-                QThread.msleep(random.randint(10, 50))
+                    QThread.msleep(random.randint(100, 200))
+                QThread.msleep(random.randint(100, 200))
             except Exception as e:
                 print("Exception: ", e)
 
