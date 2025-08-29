@@ -1,4 +1,4 @@
-<h1 align="center"> EasyBot </h1>
+<h1 align="center"> EasyBot External </h1>
 
 
 # Description
