@@ -1,6 +1,5 @@
 <h1 align="center"> EasyBot External </h1>
-[![Discord](https://img.shields.io/discord/your-server-id?label=Discord&logo=discord&color=5865F2)](https://discord.gg/your-invite-code)
-
+Join Our Discord
 [![Discord](https://img.shields.io/discord/1349680978099961878?label=Discord&logo=discord&color=5865F2)](https://discord.gg/7MTnc2ueyM)
 
 
