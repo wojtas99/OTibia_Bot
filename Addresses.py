@@ -112,18 +112,18 @@ def load_tibia() -> None:
         square_size, application_architecture, collect_threshold
 
     # Game variables
-    square_size = 75
-    application_architecture = 64
+    square_size = 75 # In pixels
+    application_architecture = 64 # If game 64 - 64Bit 32 - 32 Bit
     collect_threshold = 0.85
 
     # Character Addresses
     my_x_address = 0xCE38F0
     my_x_address_offset = []
 
-    my_y_address = 0xCE38F0 + 0x04
+    my_y_address = 0xCE38Ff
     my_y_address_offset = []
 
-    my_z_address = 0xCE38F0 + 0x08
+    my_z_address = 0xCE38F8
     my_z_address_offset = []
 
     my_stats_address = 0x00CE2870
@@ -150,7 +150,7 @@ def load_tibia() -> None:
 
 
     # Game 'n' Client names
-    client_name = "Medivia"
+    client_name = "Your client name"
     os.makedirs("Images/" + client_name, exist_ok=True)
     game_name = fin_window_name(client_name)
 

@@ -33,12 +33,12 @@ class TargetThread(QThread):
                 open_corpse = False
                 timer = 0
                 target_id = read_targeting_status()
-                press_hotkey(self.attack_key)
-                QThread.msleep(random.randint(100, 150))
                 if target_id == 0:
                     if walker_Lock.locked() and lootLoop > 1:
                         walker_Lock.release()
-                if target_id != 0:
+                    press_hotkey(self.attack_key)
+                    QThread.msleep(random.randint(100, 150))
+                else:
                     target_x, target_y, target_z, target_name, target_hp = read_target_info()
                     if any(target['Name'] == target_name or target['Name'] == '*' for target in self.targets):
                         if any(target['Name'] == target_name for target in self.targets):
