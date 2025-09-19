@@ -1,5 +1,5 @@
 <h1 align="center"> EasyBot External </h1>
-
+Join our [Discord server]([https://discord.gg/your-invite-code](https://discord.gg/7MTnc2ueyM))
 
 # Description
 This is my own project, which I did about 2 years ( with breaks ).
