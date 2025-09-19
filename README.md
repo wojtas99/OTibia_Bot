@@ -26,7 +26,7 @@ If you liked it or learned something from this project, please leave a star :sta
 - [Video Tutorial](#Video-Tutorial)
 - [How To Add New OT Client](#How-To-Add-New-OT-Client)
 - [How To Make Executable](#How-To-Make-Executable)
-- [What Next](#What's-Next)
+- [What Next](#What-Next)
 # Needed Python and Libs to Run
 
 - [![Python 3.10.0](https://img.shields.io/badge/python-3.10.0-blue.svg)](https://www.python.org/downloads/release/python-3100/)
