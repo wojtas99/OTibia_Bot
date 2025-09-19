@@ -42,11 +42,8 @@ class TargetLootTab(QWidget):
         self.attackDist_comboBox.addItems(["All", "1", "2", "3", "4", "5", "6", "7"])
         self.stance_comboBox = QComboBox(self)
         self.stance_comboBox.addItems(["Do Nothing", "Chase", "Diagonal", "Chase-Diagonal"])
-        self.skin_comboBox = QComboBox(self)
-        self.skin_comboBox.addItems(["No", "Knife"])
-        self.skin_comboBox.addItems([f"F{i}" for i in range(1, 13)])
         self.attackKey_comboBox = QComboBox(self)
-        self.attackKey_comboBox.addItems(f'F{i}' for i in range(1, 13))
+        self.attackKey_comboBox.addItems(f'F{i}' for i in range(1, 10))
 
         # Line Edits
         self.profile_lineEdit = QLineEdit(self)
@@ -100,7 +97,6 @@ class TargetLootTab(QWidget):
         layout4 = QHBoxLayout(self)
         layout5 = QHBoxLayout(self)
         layout6 = QHBoxLayout(self)
-        layout7 = QHBoxLayout(self)
 
         layout1.addWidget(self.targetList_listWidget)
         layout1.addWidget(clearTargetList_button)
@@ -111,26 +107,22 @@ class TargetLootTab(QWidget):
         layout3.addWidget(QLabel("Stance:", self))
         layout3.addWidget(self.stance_comboBox)
 
-        layout4.addWidget(QLabel("Skin:", self))
-        layout4.addWidget(self.skin_comboBox)
+        layout4.addWidget(self.startTarget_checkBox)
+        layout4.addWidget(self.startLoot_checkBox)
 
-        layout5.addWidget(self.startTarget_checkBox)
-        layout5.addWidget(self.startLoot_checkBox)
+        layout5.addWidget(QLabel("Dist:", self))
+        layout5.addWidget(self.attackDist_comboBox)
 
-        layout6.addWidget(QLabel("Dist:", self))
-        layout6.addWidget(self.attackDist_comboBox)
-
-        layout7.addWidget(QLabel("Attack Key:", self))
-        layout7.addWidget(self.attackKey_comboBox)
+        layout6.addWidget(QLabel("Attack Key:", self))
+        layout6.addWidget(self.attackKey_comboBox)
 
         self.targetName_lineEdit.setPlaceholderText("Orc, * - All Monsters")
 
         groupbox2_layout.addLayout(layout2)
-        groupbox2_layout.addLayout(layout6)
+        groupbox2_layout.addLayout(layout5)
         groupbox2_layout.addLayout(layout3)
         groupbox2_layout.addLayout(layout4)
-        groupbox2_layout.addLayout(layout5)
-        groupbox2_layout.addLayout(layout7)
+        groupbox2_layout.addLayout(layout6)
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(groupbox2_layout)
         self.layout.addWidget(groupbox, 0, 0, 1, 2)
@@ -250,7 +242,6 @@ class TargetLootTab(QWidget):
             "Name": monster_name,
             "Dist": self.attackDist_comboBox.currentIndex(),
             "Stance": self.stance_comboBox.currentIndex(),
-            "Skin": self.skin_comboBox.currentIndex()
         }
 
         monster = QListWidgetItem(monster_name)
@@ -261,7 +252,6 @@ class TargetLootTab(QWidget):
         self.targetName_lineEdit.clear()
         self.attackDist_comboBox.setCurrentIndex(0)
         self.stance_comboBox.setCurrentIndex(0)
-        self.skin_comboBox.setCurrentIndex(0)
 
         # Success message
         self.status_label.setStyleSheet("color: green; font-weight: bold;")

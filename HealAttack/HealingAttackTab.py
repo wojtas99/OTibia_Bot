@@ -26,8 +26,8 @@ class HealingTab(QWidget):
         self.status_label.setAlignment(Qt.AlignCenter)
 
         # Check Boxes
-        self.startHeal_checkBox = QCheckBox("Start Heal", self)
-        self.startAttack_checkBox = QCheckBox("Start Attack", self)
+        self.startHeal_checkBox = QCheckBox("Start", self)
+        self.startAttack_checkBox = QCheckBox("Start", self)
 
         # Combo Boxes
         # Heal
@@ -35,7 +35,6 @@ class HealingTab(QWidget):
         self.healKey_comboBox = QComboBox(self)
 
         # Attack
-        self.attackType_comboBox = QComboBox(self)
         self.attackKey_comboBox = QComboBox(self)
 
         # Line Edits
@@ -58,11 +57,8 @@ class HealingTab(QWidget):
         self.minMPAttack_lineEdit.setFixedWidth(30)
         self.minHPAttack_lineEdit = QLineEdit(self)
         self.minHPAttack_lineEdit.setFixedWidth(30)
-        self.targetCount_lineEdit = QLineEdit(self)
-        self.targetCount_lineEdit.setFixedWidth(20)
         self.profile_lineEdit = QLineEdit(self)
 
-        int_validator_4 = QIntValidator(1, 9, self)
         int_validator_3 = QIntValidator(0, 9999, self)
         int_validator_2 = QIntValidator(1, 100, self)
         int_validator_1 = QIntValidator(0, 99, self)
@@ -76,7 +72,6 @@ class HealingTab(QWidget):
         self.minMPHeal_lineEdit.setValidator(int_validator_3)
         self.minMPAttack_lineEdit.setValidator(int_validator_3)
 
-        self.targetCount_lineEdit.setValidator(int_validator_4)
 
         # List Widgets
         self.healList_listWidget = QListWidget(self)
@@ -118,7 +113,7 @@ class HealingTab(QWidget):
         # ComboBoxes
         self.healType_comboBox.addItems(["HP%", "MP%"])
         self.healKey_comboBox.addItems(
-            [f"F{i}" for i in range(1, 13)] + ["UH", "Potion"]
+            [f"F{i}" for i in range(1, 10)] + ["Health", "Mana"]
         )
 
         # CheckBox function
@@ -174,15 +169,8 @@ class HealingTab(QWidget):
         add_attack_button.clicked.connect(self.add_attack)
 
         # ComboBox
-        self.attackType_comboBox.addItems(
-            ["Exori, Exori Gran", "Exori Mas, Exevo Mas San",
-             "Exevo Gran Mas Vis, Exevo Gran Mas Flam",
-             "Avalanche, Great Fire Ball",
-             "Exori Hur, Exori Flam"]
-        )
-
         self.attackKey_comboBox.addItems(
-            [f"F{i}" for i in range(1, 13)] + ["HMM", "SD"]
+            [f"F{i}" for i in range(1, 10)] + ["First Rune", "Second Rune"]
         )
 
         # CheckBox function
@@ -191,14 +179,13 @@ class HealingTab(QWidget):
         # Layouts
         layout1 = QHBoxLayout(self)
         layout2 = QHBoxLayout(self)
-        layout3 = QHBoxLayout(self)
 
+
+        layout1.addWidget(self.targetName_lineEdit)
+        self.targetName_lineEdit.setPlaceholderText("Orc, Minotaur, etc., * - All Monsters")
         layout1.addWidget(QLabel("Key:", self), alignment=Qt.AlignLeft)
         layout1.addWidget(self.attackKey_comboBox)
-        layout1.addWidget(QLabel("Attack Type:", self), alignment=Qt.AlignLeft)
-        layout1.addWidget(self.attackType_comboBox)
-        layout2.addWidget(QLabel("Min. Creatures:", self), alignment=Qt.AlignLeft)
-        layout2.addWidget(self.targetCount_lineEdit)
+
         layout2.addWidget(QLabel("HP%:", self), alignment=Qt.AlignLeft)
         layout2.addWidget(self.hpFrom_lineEdit)
         layout2.addWidget(QLabel(" -", self), alignment=Qt.AlignLeft)
@@ -208,23 +195,18 @@ class HealingTab(QWidget):
         layout2.addWidget(QLabel("Min. HP%:", self))
         layout2.addWidget(self.minHPAttack_lineEdit)
 
-        self.targetCount_lineEdit.setPlaceholderText("1")
         self.minMPAttack_lineEdit.setPlaceholderText("300")
         self.hpFrom_lineEdit.setPlaceholderText("100")
         self.hpTo_lineEdit.setPlaceholderText("0")
         self.minHPAttack_lineEdit.setPlaceholderText("50")
 
-        layout3.addWidget(self.targetName_lineEdit)
-        self.targetName_lineEdit.setPlaceholderText("Orc, Minotaur, etc., * - All Monsters")
 
-        add_attack_button.setFixedWidth(50)
-        layout3.addWidget(add_attack_button)
-        layout3.addWidget(self.startAttack_checkBox)
+        layout2.addWidget(add_attack_button)
+        layout2.addWidget(self.startAttack_checkBox)
 
         groupbox_layout.addWidget(self.attackList_listWidget)
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(layout2)
-        groupbox_layout.addLayout(layout3)
         self.layout.addWidget(groupbox, 1, 0, 1, 2)
 
     def profileList(self) -> None:
@@ -307,7 +289,7 @@ class HealingTab(QWidget):
         for heal_data in loaded_data.get("healing", []):
             heal_name = (
                     f"{heal_data['Type']}  {heal_data['Below']}-{heal_data['Above']}"
-                    f"  :  Press " +
+                    f"  :  Use " +
                     f"{heal_data['Key']} "
             )
             heal_item = QListWidgetItem(heal_name)
@@ -316,8 +298,8 @@ class HealingTab(QWidget):
 
         for attack_data in loaded_data.get("attacking", []):
             attack_name = (
-                f"{attack_data['Count']}+ {attack_data['Name']} : ({attack_data['HpFrom']}%-{attack_data['HpTo']}%)"
-                f"  :  Press {attack_data['Key']}"
+                f"{attack_data['Name']} : ({attack_data['HpFrom']}%-{attack_data['HpTo']}%)"
+                f"  :  Use {attack_data['Key']}"
             )
             attack_item = QListWidgetItem(attack_name)
             attack_item.setData(Qt.UserRole, attack_data)
@@ -387,7 +369,6 @@ class HealingTab(QWidget):
         self.targetName_lineEdit.setStyleSheet("")
         self.hpFrom_lineEdit.setStyleSheet("")
         self.hpTo_lineEdit.setStyleSheet("")
-        self.targetCount_lineEdit.setStyleSheet("")
 
         self.status_label.setStyleSheet("color: Red; font-weight: bold;")
 
@@ -425,11 +406,10 @@ class HealingTab(QWidget):
         hp_to_val = int(self.hpTo_lineEdit.text())
         min_mp_val = int(self.minMPAttack_lineEdit.text())
         min_hp_val = int(self.minHPAttack_lineEdit.text())
-        count_val = int(self.targetCount_lineEdit.text())
 
         attack_name = (
-            f"{count_val}+ {monsters_name} : ({hp_from_val}%-{hp_to_val}%)"
-            f"  :  Press {self.attackKey_comboBox.currentText()}"
+            f"{monsters_name} : ({hp_from_val}%-{hp_to_val}%)"
+            f"  :  Use {self.attackKey_comboBox.currentText()}"
         )
 
         attack_data = {
@@ -439,8 +419,6 @@ class HealingTab(QWidget):
             "HpTo": hp_to_val,
             "MinMp": min_mp_val,
             "MinHp": min_hp_val,
-            "Count": count_val,
-            "Type": self.attackType_comboBox.currentIndex()
         }
 
         attack_item = QListWidgetItem(attack_name)
@@ -451,7 +429,6 @@ class HealingTab(QWidget):
         self.hpTo_lineEdit.clear()
         self.minMPAttack_lineEdit.clear()
         self.minHPAttack_lineEdit.clear()
-        self.targetCount_lineEdit.clear()
         self.targetName_lineEdit.clear()
         self.status_label.setText("Attack action added successfully!")
 

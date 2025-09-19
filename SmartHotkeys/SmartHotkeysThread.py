@@ -62,8 +62,8 @@ class SmartHotkeysThread(QThread):
                         if target_id:
                             target_x, target_y, target_z, target_name, target_hp = read_target_info()
                             x, y, z = read_my_wpt()
-                            dx = (target_x - x) * 75
-                            dy = (target_y - y) * 75
+                            dx = (target_x - x) * Addresses.square_size
+                            dy = (target_y - y) * Addresses.square_size
                             mouse_function(coordinates_x[0] + dx, coordinates_y[0] + dy, option=2)
                     elif hotkey_data['Option'] == 'On Yourself':
                         mouse_function(coordinates_x[0], coordinates_y[0], option=2)

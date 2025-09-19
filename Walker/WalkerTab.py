@@ -38,7 +38,6 @@ class WalkerTab(QWidget):
         self.waypointList_listWidget = QListWidget(self)
         self.profile_listWidget = QListWidget(self)
         self.profile_lineEdit = QLineEdit(self)
-        self.action_textEdit = QTextEdit(self)
         self.record_checkBox = QCheckBox("Auto Recording", self)
         self.start_checkBox = QCheckBox("Start Walker", self)
         self.option_comboBox = QComboBox(self)
@@ -100,8 +99,6 @@ class WalkerTab(QWidget):
         rope_waypoint_button = QPushButton("Rope", self)
         shovel_waypoint_button = QPushButton("Shovel", self)
         ladder_waypoint_button = QPushButton("Ladder", self)
-        action_waypoint_button = QPushButton("Action", self)
-        label_waypoint_button = QPushButton("Label", self)
         clearWaypointList_button = QPushButton("Clear List", self)
 
         # Connect to add_waypoint with different indexes
@@ -110,8 +107,6 @@ class WalkerTab(QWidget):
         rope_waypoint_button.clicked.connect(lambda: self.add_waypoint(1))
         shovel_waypoint_button.clicked.connect(lambda: self.add_waypoint(2))
         ladder_waypoint_button.clicked.connect(lambda: self.add_waypoint(3))
-        action_waypoint_button.clicked.connect(lambda: self.add_waypoint(4))
-        label_waypoint_button.clicked.connect(lambda: self.add_waypoint(5))
 
         # Double-click to delete
         self.waypointList_listWidget.itemDoubleClicked.connect(
@@ -131,8 +126,6 @@ class WalkerTab(QWidget):
         layout2.addWidget(self.option_comboBox)
 
         layout3.addWidget(stand_waypoint_button)
-        layout3.addWidget(action_waypoint_button)
-        layout3.addWidget(label_waypoint_button)
 
         layout4.addWidget(rope_waypoint_button)
         layout4.addWidget(shovel_waypoint_button)
@@ -141,7 +134,6 @@ class WalkerTab(QWidget):
         groupbox2_layout.addLayout(layout2)
         groupbox2_layout.addLayout(layout3)
         groupbox2_layout.addLayout(layout4)
-        groupbox2_layout.addWidget(self.action_textEdit)
         groupbox_layout.addLayout(layout1)
         groupbox_layout.addLayout(groupbox2_layout)
         self.layout.addWidget(groupbox, 0, 0, 1, 2)
@@ -210,10 +202,6 @@ class WalkerTab(QWidget):
                 walk_name = f"Shovel: {walk_data['X']} {walk_data['Y']} {walk_data['Z']}"
             elif index == 3:  # Ladder
                 walk_name = f"Ladder: {walk_data['X']} {walk_data['Y']} {walk_data['Z']}"
-            elif index == 4:  # Action
-                walk_name = f"Action: {walk_data['X']} {walk_data['Y']} {walk_data['Z']}"
-            elif index == 5:  # Label
-                walk_name = f"{walk_data['Direction']}"
             walk_item = QListWidgetItem(walk_name)
             walk_item.setData(Qt.UserRole, walk_data)
             self.waypointList_listWidget.addItem(walk_item)
@@ -234,7 +222,6 @@ class WalkerTab(QWidget):
 
         self.status_label.setText("")
         self.status_label.setStyleSheet("color: red; font-weight: bold;")
-        self.action_textEdit.setStyleSheet("")
 
         if index == 0:  # Stand
             waypoint_data["Direction"] = self.option_comboBox.currentIndex()
@@ -251,28 +238,6 @@ class WalkerTab(QWidget):
         elif index == 3:  # Ladder
             waypoint_data["Direction"] = self.option_comboBox.currentIndex()
             waypoint = QListWidgetItem(f'Ladder: {x} {y} {z}')
-
-        elif index == 4:  # Action
-            action_text = self.action_textEdit.toPlainText().strip()
-            if not action_text:
-                self.action_textEdit.setStyleSheet("border: 2px solid red;")
-                self.status_label.setText("Please enter an Action text.")
-                return
-
-            waypoint_data["Direction"] = action_text
-            waypoint = QListWidgetItem(f'Action: {x} {y} {z}')
-            self.action_textEdit.clear()
-
-        elif index == 5:  # Label
-            label_name = self.action_textEdit.toPlainText().strip()
-            if not label_name:
-                self.action_textEdit.setStyleSheet("border: 2px solid red;")
-                self.status_label.setText("Please enter a Label text.")
-                return
-            waypoint_data["Direction"] = label_name
-            waypoint = QListWidgetItem(f'{label_name}')
-            self.labels_dictionary[label_name] = self.waypointList_listWidget.currentRow() + 1
-            self.action_textEdit.clear()
 
         waypoint.setData(Qt.UserRole, waypoint_data)
         self.waypointList_listWidget.addItem(waypoint)

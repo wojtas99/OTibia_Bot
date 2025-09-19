@@ -19,85 +19,19 @@ import json
 def load_items_images(list_widget) -> None:
     zoom_img = 3
     Addresses.item_list = {}
-    link = Addresses.item_link
     for item_index in range(list_widget.count()):
         item_name = list_widget.item(item_index).text()
         item_data = list_widget.item(item_index).data(Qt.UserRole)
         loot_container = item_data['Loot']
-        item_name = item_name.replace(' ', '_')
-        if item_name[0] == '*':
-            item = Image.open(f'Images/{Addresses.client_name}/{item_name[1:]}.png').convert('RGBA')
-            item = np.array(item)
-            item = item[:22, :, :]
-            item = cv.cvtColor(item, cv.COLOR_BGR2GRAY)
-            item = cv.GaussianBlur(item, (7, 7), 0)
-            item = cv.resize(item, None, fx=zoom_img, fy=zoom_img,
-                                      interpolation=cv.INTER_CUBIC)
-            Addresses.item_list[item_name[1:]] = []
-            Addresses.item_list[item_name[1:]].append(item)
-            Addresses.item_list[item_name[1:]].append(loot_container)
-        else:
-            response = requests.get(f'{link}{item_name}.gif')
-            if response.status_code != 200:
-                response = requests.get(f'{link}{item_name}.png')
-                if response.status_code != 200:
-                    continue
-            soup = BeautifulSoup(response.text, "html.parser")
-            full_media_div = soup.find("div", class_="fullMedia")
-            if not full_media_div:
-                continue
-            media_url = full_media_div.find("a").get("href")
-            base_link = link[:link.rfind('/')]
-            parsed = urllib.parse.urlparse(base_link + media_url)
-            base_link = f"{parsed.scheme}://{parsed.netloc}"
-            response = requests.get(base_link + media_url)
-            if response.status_code != 200:
-                continue
-
-            Addresses.item_list[item_name] = []
-            ImageFile.LOAD_TRUNCATED_IMAGES = True
-            item_image = Image.open(io.BytesIO(response.content))
-            if item_image.format == 'GIF':
-                for frame in ImageSequence.Iterator(item_image):
-                    frame_rgba = frame.convert('RGBA')
-                    datas = frame_rgba.getdata()
-                    newData = [
-                        (255, 255, 255, 0) if (pixel[0] == 255 and pixel[1] == 255 and pixel[2] == 255) else pixel
-                        for pixel in datas
-                    ]
-                    frame_rgba.putdata(newData)
-                    background = Image.open(f'Images/{Addresses.client_name}/Background.png').convert('RGBA')
-                    background.paste(frame_rgba, (0, 0), frame_rgba)
-                    background_np = np.array(background)
-                    background_np = background_np[:22, :, :]
-                    background_np = cv.cvtColor(background_np, cv.COLOR_BGR2GRAY)
-                    background_np = cv.GaussianBlur(background_np, (7, 7), 0)
-                    background_np = cv.resize(background_np, None, fx=zoom_img, fy=zoom_img,
-                                              interpolation=cv.INTER_CUBIC)
-                    Addresses.item_list[item_name].append(background_np)
-                item_image.close()
-            elif item_image.format == 'PNG':
-                image_rgba = item_image.convert('RGBA')
-                datas = image_rgba.getdata()
-                newData = [
-                    (255, 255, 255, 0) if (pixel[0] == 255 and pixel[1] == 255 and pixel[2] == 255) else pixel
-                    for pixel in datas
-                ]
-                image_rgba.putdata(newData)
-                background = Image.open(f'Images/{Addresses.client_name}/Background.png').convert('RGBA')
-                background.paste(image_rgba, (0, 0), image_rgba)
-                background_np = np.array(background)
-                background_np = background_np[:22, :, :]
-                background_np = cv.cvtColor(background_np, cv.COLOR_BGR2GRAY)
-                background_np = cv.GaussianBlur(background_np, (7, 7), 0)
-                background_np = cv.resize(background_np, None, fx=zoom_img, fy=zoom_img, interpolation=cv.INTER_CUBIC)
-                Addresses.item_list[item_name].append(background_np)
-                item_image.close()
-            else:
-                item_image.close()
-                continue
-
-            Addresses.item_list[item_name].append(loot_container)
+        item = Image.open(f'Images/{Addresses.client_name}/{item_name}.png').convert('RGBA')
+        item = np.array(item)
+        item = item[:22, :, :]
+        item = cv.cvtColor(item, cv.COLOR_BGR2GRAY)
+        item = cv.GaussianBlur(item, (7, 7), 0)
+        item = cv.resize(item, None, fx=zoom_img, fy=zoom_img, interpolation=cv.INTER_CUBIC)
+        Addresses.item_list[item_name] = []
+        Addresses.item_list[item_name].append(item)
+        Addresses.item_list[item_name].append(loot_container)
 
 
 def merge_close_points(points, distance_threshold):

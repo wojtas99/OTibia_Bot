@@ -37,16 +37,6 @@ class SettingsThread(QThread):
                 if win32api.GetAsyncKeyState(VK_LBUTTON) & 0x8000:
                     screen_x[0], screen_y[0] = cur_x, cur_y
                     break
-            elif self.index == -2:
-                self.status_label.setText(
-                    f"Current: X={cur_x}  Y={cur_y}"
-                )
-                if win32api.GetAsyncKeyState(VK_LBUTTON) & 0x8000:
-                    battle_x[0], battle_y[0] = cur_x, cur_y
-                    self.status_label.setStyleSheet("color: green; font-weight: bold;")
-                    self.status_label.setText(f"Coordinates set at X={battle_x[0]}, Y={battle_y[0]}")
-                    self.running = False
-                    return
         QThread.msleep(200)
         self.status_label.setStyleSheet("color: red; font-weight: bold;")
         while self.running:

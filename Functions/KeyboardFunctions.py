@@ -47,7 +47,7 @@ def walk(wpt_direction, my_x, my_y, my_z, map_x, map_y, map_z) -> None:
             win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[0], lParam[0])
             return
         if abs(x) <= 7 and abs(y) <= 5 and z == 0:  # Map click
-            mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=2)
+            mouse_function(coordinates_x[0] + x * Addresses.square_size, coordinates_y[0] + y * Addresses.square_size, option=2)
             time.sleep(random.uniform(0.5, 0.7))
             return
 

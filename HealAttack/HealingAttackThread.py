@@ -1,5 +1,7 @@
 import random
 from PyQt5.QtCore import QThread, Qt
+
+import Addresses
 from Addresses import coordinates_x, coordinates_y
 from Functions.KeyboardFunctions import press_hotkey
 from Functions.MemoryFunctions import *
@@ -39,7 +41,7 @@ class HealThread(QThread):
                     hp_percentage = (current_hp * 100) / current_max_hp
                     mp_percentage = (current_mp * 100) / current_max_mp
                     if heal_type.startswith("HP"):
-                        if heal_option == "UH":
+                        if heal_option == "Health":
                             if heal_below >= hp_percentage >= heal_above:
                                 mouse_function(coordinates_x[5], coordinates_y[5], Addresses.coordinates_x[0], Addresses.coordinates_y[0], option=5)
                                 QThread.msleep(random.randint(10, 50))
@@ -51,7 +53,7 @@ class HealThread(QThread):
                                 healed = True
                     elif heal_type.startswith("MP"):
                         if heal_below >= mp_percentage >= heal_above:
-                            if heal_option == "Potion":
+                            if heal_option == "Mana":
                                 mouse_function(coordinates_x[11], coordinates_y[11], Addresses.coordinates_x[0], Addresses.coordinates_y[0], option=5)
                                 QThread.msleep(random.randint(100, 500))
                                 healed = True
@@ -68,31 +70,16 @@ class HealThread(QThread):
         self.running = False
 
 
-def read_attack_data(attack_data):
-    attack_type = attack_data['Type']
-    attack_name = attack_data['Name']
-    attack_option = attack_data['Key']
-    attack_minHp = attack_data['MinHp']
-    attack_minMp = attack_data['MinMp']
-    attack_hpFrom = attack_data['HpFrom']
-    attack_hpTo = attack_data['HpTo']
-    attack_count = attack_data['Count']
-    return attack_type, attack_name, attack_option, attack_minHp, attack_minMp, attack_hpFrom, attack_hpTo
-
-
 def attack_monster(attack_data) -> bool:
-    #monsters = targets_around_me(attack_data['Type'] + 1, attack_data['Name'])
-    monsters = 20
     target_x, target_y, target_z, target_name, target_hp = read_target_info()
     current_hp, current_max_hp, current_mp, current_max_mp = read_my_stats()
     if target_hp < 0 or target_hp > 100:
         target_hp = 100
     hp_percentage = (current_hp * 100) / current_max_hp
-    if (int(attack_data['HpFrom']) >= target_hp > int(attack_data['HpTo'])
+    if ((int(attack_data['HpFrom']) >= target_hp > int(attack_data['HpTo'])) or int(attack_data['HpFrom'] == 0)
             and current_mp >= int(attack_data['MinMp'])
             and (attack_data['Name'] == '*' or target_name in attack_data['Name'])
-            and attack_data['MinHp'] <= hp_percentage
-            and attack_data['Count'] <= monsters):
+            and attack_data['MinHp'] <= hp_percentage):
         return True
     return False
 
@@ -112,15 +99,15 @@ class AttackThread(QThread):
                     if read_targeting_status() != 0:
                         if attack_monster(attack_data):
                             if attack_data['Key'][0] == 'F':
-                                print("Pressesd")
+
                                 press_hotkey(int(attack_data['Key'][1:]))
                                 QThread.msleep(random.randint(150, 250))
                             else:
-                                if attack_data['Key'] == 'HMM':
+                                if attack_data['Key'] == 'First Rune':
                                     mouse_function(coordinates_x[6],
                                                 coordinates_y[6],
                                                    option=1)
-                                elif attack_data['Key'] == 'SD':
+                                elif attack_data['Key'] == 'Second Rune':
                                     mouse_function(coordinates_x[8],
                                                 coordinates_y[8],
                                                    option=1)
@@ -128,7 +115,7 @@ class AttackThread(QThread):
                                 target_x, target_y, target_z, target_name, target_hp = read_target_info()
                                 x = target_x - x
                                 y = target_y - y
-                                mouse_function(coordinates_x[0] + x * 75, coordinates_y[0] + y * 75, option=2)
+                                mouse_function(coordinates_x[0] + x * Addresses.square_size, coordinates_y[0] + y * Addresses.square_size, option=2)
                                 QThread.msleep(random.randint(800, 1000))
                 QThread.msleep(random.randint(100, 200))
             except Exception as e:

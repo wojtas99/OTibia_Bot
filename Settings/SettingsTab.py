@@ -63,17 +63,14 @@ class SettingsTab(QWidget):
 
         # Buttons
         set_character_pos_button = QPushButton("Set Character", self)
-        set_loot_screen_button = QPushButton("Set Loot", self)
-        set_battle_screen_button = QPushButton("Set Battle", self)
+        set_loot_screen_button = QPushButton("Set Loot Area", self)
 
         # Button functions
         set_character_pos_button.clicked.connect(lambda: self.startSet_thread(0))
         set_loot_screen_button.clicked.connect(lambda: self.startSet_thread(-1))
-        set_battle_screen_button.clicked.connect(lambda: self.startSet_thread(-2))
 
         groupbox_layout.addWidget(set_character_pos_button)
         groupbox_layout.addWidget(set_loot_screen_button)
-        groupbox_layout.addWidget(set_battle_screen_button)
 
         self.layout.addWidget(groupbox, 0, 0)
 
@@ -86,26 +83,26 @@ class SettingsTab(QWidget):
         groupbox.setLayout(groupbox_layout)
 
         # Buttons
-        gold_bp_button = QPushButton("1 Backpack", self)
+        item_bp_button = QPushButton("1 Backpack", self)
         item_bp1_button = QPushButton("2 Backpack", self)
         item_bp2_button = QPushButton("3 Backpack", self)
         item_bp3_button = QPushButton("4 Backpack", self)
-        hmm_bp_button = QPushButton("HMM", self)
-        uh_bp_button = QPushButton("UH", self)
-        mp_bp_button = QPushButton("MP", self)
-        sd_bp_button = QPushButton("SD", self)
+        rune1_button = QPushButton("First Rune", self)
+        health_button = QPushButton("Health", self)
+        mana_button = QPushButton("Mana", self)
+        rune2_button = QPushButton("Second Rune", self)
         rope_button = QPushButton("Rope", self)
         shovel_button = QPushButton("Shovel", self)
 
         # Button -> coordinate index mapping
-        gold_bp_button.clicked.connect(lambda: self.startSet_thread(1))
+        item_bp_button.clicked.connect(lambda: self.startSet_thread(1))
         item_bp1_button.clicked.connect(lambda: self.startSet_thread(2))
         item_bp2_button.clicked.connect(lambda: self.startSet_thread(3))
         item_bp3_button.clicked.connect(lambda: self.startSet_thread(4))
-        uh_bp_button.clicked.connect(lambda: self.startSet_thread(5))
-        mp_bp_button.clicked.connect(lambda: self.startSet_thread(11))
-        hmm_bp_button.clicked.connect(lambda: self.startSet_thread(6))
-        sd_bp_button.clicked.connect(lambda: self.startSet_thread(8))
+        health_button.clicked.connect(lambda: self.startSet_thread(5))
+        mana_button.clicked.connect(lambda: self.startSet_thread(11))
+        rune1_button.clicked.connect(lambda: self.startSet_thread(6))
+        rune2_button.clicked.connect(lambda: self.startSet_thread(8))
         shovel_button.clicked.connect(lambda: self.startSet_thread(9))
         rope_button.clicked.connect(lambda: self.startSet_thread(10))
 
@@ -116,17 +113,17 @@ class SettingsTab(QWidget):
         layout4 = QHBoxLayout(self)
         layout5 = QHBoxLayout(self)
 
-        layout1.addWidget(gold_bp_button)
+        layout1.addWidget(item_bp_button)
         layout1.addWidget(item_bp1_button)
 
         layout2.addWidget(item_bp2_button)
         layout2.addWidget(item_bp3_button)
 
-        layout3.addWidget(uh_bp_button)
-        layout3.addWidget(mp_bp_button)
+        layout3.addWidget(health_button)
+        layout3.addWidget(mana_button)
 
-        layout4.addWidget(hmm_bp_button)
-        layout4.addWidget(sd_bp_button)
+        layout4.addWidget(rune1_button)
+        layout4.addWidget(rune2_button)
 
         layout5.addWidget(rope_button)
         layout5.addWidget(shovel_button)
