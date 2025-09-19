@@ -21,7 +21,7 @@ If you liked it or learned something from this project, please leave a star :sta
 # Table of contents
 - [Needed Libs to Run](#Needed-Python-and-Libs-to-Run)
 - [Features Status](#Features-Status)
-- [Currently Works On](#Currently-Works-On)
+- [Works On](#Currently-Works-On)
 - [How To Use](#How-To-Use)
 - [Video Tutorial](#Video-Tutorial)
 - [How To Add New OT Client](#How-To-Add-New-OT-Client)
@@ -43,7 +43,6 @@ If you liked it or learned something from this project, please leave a star :sta
 - [Lure Monsters](#Lure-Monsters-Module) : :heavy_check_mark:
 - [Auto Training](#Auto-Training-Module) : :heavy_check_mark:
 - [Smart Hotkeys](#Smart-Hotkeys-Module) : :heavy_check_mark:
-- [Skin Monsters](#Skin-Monsters-Module) : :heavy_check_mark:
 - [Record Waypoints](#Record-Waypoints-Module) : :heavy_check_mark:
 - [Randomized Values](#Randomized-Values-Module) : :heavy_check_mark:
 - [Stay Diagonal](#Stay-Diagonal-Module) : :heavy_check_mark:
@@ -55,18 +54,10 @@ If you liked it or learned something from this project, please leave a star :sta
 - [Load Config](#Load-Config-Module) : :heavy_check_mark:
 - [Sort Loot](#Sort-Loot-Module) : :heavy_check_mark:
 - [Multiple Bots](#Multiple-Bots-Module) : :heavy_check_mark:
-- [Labels](#Labels-Module) : :grey_question: Soon
-- [Actions](#Actionst-Module) : :grey_question: Soon
 
-# Currently Works On
-- [Medivia](#Medivia) : :heavy_check_mark:
-- [TibiaScape](#TibiaScape) : :heavy_check_mark:
-- [Miracle_DX](#Miracle) : :heavy_check_mark:
-- [Treasura_DX](#Treasura) : :heavy_check_mark:
-- [Dura_DX](#Dura) : :heavy_check_mark:
-- [Giveria](#Giveria) : :heavy_check_mark:
-- [Tibiara DX](#Tibiara) : :heavy_check_mark:
-- [Igla OTS](#IglaOTS) : :heavy_check_mark:
+# Works on
+This bot can work on any Tibia game. Find Addresses add then into Addresses.py and that is it!
+It's very simple. You can find the addresses using Cheat Engine, and there are plenty of tutorials on the internet on how to do this.
   
 # How To Use
 ![image](https://github.com/user-attachments/assets/12f0048b-8bbe-4cd7-ab82-d3c6831974ce)
