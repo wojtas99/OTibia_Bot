@@ -158,9 +158,9 @@ pyinstaller --onefile --noconsole StartBot.py --name="EasyBot" --icon="Images/Ic
   ```
 
 # What Next
-Currently, due to lack of time and work on other projects, I am no longer developing this project. 
-However, if you want me to add a server, please send me a private message (I will do it for a small fee).
-If you are looking for support in the project or want to learn reverse engineering, please also let me know. 
+Currently, due to lack of time and work on other projects :hammer:, I am no longer developing this project. 
+However, if you want me to add a server, please send me a private message (:money_with_wings: I will do it for a small fee :money_with_wings:).
+If you are looking for support in the project or want to learn reverse engineering, please also let me know :bow:. 
 
 
 
