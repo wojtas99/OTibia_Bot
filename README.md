@@ -26,7 +26,7 @@ If you liked it or learned something from this project, please leave a star :sta
 - [Video Tutorial](#Video-Tutorial)
 - [How To Add New OT Client](#How-To-Add-New-OT-Client)
 - [How To Make Executable](#How-To-Make-Executable)
-- [What's Next](#What's-Next)
+- [What Next](#What's-Next)
 # Needed Python and Libs to Run
 
 - [![Python 3.10.0](https://img.shields.io/badge/python-3.10.0-blue.svg)](https://www.python.org/downloads/release/python-3100/)
@@ -157,7 +157,7 @@ If you want to make this bot executable version write this command in the consol
 pyinstaller --onefile --noconsole StartBot.py --name="EasyBot" --icon="Images/Icon.jpg"
   ```
 
-# What's Next
+# What Next
 Currently, due to lack of time and work on other projects, I am no longer developing this project. 
 However, if you want me to add a server, please send me a private message (I will do it for a small fee).
 If you are looking for support in the project or want to learn reverse engineering, please also let me know. 
