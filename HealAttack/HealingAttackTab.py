@@ -32,6 +32,7 @@ class HealingTab(QWidget):
         # Combo Boxes
         # Heal
         self.healType_comboBox = QComboBox(self)
+        self.healType_comboBox.currentTextChanged.connect(self.update_min_label)
         self.healKey_comboBox = QComboBox(self)
 
         # Attack
@@ -59,7 +60,10 @@ class HealingTab(QWidget):
         self.minHPAttack_lineEdit.setFixedWidth(30)
         self.profile_lineEdit = QLineEdit(self)
 
-        int_validator_3 = QIntValidator(0, 9999, self)
+        # Label
+        self.minLabel = QLabel(("Min MP:"))
+
+        int_validator_3 = QIntValidator(0, 99999, self)
         int_validator_2 = QIntValidator(1, 100, self)
         int_validator_1 = QIntValidator(0, 99, self)
 
@@ -139,7 +143,7 @@ class HealingTab(QWidget):
         layout3.addWidget(QLabel("Press:"))
         layout3.addWidget(self.healKey_comboBox)
 
-        layout4.addWidget(QLabel("Min MP:"))
+        layout4.addWidget(self.minLabel)
         layout4.addWidget(self.minMPHeal_lineEdit)
 
         layout5.addWidget(addHeal_button)
@@ -451,3 +455,10 @@ class HealingTab(QWidget):
             if self.attack_thread:
                 self.attack_thread.stop()
                 self.attack_thread = None
+
+
+    def update_min_label(self, text: str) -> None:
+        if text == "MP%":
+            self.minLabel.setText("Min HP:")
+        else:
+            self.minLabel.setText("Min MP:")
