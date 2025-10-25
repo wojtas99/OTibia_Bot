@@ -117,31 +117,31 @@ def load_tibia() -> None:
         square_size, application_architecture, collect_threshold
 
     # Game variables
-    square_size = 60 # In pixels
+    square_size = 75 # In pixels
     application_architecture = 64 # If game 64 - 64Bit 32 - 32 Bit
     collect_threshold = 0.85
 
     # Character Addresses
-    my_x_address = 0x019C6628
-    my_x_address_offset = [0x510, 0x60]
+    my_x_address = 0xCE38F0
+    my_x_address_offset = []
 
-    my_y_address = 0x019C6628
-    my_y_address_offset = [0x510, 0x60 + 0x04]
+    my_y_address = 0xCE38Ff
+    my_y_address_offset = []
 
-    my_z_address = 0x019C6628
-    my_z_address_offset = [0x510, 0x60 + 0x08]
+    my_z_address = 0xCE38F8
+    my_z_address_offset = []
 
-    my_stats_address = 0x019C6628
+    my_stats_address = 0x00CE2870
 
-    my_hp_offset = [0xD8, 0X18]
-    my_hp_max_offset = [0xD8, 0X1C]
+    my_hp_offset = [0X568]
+    my_hp_max_offset = [0X570]
 
-    my_mp_offset = [0xD8, 0X60]
-    my_mp_max_offset = [0xD8, 0X64]
+    my_mp_offset = [0x5A0]
+    my_mp_max_offset = [0x5A8]
 
     # Target Addresses
-    attack_address = 0x019C6628
-    attack_address_offset = [0x2C0, 0x2C]
+    attack_address = 0xCE2878
+    attack_address_offset = []
 
     target_x_offset = 0x38
 
@@ -155,7 +155,7 @@ def load_tibia() -> None:
 
 
     # Game 'n' Client names
-    client_name = "Tibia - "
+    client_name = "Your client name"
     os.makedirs("Images/" + client_name, exist_ok=True)
     game_name = fin_window_name(client_name)
 
@@ -173,7 +173,7 @@ def fin_window_name(name) -> str:
 
     def enum_window_callback(hwnd, _):
         window_text = win32gui.GetWindowText(hwnd)
-        if name in window_text and "SA" not in window_text:
+        if name in window_text and "EasyBot" not in window_text:
             matching_titles.append(window_text)
 
     win32gui.EnumWindows(enum_window_callback, None)
