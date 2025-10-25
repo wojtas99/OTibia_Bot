@@ -37,17 +37,28 @@ class SettingsThread(QThread):
                 if win32api.GetAsyncKeyState(VK_LBUTTON) & 0x8000:
                     screen_x[0], screen_y[0] = cur_x, cur_y
                     break
+
+            elif self.index == -2:
+                self.status_label.setText(
+                    f"Top-left X={cur_x}  Y={cur_y}"
+                )
+                if win32api.GetAsyncKeyState(VK_LBUTTON) & 0x8000:
+                    battle_x[0], battle_y[0] = cur_x, cur_y
+                    break
         QThread.msleep(200)
         self.status_label.setStyleSheet("color: red; font-weight: bold;")
         while self.running:
             cur_x, cur_y = win32gui.ScreenToClient(Addresses.game, win32api.GetCursorPos())
             QThread.msleep(10)
-            self.status_label.setText(
-                f"Bottom-right X={cur_x}  Y={cur_y}"
-            )
+            self.status_label.setText(f"Bottom-right X={cur_x}  Y={cur_y}")
             if win32api.GetAsyncKeyState(VK_LBUTTON) & 0x8000:
-                screen_width[0], screen_height[0] = cur_x, cur_y
-                self.status_label.setStyleSheet("color: green; font-weight: bold;")
-                self.status_label.setText("Screen area set successfully!")
+                if self.index == -1:
+                    screen_width[0], screen_height[0] = cur_x, cur_y
+                    self.status_label.setStyleSheet("color: green; font-weight: bold;")
+                    self.status_label.setText("Loot area set successfully!")
+                else:
+                    screen_width[1], screen_height[1] = cur_x, cur_y
+                    self.status_label.setStyleSheet("color: green; font-weight: bold;")
+                    self.status_label.setText("Battle List set successfully!")
                 self.running = False
                 return

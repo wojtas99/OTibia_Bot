@@ -7,7 +7,6 @@ from Addresses import rParam, lParam, coordinates_x, coordinates_y
 from Functions.MouseFunctions import mouse_function
 import win32con
 
-
 def walk(wpt_direction, my_x, my_y, my_z, map_x, map_y, map_z) -> None:
     x = map_x - my_x
     y = map_y - my_y
@@ -46,9 +45,30 @@ def walk(wpt_direction, my_x, my_y, my_z, map_x, map_y, map_z) -> None:
             win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[0], lParam[0])
             win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[0], lParam[0])
             return
+
+        if x == 1 and y == -1 and z == 0:  # North East
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[4], lParam[4])
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[4], lParam[4])
+            return
+
+        if x == -1 and y == -1 and z == 0:  # North West
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[5], lParam[5])
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[5], lParam[5])
+            return
+
+        if x == 1 and y == 1 and z == 0:   # South Easy
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[6], lParam[6])
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[6], lParam[6])
+            return
+
+        if x == -1 and y == 1 and z == 0:  # South West
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYDOWN, rParam[7], lParam[7])
+            win32gui.PostMessage(Addresses.game, win32con.WM_KEYUP, rParam[7], lParam[7])
+            return
+
+
         if abs(x) <= 7 and abs(y) <= 5 and z == 0:  # Map click
             mouse_function(coordinates_x[0] + x * Addresses.square_size, coordinates_y[0] + y * Addresses.square_size, option=2)
-            time.sleep(random.uniform(0.5, 0.7))
             return
 
 

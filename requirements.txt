@@ -6,3 +6,4 @@ numpy
 opencv-python
 pyinstaller
 beautifulsoup4
+pytesseract

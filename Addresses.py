@@ -3,6 +3,7 @@ import os
 import threading
 import win32gui
 import win32process
+import pytesseract
 
 from Functions.MemoryFunctions import enable_debug_privilege_pywin32
 
@@ -21,6 +22,10 @@ rParam = [
 
 # Locks
 walker_Lock = threading.Lock()
+attack_Lock = threading.Lock()
+
+# pytesseract
+pytesseract.pytesseract.tesseract_cmd = r"YOUR_PATH_TO_PYTESSERACT/tesseract.exe"
 
 # There is 6 types of values
 # 1 Byte - 1 byte
@@ -47,17 +52,17 @@ my_stats_address = None
 
 my_hp_offset = None
 my_hp_max_offset = None
-my_hp_type = 5
+my_hp_type = 2
 
 my_mp_offset = None
 my_mp_max_offset = None
-my_mp_type = 5
+my_mp_type = 2
 
 
 # Target Addresses
 attack_address = None
 attack_address_offset = None
-my_attack_type = 4
+my_attack_type = 3
 
 target_x_offset = None
 target_x_type = 3
@@ -91,8 +96,8 @@ screen_x = [0] * 1
 screen_y = [0] * 1
 battle_x = [0] * 1
 battle_y = [0] * 1
-screen_width = [0] * 1
-screen_height = [0] * 1
+screen_width = [0] * 2
+screen_height = [0] * 2
 coordinates_x = [0] * 12
 coordinates_y = [0] * 12
 
@@ -112,31 +117,31 @@ def load_tibia() -> None:
         square_size, application_architecture, collect_threshold
 
     # Game variables
-    square_size = 75 # In pixels
+    square_size = 60 # In pixels
     application_architecture = 64 # If game 64 - 64Bit 32 - 32 Bit
     collect_threshold = 0.85
 
     # Character Addresses
-    my_x_address = 0xCE38F0
-    my_x_address_offset = []
+    my_x_address = 0x019C6628
+    my_x_address_offset = [0x510, 0x60]
 
-    my_y_address = 0xCE38Ff
-    my_y_address_offset = []
+    my_y_address = 0x019C6628
+    my_y_address_offset = [0x510, 0x60 + 0x04]
 
-    my_z_address = 0xCE38F8
-    my_z_address_offset = []
+    my_z_address = 0x019C6628
+    my_z_address_offset = [0x510, 0x60 + 0x08]
 
-    my_stats_address = 0x00CE2870
+    my_stats_address = 0x019C6628
 
-    my_hp_offset = [0X568]
-    my_hp_max_offset = [0X570]
+    my_hp_offset = [0xD8, 0X18]
+    my_hp_max_offset = [0xD8, 0X1C]
 
-    my_mp_offset = [0x5A0]
-    my_mp_max_offset = [0x5A8]
+    my_mp_offset = [0xD8, 0X60]
+    my_mp_max_offset = [0xD8, 0X64]
 
     # Target Addresses
-    attack_address = 0xCE2878
-    attack_address_offset = []
+    attack_address = 0x019C6628
+    attack_address_offset = [0x2C0, 0x2C]
 
     target_x_offset = 0x38
 
@@ -150,7 +155,7 @@ def load_tibia() -> None:
 
 
     # Game 'n' Client names
-    client_name = "Your client name"
+    client_name = "Tibia - "
     os.makedirs("Images/" + client_name, exist_ok=True)
     game_name = fin_window_name(client_name)
 
@@ -168,7 +173,7 @@ def fin_window_name(name) -> str:
 
     def enum_window_callback(hwnd, _):
         window_text = win32gui.GetWindowText(hwnd)
-        if name in window_text and "EasyBot" not in window_text:
+        if name in window_text and "SA" not in window_text:
             matching_titles.append(window_text)
 
     win32gui.EnumWindows(enum_window_callback, None)

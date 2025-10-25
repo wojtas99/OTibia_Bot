@@ -3,7 +3,7 @@ from PyQt5.QtCore import QThread, pyqtSignal, Qt
 from PyQt5.QtWidgets import QListWidgetItem
 
 import Addresses
-from Addresses import walker_Lock, coordinates_x, coordinates_y
+from Addresses import walker_Lock, coordinates_x, coordinates_y, attack_Lock
 from Functions.MemoryFunctions import *
 from Functions.KeyboardFunctions import walk
 from Functions.MouseFunctions import mouse_function
@@ -19,13 +19,22 @@ class WalkerThread(QThread):
 
     def run(self):
         current_wpt = 0
-        timer, timer2 = 0, 0
-        old_x, old_y = 0, 0
+        timer = 0.0
+        second_timer = 0.0
+        third_timer = 0.0
+        x, y, z = read_my_wpt()
+        previous_pos = (x, y, z)
+
         while self.running:
             try:
-                if timer2 >= 1:
-                    current_wpt = self.find_wpt(current_wpt)
-                    timer2 = 0
+                sleep_value = random.randint(10, 50)
+                QThread.msleep(sleep_value)
+                if timer > 5:
+                    current_wpt = self.lost_wpt(current_wpt)
+                    timer = 0.0
+                    second_timer = 0.0
+
+
                 self.index_update.emit(0, current_wpt)
                 wpt_data = self.waypoints[current_wpt]
                 wpt_action = wpt_data['Action']
@@ -33,19 +42,27 @@ class WalkerThread(QThread):
                 map_x = wpt_data['X']
                 map_y = wpt_data['Y']
                 map_z = wpt_data['Z']
+
                 x, y, z = read_my_wpt()
                 while (x or y or z) is None:
                     x, y, z = read_my_wpt()
-                if x == map_x and y == map_y and z == map_z and wpt_action == 0:
-                    timer = 0
+                    sleep_value = random.randint(10, 15)
+                    QThread.msleep(sleep_value)
+                    timer += (sleep_value / 1000)
+                    second_timer += (sleep_value / 1000)
+                    third_timer += (sleep_value / 1000)
+
+                if x == map_x  and y == map_y and z == map_z:
                     current_wpt = (current_wpt + 1) % len(self.waypoints)
+                    timer = 0.0
+                    second_timer = 0.0
+                    third_timer = 0.0
                     continue
+
+                while walker_Lock.locked() and wpt_direction != 9:
+                    QThread.msleep(500)
+
                 if not walker_Lock.locked() or wpt_direction == 9:
-                    if old_x == x and old_y == y:
-                        timer2 += 0.2
-                    else:
-                        timer2 = 0
-                    old_x, old_y = x, y
                     if wpt_action == 0:
                         walk(wpt_direction, x, y, z, map_x, map_y, map_z)
                     elif wpt_action == 1:
@@ -82,15 +99,22 @@ class WalkerThread(QThread):
                         mouse_function(coordinates_x[0], coordinates_y[0], option=1)
                         current_wpt = (current_wpt + 1) % len(self.waypoints)
 
-                if timer > 5000:
-                    current_wpt = self.lost_wpt(current_wpt)
-                    timer = 0
-                sleep_value = random.randint(50, 100)
-                QThread.msleep(sleep_value)
-                if not walker_Lock.locked():
-                    timer += sleep_value
+                    if (x, y, z) == previous_pos:
+                        timer += (sleep_value / 1000)
+                        second_timer += (sleep_value / 1000)
+                        third_timer += (sleep_value / 1000)
+                    else:
+                        previous_pos = (x, y, z)
+                        timer = 0.0
+                        second_timer = 0.0
+                        third_timer = 0.0
+
+                    if second_timer > 1:
+                        current_wpt = self.find_wpt(current_wpt)
+                        second_timer = 0.0
             except Exception as e:
-                print(e)
+                print("Error", e)
+
 
     def stop(self):
         self.running = False
@@ -107,7 +131,8 @@ class WalkerThread(QThread):
             map_z = wpt_data['Z']
             wpt_action = wpt_data['Action']
             wpt_direction = wpt_data['Direction']
-            if (z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 and (wpt_direction == 0 or wpt_direction == 9)
+            if (z == map_z and abs(map_x - x) <= 3 and abs(map_y - y) <= 3 and wpt_action == 0 and (
+                    wpt_direction == 0 or wpt_direction == 9)
                     and 0 > index - wpt >= -5):
                 current_wpt = wpt
                 if wpt_direction == 0:
@@ -126,7 +151,8 @@ class WalkerThread(QThread):
             map_z = wpt_data['Z']
             wpt_action = wpt_data['Action']
             wpt_direction = wpt_data['Direction']
-            if z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0 and (wpt_direction == 0 or wpt_direction == 9):
+            if (z == map_z and abs(map_x - x) <= 7 and abs(map_y - y) <= 5 and wpt_action == 0
+                    and (wpt_direction == 0 or wpt_direction == 9)):
                 current_wpt = wpt
         return current_wpt
 
@@ -190,7 +216,6 @@ class RecordThread(QThread):
                         waypoint.setData(Qt.UserRole, waypoint_data)
                         self.wpt_update.emit(1, waypoint)
 
-
                     if y == old_y and x < old_x:  # Move West
                         waypoint_data = {
                             "Action": 0,
@@ -215,7 +240,7 @@ class RecordThread(QThread):
                     waypoint.setData(Qt.UserRole, waypoint_data)
                     self.wpt_update.emit(1, waypoint)
                 old_x, old_y, old_z = x, y, z
-                QThread.msleep(100)
+                QThread.msleep(10)
             except Exception as e:
                 print(e)
 

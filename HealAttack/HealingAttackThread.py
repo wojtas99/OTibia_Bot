@@ -1,11 +1,11 @@
 import random
 from PyQt5.QtCore import QThread, Qt
 
-import Addresses
 from Addresses import coordinates_x, coordinates_y
 from Functions.KeyboardFunctions import press_hotkey
 from Functions.MemoryFunctions import *
 from Functions.MouseFunctions import mouse_function
+from Addresses import attack_Lock
 
 
 def read_heal_data(heal_data):
@@ -79,30 +79,31 @@ class AttackThread(QThread):
     def run(self):
         while self.running:
             try:
-                for attack_index in range(self.attack_list.count()):
-                    attack_data = self.attack_list.item(attack_index).data(Qt.UserRole)
-                    if read_targeting_status() != 0:
-                        if attack_monster(attack_data):
-                            if attack_data['Key'][0] == 'F':
+                if not attack_Lock.locked():
+                    for attack_index in range(self.attack_list.count()):
+                        attack_data = self.attack_list.item(attack_index).data(Qt.UserRole)
+                        if read_targeting_status() != 0:
+                            if attack_monster(attack_data):
+                                if attack_data['Key'][0] == 'F':
 
-                                press_hotkey(int(attack_data['Key'][1:]))
-                                QThread.msleep(random.randint(150, 250))
-                            else:
-                                if attack_data['Key'] == 'First Rune':
-                                    mouse_function(coordinates_x[6],
-                                                coordinates_y[6],
-                                                   option=1)
-                                elif attack_data['Key'] == 'Second Rune':
-                                    mouse_function(coordinates_x[8],
-                                                coordinates_y[8],
-                                                   option=1)
-                                x, y, z = read_my_wpt()
-                                target_x, target_y, target_z, target_name, target_hp = read_target_info()
-                                x = target_x - x
-                                y = target_y - y
-                                mouse_function(coordinates_x[0] + x * Addresses.square_size, coordinates_y[0] + y * Addresses.square_size, option=2)
-                                QThread.msleep(random.randint(800, 1000))
-                QThread.msleep(random.randint(100, 200))
+                                    press_hotkey(int(attack_data['Key'][1:]))
+                                    QThread.msleep(random.randint(150, 250))
+                                else:
+                                    if attack_data['Key'] == 'First Rune':
+                                        mouse_function(coordinates_x[6],
+                                                    coordinates_y[6],
+                                                       option=1)
+                                    elif attack_data['Key'] == 'Second Rune':
+                                        mouse_function(coordinates_x[8],
+                                                    coordinates_y[8],
+                                                       option=1)
+                                    x, y, z = read_my_wpt()
+                                    target_x, target_y, target_z, target_name, target_hp = read_target_info()
+                                    x = target_x - x
+                                    y = target_y - y
+                                    mouse_function(coordinates_x[0] + x * Addresses.square_size, coordinates_y[0] + y * Addresses.square_size, option=2)
+                                    QThread.msleep(random.randint(800, 1000))
+                    QThread.msleep(random.randint(100, 200))
             except Exception as e:
                 print(e)
 

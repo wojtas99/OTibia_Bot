@@ -44,6 +44,7 @@ class TargetLootTab(QWidget):
         self.stance_comboBox.addItems(["Do Nothing", "Chase", "Diagonal", "Chase-Diagonal"])
         self.attackKey_comboBox = QComboBox(self)
         self.attackKey_comboBox.addItems(f'F{i}' for i in range(1, 10))
+        self.attackKey_comboBox.addItem("OCR")
 
         # Line Edits
         self.profile_lineEdit = QLineEdit(self)

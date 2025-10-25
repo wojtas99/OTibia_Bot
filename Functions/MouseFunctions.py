@@ -6,11 +6,6 @@ mouse_lock = threading.Lock()
 
 
 def mouse_function(x_source, y_source, x_dest=0, y_dest=0, option=0) ->None:
-    if option != 3 or option != 5:
-        x_source += random.randint(0, 10) - 5
-        y_source += random.randint(0, 10) - 5
-        x_dest += random.randint(0, 10) - 5
-        y_dest += random.randint(0, 10) - 5
     with mouse_lock:
         if option == 1: #  Right Click
             win32gui.PostMessage(Addresses.game, win32con.WM_MOUSEMOVE, 0, win32api.MAKELONG(x_source, y_source))
